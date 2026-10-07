@@ -89,7 +89,7 @@ function Login() {
       <p className="mt-2 text-ink-700">Authorised administrators only.</p>
       <form onSubmit={submit} noValidate className="card mt-6 space-y-5 p-6">
         {error && <Notice>{error}</Notice>}
-        <TextField label="Email" required type="email" autoComplete="username" value={email} onChange={setEmail} />
+        <TextField fieldKey="admin_email" label="Email" required type="email" autoComplete="username" value={email} onChange={setEmail} />
         <PasswordField value={password} onChange={setPassword} />
         <button type="submit" className="btn btn-primary w-full" disabled={busy}>
           {busy ? (<><Spinner label="Signing in" /> Signing in</>) : 'Sign in'}

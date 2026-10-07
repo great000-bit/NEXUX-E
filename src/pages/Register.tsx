@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  emptyForm, EXPERT_ID_KEY, STORAGE_KEY, validateStep,
-  type Errors, type FormData,
+  emptyForm, errorList, EXPERT_ID_KEY, FIELD_INFO, firstInvalidStep, STEP_NAMES, STORAGE_KEY, validateStep,
+  type ErrorKey, type Errors, type FormData, type StepIndex,
 } from '../lib/form'
 import {
   ASSIGNMENTS, AVAILABILITY, EXPERTISE, MAX_SECONDARY, MEMBERSHIPS,
   QUALIFICATIONS, STATES, TITLES, YEARS,
 } from '../lib/options'
 import { registerExpert } from '../lib/api'
-import { CheckList, ConsentBox, RadioList, SelectField, TextField } from '../components/fields'
-import { Notice, ProgressBar, Spinner } from '../components/ui'
+import { CheckList, ConsentBox, fieldId, RadioList, SelectField, TextField } from '../components/fields'
+import { ErrorSummary, Notice, ProgressBar, Spinner } from '../components/ui'
 import { Turnstile } from '../components/Turnstile'
 
-const STEP_LABELS = ['Identity', 'Expertise', 'Opportunity profile']
 const STEP_TITLES = ['Tell us who you are', 'Your expertise', 'Your opportunity profile']
 const STEP_INTROS = [
   'We use these details to create your record and to reach you.',
@@ -21,31 +20,61 @@ const STEP_INTROS = [
   'Tell organisations how you can help, and confirm your consent.',
 ]
 
-type Saved = { form: FormData; step: 0 | 1 | 2 }
+const sentBackNote = (step: StepIndex) =>
+  `We took you back to screen ${step + 1} (${STEP_NAMES[step]}) because something there needs your attention.`
 
-function load(): Saved {
+type Start = { form: FormData; step: StepIndex; errors: Errors; note: string | null }
+
+/** Restore saved progress. If an earlier screen is no longer valid, resume there and say why. */
+function load(): Start {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY)
     if (raw) {
-      const parsed = JSON.parse(raw) as Saved
-      return { form: { ...emptyForm, ...parsed.form, website: '' }, step: (parsed.step ?? 0) as 0 | 1 | 2 }
+      const parsed = JSON.parse(raw) as { form: FormData; step: StepIndex }
+      const form = { ...emptyForm, ...parsed.form, website: '' }
+      const saved = (parsed.step ?? 0) as StepIndex
+      if (saved > 0) {
+        const bad = firstInvalidStep(form, (saved - 1) as StepIndex)
+        if (bad) return { form, step: bad.step, errors: bad.errors, note: sentBackNote(bad.step) }
+      }
+      return { form, step: saved, errors: {}, note: null }
     }
   } catch {
     /* storage unavailable or corrupt: start fresh */
   }
-  return { form: emptyForm, step: 0 }
+  return { form: emptyForm, step: 0, errors: {}, note: null }
+}
+
+/** Scroll to a field, focus it and pulse it so the eye finds it. */
+function focusField(anchor: string) {
+  const el = document.getElementById(fieldId(anchor))
+  if (!el) return
+  const group = el.matches('fieldset')
+  const holder = group ? el : (el.closest('div') ?? el)
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  holder.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' })
+  el.focus({ preventScroll: true })
+  holder.classList.remove('attention')
+  void holder.offsetWidth // restart the animation if it is already running
+  holder.classList.add('attention')
+  window.setTimeout(() => holder.classList.remove('attention'), 1400)
 }
 
 export default function Register() {
   const navigate = useNavigate()
   const [initial] = useState(load)
   const [form, setForm] = useState<FormData>(initial.form)
-  const [step, setStep] = useState<0 | 1 | 2>(initial.step)
-  const [errors, setErrors] = useState<Errors>({})
+  const [step, setStep] = useState<StepIndex>(initial.step)
+  const [errors, setErrors] = useState<Errors>(initial.errors)
+  const [note, setNote] = useState<string | null>(initial.note)
+  const [service, setService] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
-  const [serverError, setServerError] = useState<string | null>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
-  const firstRender = useRef(true)
+  const serviceRef = useRef<HTMLDivElement>(null)
+  const pendingFocus = useRef<string | null>(null)
+  const shownStep = useRef<StepIndex>(initial.step)
+  /** Errors that came from the server stay until that field changes. */
+  const serverKeys = useRef(new Set<ErrorKey>())
 
   // Save progress so a refresh or an accidental tab close does not lose it.
   useEffect(() => {
@@ -56,66 +85,87 @@ export default function Register() {
     }
   }, [form, step])
 
-  // Move focus to the heading on each step change for keyboard and screen reader users.
+  // After each render: focus the first problem if one was requested, otherwise the new screen's heading.
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false
+    const target = pendingFocus.current
+    if (target) {
+      pendingFocus.current = null
+      shownStep.current = step
+      focusField(target)
       return
     }
-    headingRef.current?.focus()
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [step])
-
-  const set = <K extends keyof FormData>(k: K, v: FormData[K]) => {
-    setForm((f) => ({ ...f, [k]: v }))
-    if (errors[k] || (k === 'phone' || k === 'email') && errors.contact) {
-      setErrors((e) => {
-        const next = { ...e }
-        delete next[k]
-        if (k === 'phone' || k === 'email') delete next.contact
-        return next
-      })
+    if (shownStep.current !== step) {
+      shownStep.current = step
+      headingRef.current?.focus()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
+  }, [step, errors])
+
+  useEffect(() => {
+    if (service) serviceRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+  }, [service])
+
+  /** Show these problems, move to their screen, and focus the first one. */
+  const showProblems = (screen: StepIndex, problems: Errors, why: string | null) => {
+    const first = errorList(problems)[0]
+    setErrors(problems)
+    setNote(why)
+    pendingFocus.current = first ? first.anchor : null
+    setStep(screen)
   }
 
-  const focusFirstError = (e: Errors) => {
-    requestAnimationFrame(() => {
-      const el = document.querySelector<HTMLElement>('[aria-invalid="true"]')
-      el?.focus()
-      if (!el && e.contact) document.getElementById('contact-error')?.focus()
-    })
+  const set = <K extends keyof FormData>(k: K, v: FormData[K]) => {
+    const nextForm = { ...form, [k]: v }
+    setForm(nextForm)
+    setService(null)
+    if (Object.keys(errors).length === 0) return
+    // Re-check as they fix things: fixed problems disappear, the rest keep an up to date message.
+    const fresh = validateStep(step, nextForm)
+    const kept: Errors = {}
+    for (const key of Object.keys(errors) as ErrorKey[]) {
+      if (serverKeys.current.has(key)) {
+        if (key === k) serverKeys.current.delete(key)
+        else kept[key] = errors[key]
+      } else if (fresh[key]) {
+        kept[key] = fresh[key]
+      }
+    }
+    setErrors(kept)
+    if (Object.keys(kept).length === 0) setNote(null)
   }
 
   const next = () => {
+    serverKeys.current.clear()
+    setService(null)
     const e = validateStep(step, form)
-    setErrors(e)
-    if (Object.keys(e).length) return focusFirstError(e)
-    setStep((s) => (s + 1) as 0 | 1 | 2)
+    if (Object.keys(e).length) return showProblems(step, e, null)
+    setErrors({})
+    setNote(null)
+    setStep((s) => (s + 1) as StepIndex)
   }
 
   const back = () => {
+    serverKeys.current.clear()
     setErrors({})
-    setServerError(null)
-    setStep((s) => Math.max(0, s - 1) as 0 | 1 | 2)
+    setNote(null)
+    setService(null)
+    setStep((s) => Math.max(0, s - 1) as StepIndex)
   }
 
   const submit = async (ev: FormEvent) => {
     ev.preventDefault()
     if (step < 2) return next()
-    // Re-check every screen so nothing invalid reaches the server.
-    for (const s of [0, 1, 2] as const) {
-      const e = validateStep(s, form)
-      if (Object.keys(e).length) {
-        setErrors(e)
-        setStep(s)
-        setServerError('Please fix the highlighted fields before submitting.')
-        return focusFirstError(e)
-      }
-    }
+    serverKeys.current.clear()
+    setService(null)
+
+    // Re-check every screen, so nothing invalid reaches the server.
+    const bad = firstInvalidStep(form)
+    if (bad) return showProblems(bad.step, bad.errors, bad.step === step ? null : sentBackNote(bad.step))
+
     setSubmitting(true)
-    setServerError(null)
     const res = await registerExpert(form)
     setSubmitting(false)
+
     if (res.ok) {
       try {
         sessionStorage.removeItem(STORAGE_KEY)
@@ -126,24 +176,25 @@ export default function Register() {
       navigate('/registered', { replace: true, state: { expertId: res.expertId } })
       return
     }
-    // Send people to the screen that holds the problem field.
-    if (res.code === 'duplicate_email') {
-      setStep(0)
-      setErrors({ email: res.message })
-    } else if (res.code === 'duplicate_phone') {
-      setStep(0)
-      setErrors({ phone: res.message })
-    } else {
-      setServerError(res.message)
+
+    if (res.kind === 'field') {
+      const screen = FIELD_INFO[res.field]?.step ?? 0
+      serverKeys.current.add(res.field)
+      showProblems(screen, { [res.field]: res.message }, screen === step ? null : sentBackNote(screen))
+      return
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    setService(
+      res.kind === 'service'
+        ? res.message
+        : 'We could not save your registration just now. Please try again in a moment. Your answers are saved.',
+    )
   }
 
-  const hasContactError = Boolean(errors.contact)
+  const items = errorList(errors)
 
   return (
     <div>
-      <ProgressBar step={step} total={3} labels={STEP_LABELS} />
+      <ProgressBar step={step} total={3} labels={[...STEP_NAMES]} />
 
       <form onSubmit={submit} noValidate className="mt-6">
         <div className="card p-5 sm:p-8">
@@ -156,9 +207,9 @@ export default function Register() {
           </h1>
           <p className="mt-2 text-[0.95rem] text-ink-700">{STEP_INTROS[step]}</p>
 
-          {serverError && (
+          {items.length > 0 && (
             <div className="mt-5">
-              <Notice title={step === 2 ? 'We could not complete your registration' : undefined}>{serverError}</Notice>
+              <ErrorSummary items={items} note={note} onJump={focusField} />
             </div>
           )}
 
@@ -181,45 +232,43 @@ export default function Register() {
             {step === 0 && (
               <div className="page-enter space-y-5">
                 <TextField
-                  label="Full name" required name="name" autoComplete="name"
+                  fieldKey="full_name" label="Full name" required autoComplete="name"
                   value={form.full_name} onChange={(v) => set('full_name', v)} error={errors.full_name}
                 />
                 <SelectField
-                  label="Professional title" required autoComplete="honorific-prefix"
+                  fieldKey="title" label="Professional title" required autoComplete="honorific-prefix"
                   options={TITLES} value={form.title} onChange={(v) => set('title', v)} error={errors.title}
                 />
                 <TextField
-                  label="Current organisation or institution" required autoComplete="organization"
+                  fieldKey="organisation" label="Current organisation or institution" required autoComplete="organization"
                   value={form.organisation} onChange={(v) => set('organisation', v)} error={errors.organisation}
                 />
                 <TextField
-                  label="Current position" required autoComplete="organization-title"
+                  fieldKey="position" label="Current position" required autoComplete="organization-title"
                   value={form.position} onChange={(v) => set('position', v)} error={errors.position}
                 />
                 <SelectField
-                  label="State of residence or practice" required placeholder="Select your state"
+                  fieldKey="state" label="State of residence or practice" required placeholder="Select your state"
                   options={STATES} value={form.state} onChange={(v) => set('state', v)} error={errors.state}
                 />
-                <fieldset className="rounded-[var(--radius-lg)] bg-green-50 p-4">
+                <fieldset
+                  className={`rounded-[var(--radius-lg)] bg-green-50 p-4 ${errors.contact ? 'border-2 border-danger-600' : 'border-2 border-transparent'}`}
+                >
                   <legend className="px-1 text-sm font-bold text-green-900">How can we reach you?</legend>
                   <p className="mb-4 text-sm text-ink-700">Provide at least one. Both is better.</p>
                   <div className="space-y-5">
                     <TextField
-                      label="Phone or WhatsApp" tag="One contact required" type="tel" inputMode="tel" autoComplete="tel"
+                      fieldKey="phone" label="Phone or WhatsApp" tag="One contact required" type="tel" inputMode="tel" autoComplete="tel"
                       placeholder="0803 123 4567"
-                      value={form.phone} onChange={(v) => set('phone', v)} error={errors.phone}
+                      value={form.phone} onChange={(v) => set('phone', v)} error={errors.phone} invalid={Boolean(errors.contact)}
                     />
                     <TextField
-                      label="Email" tag="One contact required" type="email" inputMode="email" autoComplete="email"
+                      fieldKey="email" label="Email" tag="One contact required" type="email" inputMode="email" autoComplete="email"
                       placeholder="you@example.com"
-                      value={form.email} onChange={(v) => set('email', v)} error={errors.email}
+                      value={form.email} onChange={(v) => set('email', v)} error={errors.email} invalid={Boolean(errors.contact)}
                     />
                   </div>
-                  {hasContactError && (
-                    <p id="contact-error" tabIndex={-1} role="alert" className="field-error mt-4 outline-none">
-                      {errors.contact}
-                    </p>
-                  )}
+                  {errors.contact && <p id="field-contact-err" className="field-error mt-4">{errors.contact}</p>}
                 </fieldset>
               </div>
             )}
@@ -227,7 +276,7 @@ export default function Register() {
             {step === 1 && (
               <div className="page-enter space-y-7">
                 <SelectField
-                  label="Primary expertise" required placeholder="Select your main area"
+                  fieldKey="primary_expertise" label="Primary expertise" required placeholder="Select your main area"
                   options={EXPERTISE} value={form.primary_expertise}
                   onChange={(v) => {
                     set('primary_expertise', v)
@@ -239,7 +288,7 @@ export default function Register() {
                   error={errors.primary_expertise}
                 />
                 <CheckList
-                  legend="Secondary expertise"
+                  fieldKey="secondary_expertise" legend="Secondary expertise"
                   hint="Choose up to three."
                   max={MAX_SECONDARY}
                   options={EXPERTISE.filter((x) => x !== form.primary_expertise)}
@@ -249,30 +298,30 @@ export default function Register() {
                   columns={2}
                 />
                 <RadioList
-                  legend="Years of professional experience" required
+                  fieldKey="years_experience" legend="Years of professional experience" required
                   options={YEARS} value={form.years_experience}
                   onChange={(v) => set('years_experience', v)} error={errors.years_experience} columns={2}
                 />
                 <SelectField
-                  label="Highest qualification" required placeholder="Select your qualification"
+                  fieldKey="qualification" label="Highest qualification" required placeholder="Select your qualification"
                   options={QUALIFICATIONS} value={form.qualification}
                   onChange={(v) => set('qualification', v)} error={errors.qualification}
                 />
                 <CheckList
-                  legend="Professional memberships"
+                  fieldKey="memberships" legend="Professional memberships"
                   hint="These are checked later during verification."
                   options={MEMBERSHIPS} values={form.memberships}
                   onChange={(v) => set('memberships', v)} columns={2}
                 />
                 {form.memberships.includes('NES') && (
                   <TextField
-                    label="NES membership number"
+                    fieldKey="nes_number" label="NES membership number"
                     value={form.nes_number} onChange={(v) => set('nes_number', v)}
                   />
                 )}
                 {form.memberships.includes('IEPN') && (
                   <TextField
-                    label="IEPN licence or status"
+                    fieldKey="iepn_status" label="IEPN licence or status"
                     value={form.iepn_status} onChange={(v) => set('iepn_status', v)}
                   />
                 )}
@@ -286,23 +335,23 @@ export default function Register() {
             {step === 2 && (
               <div className="page-enter space-y-7">
                 <CheckList
-                  legend="Assignments you are available for"
+                  fieldKey="assignments" legend="Assignments you are available for"
                   hint="Choose all that apply."
                   options={ASSIGNMENTS} values={form.assignments}
                   onChange={(v) => set('assignments', v)} columns={2}
                 />
                 <RadioList
-                  legend="Geographic availability" required
+                  fieldKey="availability" legend="Geographic availability" required
                   options={AVAILABILITY} value={form.availability}
                   onChange={(v) => set('availability', v)} error={errors.availability} columns={2}
                 />
                 <TextField
-                  label="LinkedIn or profile link" type="url" inputMode="url" autoComplete="url"
+                  fieldKey="profile_url" label="LinkedIn or profile link" type="url" inputMode="url" autoComplete="url"
                   placeholder="linkedin.com/in/yourname"
                   value={form.profile_url} onChange={(v) => set('profile_url', v)} error={errors.profile_url}
                 />
                 <RadioList
-                  legend="May organisations discover you?" required
+                  fieldKey="discoverable" legend="May organisations discover you?" required
                   hint="Only experts who say Yes can appear in the searchable directory."
                   options={[
                     { value: 'yes', label: 'Yes, list me', sub: 'Organisations can find and contact me.' },
@@ -313,6 +362,7 @@ export default function Register() {
                   error={errors.discoverable}
                 />
                 <ConsentBox
+                  fieldKey="consent_contact"
                   checked={form.consent_contact}
                   onChange={(v) => set('consent_contact', v)}
                   error={errors.consent_contact}
@@ -326,6 +376,12 @@ export default function Register() {
           </div>
         </div>
 
+        {service && (
+          <div ref={serviceRef} className="mt-5">
+            <Notice title="We could not finish your registration">{service}</Notice>
+          </div>
+        )}
+
         <div className="mt-5 flex items-center gap-3">
           {step > 0 && (
             <button type="button" className="btn btn-ghost" onClick={back} disabled={submitting}>
@@ -338,7 +394,7 @@ export default function Register() {
             </button>
           ) : (
             <button type="submit" className="btn btn-primary ml-auto flex-1 sm:flex-none sm:px-10" disabled={submitting}>
-              {submitting ? (<><Spinner label="Submitting" /> Submitting</>) : 'Submit registration'}
+              {submitting ? (<><Spinner label="Submitting" /> Submitting</>) : service ? 'Try again' : 'Submit registration'}
             </button>
           )}
         </div>

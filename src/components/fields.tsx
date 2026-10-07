@@ -1,12 +1,19 @@
 import { useId, type ReactNode } from 'react'
 
+/** The DOM id of a field. The error summary links to it, and focus moves to it. */
+export const fieldId = (key: string) => `field-${key}`
+
 type BaseProps = {
+  /** Matches a key in FIELD_INFO. Becomes the element id. */
+  fieldKey: string
   label: string
   required?: boolean
   hint?: string
   error?: string
   /** Replaces the default Optional tag, for fields that are required as a group. */
   tag?: string
+  /** Show the invalid style even though the message sits elsewhere (for example a shared message). */
+  invalid?: boolean
 }
 
 function Wrap({
@@ -17,7 +24,7 @@ function Wrap({
   error,
   tag,
   children,
-}: BaseProps & { id: string; children: ReactNode }) {
+}: Pick<BaseProps, 'label' | 'required' | 'hint' | 'error' | 'tag'> & { id: string; children: ReactNode }) {
   return (
     <div>
       <label htmlFor={id} className="field-label">
@@ -30,7 +37,7 @@ function Wrap({
       </label>
       {children}
       {hint && !error && <p id={`${id}-hint`} className="field-hint">{hint}</p>}
-      {error && <p id={`${id}-err`} role="alert" className="field-error">{error}</p>}
+      {error && <p id={`${id}-err`} className="field-error">{error}</p>}
     </div>
   )
 }
@@ -46,16 +53,16 @@ export function TextField(
     autoComplete?: string
     inputMode?: 'text' | 'email' | 'tel' | 'url' | 'numeric'
     placeholder?: string
-    name?: string
   },
 ) {
-  const id = useId()
-  const { value, onChange, type = 'text', autoComplete, inputMode, placeholder, name, ...rest } = props
+  const { fieldKey, value, onChange, type = 'text', autoComplete, inputMode, placeholder, invalid, ...rest } = props
+  const id = fieldId(fieldKey)
+  const bad = Boolean(rest.error) || Boolean(invalid)
   return (
     <Wrap id={id} {...rest}>
       <input
         id={id}
-        name={name}
+        name={fieldKey}
         className="input"
         type={type}
         value={value}
@@ -63,7 +70,7 @@ export function TextField(
         inputMode={inputMode}
         placeholder={placeholder}
         aria-required={rest.required || undefined}
-        aria-invalid={rest.error ? true : undefined}
+        aria-invalid={bad ? true : undefined}
         aria-describedby={describe(id, rest.hint, rest.error)}
         onChange={(e) => onChange(e.target.value)}
       />
@@ -80,18 +87,20 @@ export function SelectField(
     autoComplete?: string
   },
 ) {
-  const id = useId()
-  const { value, onChange, options, placeholder = 'Select', autoComplete, ...rest } = props
+  const { fieldKey, value, onChange, options, placeholder = 'Select', autoComplete, invalid, ...rest } = props
+  const id = fieldId(fieldKey)
+  const bad = Boolean(rest.error) || Boolean(invalid)
   return (
     <Wrap id={id} {...rest}>
       <div className="relative">
         <select
           id={id}
+          name={fieldKey}
           className="input appearance-none pr-10"
           value={value}
           autoComplete={autoComplete}
           aria-required={rest.required || undefined}
-          aria-invalid={rest.error ? true : undefined}
+          aria-invalid={bad ? true : undefined}
           aria-describedby={describe(id, rest.hint, rest.error)}
           onChange={(e) => onChange(e.target.value)}
           style={{ color: value ? undefined : '#75827a' }}
@@ -114,8 +123,9 @@ export function SelectField(
 
 /** Single-choice list shown as accessible radio cards. */
 export function RadioList({
-  legend, required, hint, error, options, value, onChange, columns = 1,
+  fieldKey, legend, required, hint, error, options, value, onChange, columns = 1,
 }: {
+  fieldKey: string
   legend: string
   required?: boolean
   hint?: string
@@ -126,9 +136,16 @@ export function RadioList({
   columns?: 1 | 2
 }) {
   const name = useId()
+  const id = fieldId(fieldKey)
   const opts = options.map((o) => (typeof o === 'string' ? { value: o, label: o, sub: undefined } : { sub: undefined, ...o }))
   return (
-    <fieldset aria-describedby={error ? `${name}-err` : undefined}>
+    <fieldset
+      id={id}
+      tabIndex={-1}
+      data-invalid={error ? true : undefined}
+      className="group-field"
+      aria-describedby={error ? `${id}-err` : undefined}
+    >
       <legend className="field-label">
         {legend}
         {required ? <span className="ml-1 text-danger-600" aria-hidden="true">*</span> : null}
@@ -136,12 +153,13 @@ export function RadioList({
       {hint && <p className="field-hint -mt-1 mb-2">{hint}</p>}
       <div className={`grid gap-2 ${columns === 2 ? 'sm:grid-cols-2' : ''}`}>
         {opts.map((o) => (
-          <label key={o.value} className="choice" data-checked={value === o.value}>
+          <label key={o.value} className="choice" data-checked={value === o.value} data-error={error ? true : undefined}>
             <input
               type="radio"
               name={name}
               className="sr-only"
               checked={value === o.value}
+              aria-invalid={error ? true : undefined}
               onChange={() => onChange(o.value)}
             />
             <span className="choice-mark choice-radio" aria-hidden="true" />
@@ -152,15 +170,16 @@ export function RadioList({
           </label>
         ))}
       </div>
-      {error && <p id={`${name}-err`} role="alert" className="field-error">{error}</p>}
+      {error && <p id={`${id}-err`} className="field-error">{error}</p>}
     </fieldset>
   )
 }
 
 /** Multi-choice list with an optional maximum. */
 export function CheckList({
-  legend, required, hint, error, options, values, onChange, max, columns = 1,
+  fieldKey, legend, required, hint, error, options, values, onChange, max, columns = 1,
 }: {
+  fieldKey: string
   legend: string
   required?: boolean
   hint?: string
@@ -171,12 +190,18 @@ export function CheckList({
   max?: number
   columns?: 1 | 2
 }) {
-  const name = useId()
+  const id = fieldId(fieldKey)
   const atMax = max !== undefined && values.length >= max
   const toggle = (o: string) =>
     onChange(values.includes(o) ? values.filter((x) => x !== o) : atMax ? values : [...values, o])
   return (
-    <fieldset aria-describedby={error ? `${name}-err` : undefined}>
+    <fieldset
+      id={id}
+      tabIndex={-1}
+      data-invalid={error ? true : undefined}
+      className="group-field"
+      aria-describedby={error ? `${id}-err` : undefined}
+    >
       <legend className="field-label">
         {legend}
         {required ? (
@@ -210,20 +235,21 @@ export function CheckList({
           )
         })}
       </div>
-      {error && <p id={`${name}-err`} role="alert" className="field-error">{error}</p>}
+      {error && <p id={`${id}-err`} className="field-error">{error}</p>}
     </fieldset>
   )
 }
 
 export function ConsentBox({
-  checked, onChange, error, children,
+  fieldKey, checked, onChange, error, children,
 }: {
+  fieldKey: string
   checked: boolean
   onChange: (v: boolean) => void
   error?: string
   children: ReactNode
 }) {
-  const id = useId()
+  const id = fieldId(fieldKey)
   return (
     <div>
       <label className="choice" data-checked={checked} data-error={!!error}>
@@ -240,7 +266,7 @@ export function ConsentBox({
         <span className="choice-mark choice-check" aria-hidden="true" />
         <span className="flex-1 text-[0.95rem] leading-snug">{children}</span>
       </label>
-      {error && <p id={`${id}-err`} role="alert" className="field-error">{error}</p>}
+      {error && <p id={`${id}-err`} className="field-error">{error}</p>}
     </div>
   )
 }

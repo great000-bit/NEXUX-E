@@ -98,6 +98,10 @@
   to { opacity: 1; transform: translateY(0); }
 }
 .page-enter { animation: rise 420ms var(--ease) both; }
+@keyframes attention {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(180 35 24 / 0); }
+  30% { box-shadow: 0 0 0 6px rgb(180 35 24 / 0.28); }
+}
 @keyframes spin { to { transform: rotate(360deg); } }
 .spin { animation: spin 800ms linear infinite; }
 @keyframes pop {
@@ -138,7 +142,26 @@
 
   .field-label { display: block; font-weight: 700; font-size: 0.875rem; color: var(--color-ink-900); margin-bottom: 0.4rem; }
   .field-hint { font-size: 0.8125rem; color: var(--color-ink-500); margin-top: 0.35rem; }
-  .field-error { font-size: 0.8125rem; color: var(--color-danger-600); margin-top: 0.4rem; font-weight: 600; }
+  .field-error {
+    display: flex; align-items: flex-start; gap: 0.45rem;
+    font-size: 0.875rem; line-height: 1.4; color: var(--color-danger-600);
+    margin-top: 0.45rem; font-weight: 600;
+  }
+  /* Icon as well as colour, so the message does not rely on red alone. Hidden from screen readers. */
+  .field-error::before {
+    content: '!'; content: '!' / '';
+    flex: none; display: grid; place-items: center;
+    width: 1.1rem; height: 1.1rem; margin-top: 0.05rem; border-radius: 999px;
+    background: var(--color-danger-600); color: #fff; font-size: 0.7rem; font-weight: 800;
+  }
+  .group-field { border: 0; margin: 0; padding: 0; min-width: 0; border-radius: var(--radius-md); }
+  .group-field[data-invalid='true'] {
+    padding: 0.85rem; margin: -0.85rem;
+    box-shadow: inset 3px 0 0 var(--color-danger-600);
+    background: rgb(253 236 235 / 0.45);
+  }
+  .group-field:focus { outline: none; }
+  .attention { animation: attention 1.2s var(--ease) 1; }
 
   .input {
     width: 100%; min-height: 3rem; padding: 0.7rem 0.95rem;

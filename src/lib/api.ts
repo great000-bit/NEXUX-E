@@ -1,40 +1,53 @@
 import { isConfigured } from './config'
-import { toPayload, type FormData } from './form'
+import { toPayload, type ErrorKey, type FormData } from './form'
 
+/**
+ * A rejection that belongs to one field: show the message under it and send the person there.
+ * A service problem has no field: show it as a notice and let them try again.
+ */
 export type RegisterResult =
   | { ok: true; expertId: string }
-  | { ok: false; code: string; message: string }
+  | { ok: false; kind: 'field'; field: ErrorKey; message: string }
+  | { ok: false; kind: 'service'; message: string }
+  | { ok: false; kind: 'unknown' }
 
-const MESSAGES: Record<string, string> = {
-  duplicate_email:
-    'This email address is already registered. If this is you, your Expert ID was shown after you registered. Otherwise, use a different email.',
-  duplicate_phone:
-    'This phone number is already registered. If this is you, your Expert ID was shown after you registered. Otherwise, use a different number.',
-  rate_limited: 'Too many attempts from this network. Please wait a few minutes and try again.',
-  contact_required: 'Provide at least a phone number or an email address.',
-  invalid_email: 'The email address looks incorrect. Please check it and try again.',
-  invalid_url: 'The profile link must start with http:// or https://. Please check it and try again.',
-  invalid_phone: 'The phone number looks incorrect. Please check it and try again.',
-  consent_required: 'Your consent to be contacted is required to register.',
-  too_many_secondary: 'Please choose no more than three secondary areas of expertise.',
-  invalid: 'Some details could not be accepted. Please review each screen and try again.',
-  not_configured: 'Registration is not available yet because the service is not configured.',
-  unavailable: 'Registration is temporarily unavailable. Please try again shortly. Your answers are saved.',
-  network: 'We could not reach the server. Check your connection and try again. Your answers are saved.',
+const ALREADY = 'If this is you, your Expert ID was shown after you registered.'
+
+const FIELD_ERRORS: Record<string, { field: ErrorKey; message: string }> = {
+  duplicate_email: { field: 'email', message: `This email is already registered. ${ALREADY}` },
+  duplicate_phone: { field: 'phone', message: `This phone number is already registered. ${ALREADY}` },
+  invalid_email: { field: 'email', message: 'Enter a valid email address, like name@example.com.' },
+  invalid_phone: { field: 'phone', message: 'Enter a valid phone number, like 0803 123 4567.' },
+  invalid_url: { field: 'profile_url', message: 'Enter a valid link that starts with http or https, or leave it empty.' },
+  contact_required: { field: 'contact', message: 'Add a phone number or an email address so we can reach you. One is enough.' },
+  consent_required: { field: 'consent_contact', message: 'Please tick this box. We need your consent to contact you before we can register you.' },
+  too_many_secondary: { field: 'secondary_expertise', message: 'You can choose up to 3 secondary areas. Please untick some.' },
 }
 
-export const messageFor = (code: string) => MESSAGES[code] ?? MESSAGES.invalid
+const SERVICE_ERRORS: Record<string, string> = {
+  rate_limited: 'Many people are registering from this network right now. Please wait a few minutes, then try again.',
+  not_configured: 'Registration is not open yet. Please try again later.',
+  unavailable: 'We could not save your registration just now. Please try again in a moment. Your answers are saved.',
+  network: 'We could not connect. Please check your internet and try again. Your answers are saved.',
+}
 
-/** Tell a real connection problem apart from a server or configuration rejection. */
+/** Tell a real connection problem apart from a server rejection. */
 function failure(error: { message?: string; code?: string; status?: number }): RegisterResult {
   console.error('register_expert failed', error.status ?? '', error.code ?? '', error.message ?? '')
-  const offline = !error.status || /failed to fetch|network|load failed/i.test(error.message ?? '')
-  const code = offline ? 'network' : 'unavailable'
-  return { ok: false, code, message: MESSAGES[code] }
+  // A real connection failure has no database error code and a fetch style message.
+  const offline = !error.code && /fetch|network|load failed|timed? ?out/i.test(error.message ?? '')
+  return { ok: false, kind: 'service', message: SERVICE_ERRORS[offline ? 'network' : 'unavailable'] }
+}
+
+function fromCode(code: string): RegisterResult {
+  const field = FIELD_ERRORS[code]
+  if (field) return { ok: false, kind: 'field', ...field }
+  if (SERVICE_ERRORS[code]) return { ok: false, kind: 'service', message: SERVICE_ERRORS[code] }
+  return { ok: false, kind: 'unknown' }
 }
 
 export async function registerExpert(form: FormData): Promise<RegisterResult> {
-  if (!isConfigured) return { ok: false, code: 'not_configured', message: MESSAGES.not_configured }
+  if (!isConfigured) return fromCode('not_configured')
   try {
     // Loaded on demand so the public pages stay light on weak mobile data.
     const { supabase } = await import('./supabase')
@@ -42,9 +55,9 @@ export async function registerExpert(form: FormData): Promise<RegisterResult> {
     if (error) return failure(error)
     const res = data as { ok: boolean; expert_id?: string; error?: string }
     if (res?.ok && res.expert_id) return { ok: true, expertId: res.expert_id }
-    const code = res?.error ?? 'invalid'
-    return { ok: false, code, message: messageFor(code) }
-  } catch {
-    return { ok: false, code: 'network', message: MESSAGES.network }
+    return fromCode(res?.error ?? 'invalid')
+  } catch (e) {
+    console.error('register_expert threw', e)
+    return fromCode('network')
   }
 }

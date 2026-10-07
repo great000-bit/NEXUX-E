@@ -50,7 +50,43 @@ export const emptyForm: FormData = {
   website: '',
 }
 
-export type Errors = Partial<Record<keyof FormData | 'contact', string>>
+export type ErrorKey = keyof FormData | 'contact'
+export type Errors = Partial<Record<ErrorKey, string>>
+
+export type StepIndex = 0 | 1 | 2
+export const STEP_NAMES = ['Identity', 'Expertise', 'Opportunity profile'] as const
+
+/** Where each checkable field lives and what to call it when we point at it. Order is page order. */
+export const FIELD_INFO: Partial<Record<ErrorKey, { label: string; step: StepIndex; anchor: string }>> = {
+  full_name: { label: 'Full name', step: 0, anchor: 'full_name' },
+  title: { label: 'Title', step: 0, anchor: 'title' },
+  organisation: { label: 'Organisation', step: 0, anchor: 'organisation' },
+  position: { label: 'Position', step: 0, anchor: 'position' },
+  state: { label: 'State', step: 0, anchor: 'state' },
+  contact: { label: 'Phone number or email', step: 0, anchor: 'phone' },
+  phone: { label: 'Phone number', step: 0, anchor: 'phone' },
+  email: { label: 'Email address', step: 0, anchor: 'email' },
+  primary_expertise: { label: 'Primary expertise', step: 1, anchor: 'primary_expertise' },
+  secondary_expertise: { label: 'Secondary expertise', step: 1, anchor: 'secondary_expertise' },
+  years_experience: { label: 'Years of experience', step: 1, anchor: 'years_experience' },
+  qualification: { label: 'Highest qualification', step: 1, anchor: 'qualification' },
+  availability: { label: 'Geographic availability', step: 2, anchor: 'availability' },
+  profile_url: { label: 'Profile link', step: 2, anchor: 'profile_url' },
+  discoverable: { label: 'Discoverability', step: 2, anchor: 'discoverable' },
+  consent_contact: { label: 'Consent to be contacted', step: 2, anchor: 'consent_contact' },
+}
+
+const FIELD_ORDER = Object.keys(FIELD_INFO) as ErrorKey[]
+
+/** Errors as an ordered list, in the order they appear on the page. */
+export function errorList(errors: Errors): { key: ErrorKey; label: string; message: string; anchor: string }[] {
+  return FIELD_ORDER.filter((k) => errors[k]).map((k) => ({
+    key: k,
+    label: FIELD_INFO[k]!.label,
+    message: errors[k]!,
+    anchor: FIELD_INFO[k]!.anchor,
+  }))
+}
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
@@ -76,7 +112,7 @@ export function isValidUrl(raw: string): boolean {
   }
 }
 
-export function validateStep(step: 0 | 1 | 2, f: FormData): Errors {
+export function validateStep(step: StepIndex, f: FormData): Errors {
   const e: Errors = {}
   const req = (k: keyof FormData, msg: string) => {
     const v = f[k]
@@ -84,39 +120,49 @@ export function validateStep(step: 0 | 1 | 2, f: FormData): Errors {
   }
 
   if (step === 0) {
-    req('full_name', 'Enter your full name.')
-    req('title', 'Choose your title.')
-    req('organisation', 'Enter your current organisation or institution.')
-    req('position', 'Enter your current position.')
-    req('state', 'Choose your state of residence or practice.')
+    req('full_name', 'Enter your full name, like Ada Obi.')
+    req('title', 'Choose your title from the list.')
+    req('organisation', 'Enter the organisation or institution where you work.')
+    req('position', 'Enter your current position, like Senior Lecturer.')
+    req('state', 'Choose your state from the list.')
     const hasPhone = f.phone.trim() !== ''
     const hasEmail = f.email.trim() !== ''
     if (!hasPhone && !hasEmail) {
-      e.contact = 'Provide at least one way to reach you: a phone number or an email address.'
+      e.contact = 'Add a phone number or an email address so we can reach you. One is enough.'
     }
-    if (hasPhone && !isValidPhone(f.phone)) e.phone = 'Enter a valid phone number, for example 0803 123 4567.'
-    if (hasEmail && !EMAIL_RE.test(f.email.trim())) e.email = 'Enter a valid email address.'
+    if (hasPhone && !isValidPhone(f.phone)) e.phone = 'Enter a valid phone number, like 0803 123 4567.'
+    if (hasEmail && !EMAIL_RE.test(f.email.trim())) e.email = 'Enter a valid email address, like name@example.com.'
   }
 
   if (step === 1) {
-    req('primary_expertise', 'Choose your primary expertise.')
-    req('years_experience', 'Choose your years of experience.')
-    req('qualification', 'Choose your highest qualification.')
+    req('primary_expertise', 'Choose your main area of expertise.')
+    req('years_experience', 'Choose how many years you have worked professionally.')
+    req('qualification', 'Choose your highest qualification from the list.')
     if (f.secondary_expertise.length > MAX_SECONDARY) {
-      e.secondary_expertise = `Choose up to ${MAX_SECONDARY} secondary areas.`
+      e.secondary_expertise = `You can choose up to ${MAX_SECONDARY} secondary areas. Please untick some.`
     }
   }
 
   if (step === 2) {
-    req('availability', 'Choose your geographic availability.')
-    if (f.discoverable === '') e.discoverable = 'Tell us whether organisations may discover you.'
-    if (!f.consent_contact) e.consent_contact = 'Your consent to be contacted is required to register.'
+    req('availability', 'Choose where you are available to work.')
+    if (f.discoverable === '') e.discoverable = 'Choose Yes or No to tell us whether organisations may find you.'
+    if (!f.consent_contact) e.consent_contact = 'Please tick this box. We need your consent to contact you before we can register you.'
     if (f.profile_url.trim() && !isValidUrl(f.profile_url.trim())) {
-      e.profile_url = 'Enter a valid link, for example linkedin.com/in/yourname.'
+      e.profile_url = 'Enter a valid link, like linkedin.com/in/yourname, or leave it empty.'
     }
   }
 
   return e
+}
+
+/** First screen (0 to 2) that has a problem, or null. */
+export function firstInvalidStep(f: FormData, upTo: StepIndex = 2): { step: StepIndex; errors: Errors } | null {
+  for (const s of [0, 1, 2] as const) {
+    if (s > upTo) break
+    const errors = validateStep(s, f)
+    if (Object.keys(errors).length) return { step: s, errors }
+  }
+  return null
 }
 
 export function toPayload(f: FormData) {
