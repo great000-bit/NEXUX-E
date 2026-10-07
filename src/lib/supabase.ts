@@ -5,6 +5,6 @@ export { isConfigured }
 
 // A placeholder client keeps the app rendering when env vars are missing.
 // Pages check `isConfigured` and show a clear message instead of failing silently.
-export const supabase = createClient(SUPABASE_URL ?? 'http://localhost:54321', SUPABASE_ANON_KEY ?? 'missing-anon-key', {
+export const supabase = createClient(SUPABASE_URL ?? 'https://not-configured.invalid', SUPABASE_ANON_KEY ?? 'missing-anon-key', {
   auth: { persistSession: true, autoRefreshToken: true },
 })
