@@ -167,7 +167,7 @@ test('email: subject, expert id, name, link, brand colours and no dashes', () =>
     assert.ok(part.includes('https://register.nexuse.org'))
     assert.ok(part.includes('founding expert'))
     assert.ok(part.includes('after the conference'.charAt(0).toUpperCase() + 'fter the conference') || part.includes('After the conference'))
-    assert.ok(!/[—–]/.test(part), 'no em or en dashes')
+    assert.ok(!new RegExp(`[${String.fromCharCode(0x2014, 0x2013)}]`).test(part), 'no em or en dashes')
   }
   assert.ok(mail.html.includes('#06361e') && mail.html.includes('#c5dc3f'))
 })
