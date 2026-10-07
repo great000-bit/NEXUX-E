@@ -5,6 +5,8 @@ type BaseProps = {
   required?: boolean
   hint?: string
   error?: string
+  /** Replaces the default Optional tag, for fields that are required as a group. */
+  tag?: string
 }
 
 function Wrap({
@@ -13,6 +15,7 @@ function Wrap({
   required,
   hint,
   error,
+  tag,
   children,
 }: BaseProps & { id: string; children: ReactNode }) {
   return (
@@ -22,7 +25,7 @@ function Wrap({
         {required ? (
           <span className="ml-1 text-danger-600" aria-hidden="true">*</span>
         ) : (
-          <span className="ml-2 text-xs font-medium text-ink-500">Optional</span>
+          <span className="ml-2 text-xs font-medium text-ink-500">{tag ?? 'Optional'}</span>
         )}
       </label>
       {children}
@@ -91,7 +94,7 @@ export function SelectField(
           aria-invalid={rest.error ? true : undefined}
           aria-describedby={describe(id, rest.hint, rest.error)}
           onChange={(e) => onChange(e.target.value)}
-          style={{ color: value ? undefined : 'var(--color-ink-300)' }}
+          style={{ color: value ? undefined : '#75827a' }}
         >
           <option value="" disabled>{placeholder}</option>
           {options.map((o) => (

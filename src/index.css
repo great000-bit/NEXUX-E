@@ -147,7 +147,7 @@
     font: inherit; font-size: 1rem; /* 16px stops iOS zoom on focus */
     transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease), background-color 160ms;
   }
-  .input::placeholder { color: var(--color-ink-300); }
+  .input::placeholder { color: #75827a; }
   .input:hover { border-color: var(--color-green-600); }
   .input:focus { outline: none; border-color: var(--color-blue-600); box-shadow: var(--ring); }
   .input[aria-invalid='true'] { border-color: var(--color-danger-600); background: var(--color-danger-100); }
@@ -155,7 +155,7 @@
 
   .choice {
     display: flex; align-items: flex-start; gap: 0.75rem;
-    padding: 0.8rem 0.95rem; cursor: pointer;
+    padding: 0.65rem 0.9rem; cursor: pointer;
     background: var(--color-surface); border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-md);
     transition: border-color 160ms var(--ease), background-color 160ms var(--ease), box-shadow 160ms var(--ease);

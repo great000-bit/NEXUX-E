@@ -126,7 +126,6 @@ export default function Register() {
       navigate('/registered', { replace: true, state: { expertId: res.expertId } })
       return
     }
-    setServerError(res.message)
     // Send people to the screen that holds the problem field.
     if (res.code === 'duplicate_email') {
       setStep(0)
@@ -134,6 +133,8 @@ export default function Register() {
     } else if (res.code === 'duplicate_phone') {
       setStep(0)
       setErrors({ phone: res.message })
+    } else {
+      setServerError(res.message)
     }
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -204,12 +205,12 @@ export default function Register() {
                   <p className="mb-4 text-sm text-ink-700">Provide at least one. Both is better.</p>
                   <div className="space-y-5">
                     <TextField
-                      label="Phone or WhatsApp" type="tel" inputMode="tel" autoComplete="tel"
+                      label="Phone or WhatsApp" tag="One contact required" type="tel" inputMode="tel" autoComplete="tel"
                       placeholder="0803 123 4567"
                       value={form.phone} onChange={(v) => set('phone', v)} error={errors.phone}
                     />
                     <TextField
-                      label="Email" type="email" inputMode="email" autoComplete="email"
+                      label="Email" tag="One contact required" type="email" inputMode="email" autoComplete="email"
                       placeholder="you@example.com"
                       value={form.email} onChange={(v) => set('email', v)} error={errors.email}
                     />
@@ -239,7 +240,7 @@ export default function Register() {
                 />
                 <CheckList
                   legend="Secondary expertise"
-                  hint="Optional. Choose up to three."
+                  hint="Choose up to three."
                   max={MAX_SECONDARY}
                   options={EXPERTISE.filter((x) => x !== form.primary_expertise)}
                   values={form.secondary_expertise}
@@ -259,7 +260,7 @@ export default function Register() {
                 />
                 <CheckList
                   legend="Professional memberships"
-                  hint="Optional. These are checked later during verification."
+                  hint="These are checked later during verification."
                   options={MEMBERSHIPS} values={form.memberships}
                   onChange={(v) => set('memberships', v)} columns={2}
                 />
@@ -286,7 +287,7 @@ export default function Register() {
               <div className="page-enter space-y-7">
                 <CheckList
                   legend="Assignments you are available for"
-                  hint="Optional. Choose all that apply."
+                  hint="Choose all that apply."
                   options={ASSIGNMENTS} values={form.assignments}
                   onChange={(v) => set('assignments', v)} columns={2}
                 />

@@ -66,13 +66,13 @@ export default function Registered() {
         className="relative mt-8 overflow-hidden rounded-[var(--radius-xl)] bg-green-900 px-6 py-8 text-white shadow-lg"
       >
         <div aria-hidden="true" className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-green-700/60 blur-2xl" />
-        <p id="label" className="sr-only">Your Expert ID</p>
         <p id="id-label" className="relative text-xs font-bold uppercase tracking-[0.22em] text-lime-500">
           Your Expert ID
         </p>
         <p
           id="expert-id"
           className="relative mt-3 select-all font-display text-[2.4rem] font-semibold tracking-wide sm:text-5xl"
+          style={{ fontVariantNumeric: 'lining-nums tabular-nums' }}
         >
           {expertId}
         </p>
@@ -105,8 +105,7 @@ export default function Registered() {
       <section className="mt-6 rounded-[var(--radius-lg)] bg-green-100 p-6 text-left">
         <h2 className="text-xl font-semibold text-green-900">Next: complete your verification</h2>
         <p className="mt-2 text-[0.95rem] text-ink-700">
-          Verified Experts rank higher when organisations search. After the conference we will invite you to confirm
-          your membership, licence and credentials using your Expert ID. There is nothing more to do today.
+          Complete verification to earn Verified Expert status. After the conference we will invite you to confirm your membership, licence and credentials using your Expert ID. There is nothing more to do today.
         </p>
       </section>
 

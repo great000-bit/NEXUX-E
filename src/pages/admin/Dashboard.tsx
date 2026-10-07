@@ -99,8 +99,8 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
         </div>
       </div>
 
-      <dl className="mt-6 grid grid-cols-3 gap-3">
-        <Stat label="Total registered" value={rows ? stats.total : null} accent />
+      <dl className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
+        <Stat label="Total" value={rows ? stats.total : null} accent />
         <Stat label="Today" value={rows ? stats.today : null} />
         <Stat label="Discoverable" value={rows ? stats.discoverable : null} />
       </dl>
@@ -226,9 +226,9 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
 
 function Stat({ label, value, accent }: { label: string; value: number | null; accent?: boolean }) {
   return (
-    <div className={`rounded-[var(--radius-lg)] p-4 ${accent ? 'bg-green-900 text-white' : 'border border-line bg-surface'}`}>
-      <dt className={`text-xs font-bold uppercase tracking-wider ${accent ? 'text-lime-500' : 'text-ink-500'}`}>{label}</dt>
-      <dd className="mt-1 font-display text-3xl font-semibold">{value === null ? '–' : value.toLocaleString()}</dd>
+    <div className={`min-w-0 rounded-[var(--radius-lg)] p-3 sm:p-4 ${accent ? 'bg-green-900 text-white' : 'border border-line bg-surface'}`}>
+      <dt className={`text-[0.65rem] font-bold uppercase leading-tight tracking-wider sm:text-xs ${accent ? 'text-lime-500' : 'text-ink-500'}`}>{label}</dt>
+      <dd className="mt-1 font-display text-3xl font-semibold">{value === null ? '...' : value.toLocaleString()}</dd>
     </div>
   )
 }
@@ -304,7 +304,7 @@ function Detail({ expert: r, onClose }: { expert: Expert; onClose: () => void })
           <div key={k} className="grid grid-cols-[9rem_1fr] gap-3 py-3 text-sm">
             <dt className="font-bold text-ink-500">{k}</dt>
             <dd className="break-words text-ink-900">
-              {v ? (k === 'Profile link' ? <a className="text-blue-700 underline" href={v} target="_blank" rel="noopener noreferrer">{v}</a> : v) : <span className="text-ink-300">Not provided</span>}
+              {v ? (k === 'Profile link' && /^https?:\/\//i.test(v) ? <a className="text-blue-700 underline" href={v} target="_blank" rel="noopener noreferrer">{v}</a> : v) : <span className="text-ink-300">Not provided</span>}
             </dd>
           </div>
         ))}
