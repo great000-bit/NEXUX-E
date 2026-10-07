@@ -58,6 +58,7 @@ as $$
 declare
   v_email text := nullif(lower(btrim(payload ->> 'email')), '');
   v_phone text := public.normalise_phone(payload ->> 'phone');
+  v_url text := nullif(btrim(coalesce(payload ->> 'profile_url', '')), '');
   v_secondary text[] := coalesce(array(select jsonb_array_elements_text(coalesce(payload -> 'secondary_expertise', '[]'::jsonb))), '{}');
   v_memberships text[] := coalesce(array(select jsonb_array_elements_text(coalesce(payload -> 'memberships', '[]'::jsonb))), '{}');
   v_assignments text[] := coalesce(array(select jsonb_array_elements_text(coalesce(payload -> 'assignments', '[]'::jsonb))), '{}');
@@ -100,6 +101,9 @@ begin
   if v_phone is not null and length(v_phone) not between 10 and 15 then
     return jsonb_build_object('ok', false, 'error', 'invalid_phone');
   end if;
+  if v_url is not null and v_url !~* '^https?://[^[:space:]]+$' then
+    return jsonb_build_object('ok', false, 'error', 'invalid_url');
+  end if;
   if cardinality(v_secondary) > 3 then
     return jsonb_build_object('ok', false, 'error', 'too_many_secondary');
   end if;
@@ -133,7 +137,7 @@ begin
       nullif(btrim(coalesce(payload ->> 'iepn_status', '')), ''),
       v_assignments,
       payload ->> 'availability',
-      nullif(btrim(coalesce(payload ->> 'profile_url', '')), ''),
+      v_url,
       (payload ->> 'discoverable')::boolean,
       true
     )

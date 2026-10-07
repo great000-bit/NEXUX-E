@@ -42,6 +42,8 @@ create table public.experts (
 
   constraint experts_contact_present check (phone is not null or email is not null),
   constraint experts_secondary_max3 check (cardinality(secondary_expertise) <= 3),
+  -- Only web links are accepted, so a stored value can never be a script URL.
+  constraint experts_profile_url_http check (profile_url is null or profile_url ~* '^https?://[^[:space:]]+$'),
   constraint experts_consent_contact_true check (consent_contact is true),
   constraint experts_title_valid check (title in ('Prof','Dr','Engr','Arc','Tpl','Mr','Mrs','Ms','Other')),
   constraint experts_years_valid check (years_experience in ('Under 5','5 to 10','11 to 20','21 to 30','30+')),

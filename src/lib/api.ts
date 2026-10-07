@@ -13,6 +13,7 @@ const MESSAGES: Record<string, string> = {
   rate_limited: 'Too many attempts from this network. Please wait a few minutes and try again.',
   contact_required: 'Provide at least a phone number or an email address.',
   invalid_email: 'The email address looks incorrect. Please check it and try again.',
+  invalid_url: 'The profile link must start with http:// or https://. Please check it and try again.',
   invalid_phone: 'The phone number looks incorrect. Please check it and try again.',
   consent_required: 'Your consent to be contacted is required to register.',
   too_many_secondary: 'Please choose no more than three secondary areas of expertise.',
