@@ -19,10 +19,19 @@ const MESSAGES: Record<string, string> = {
   too_many_secondary: 'Please choose no more than three secondary areas of expertise.',
   invalid: 'Some details could not be accepted. Please review each screen and try again.',
   not_configured: 'Registration is not available yet because the service is not configured.',
+  unavailable: 'Registration is temporarily unavailable. Please try again shortly. Your answers are saved.',
   network: 'We could not reach the server. Check your connection and try again. Your answers are saved.',
 }
 
 export const messageFor = (code: string) => MESSAGES[code] ?? MESSAGES.invalid
+
+/** Tell a real connection problem apart from a server or configuration rejection. */
+function failure(error: { message?: string; code?: string; status?: number }): RegisterResult {
+  console.error('register_expert failed', error.status ?? '', error.code ?? '', error.message ?? '')
+  const offline = !error.status || /failed to fetch|network|load failed/i.test(error.message ?? '')
+  const code = offline ? 'network' : 'unavailable'
+  return { ok: false, code, message: MESSAGES[code] }
+}
 
 export async function registerExpert(form: FormData): Promise<RegisterResult> {
   if (!isConfigured) return { ok: false, code: 'not_configured', message: MESSAGES.not_configured }
@@ -30,7 +39,7 @@ export async function registerExpert(form: FormData): Promise<RegisterResult> {
     // Loaded on demand so the public pages stay light on weak mobile data.
     const { supabase } = await import('./supabase')
     const { data, error } = await supabase.rpc('register_expert', { payload: toPayload(form) })
-    if (error) return { ok: false, code: 'network', message: MESSAGES.network }
+    if (error) return failure(error)
     const res = data as { ok: boolean; expert_id?: string; error?: string }
     if (res?.ok && res.expert_id) return { ok: true, expertId: res.expert_id }
     const code = res?.error ?? 'invalid'
