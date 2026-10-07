@@ -1,0 +1,6 @@
+project_id = "bkbkrjgkannexiwuslyu"
+
+# This function is called by the database (trigger and cron), not by browsers. It checks its own
+# x-webhook-secret header, so Supabase's JWT check is switched off for it.
+[functions.send-confirmation-emails]
+verify_jwt = false
