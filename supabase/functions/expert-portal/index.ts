@@ -6,7 +6,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { checkFile, extensionOf, MAX_BYTES } from './filecheck.ts'
 import { codeHash, ipHash, isPlausibleEmail, normaliseEmail, randomCode, randomHex, sha256Hex } from './hash.ts'
-import { buildCodeEmail } from './mail.ts'
+import { buildCodeEmail, buildSendBody } from './mail.ts'
 
 declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined
 
@@ -294,6 +294,14 @@ class PortalError extends Error {
   }
 }
 
+/** An environment secret wins. Otherwise the address lives in public.verification_settings. */
+async function replyToAddress(): Promise<string> {
+  const fromEnv = env('EMAIL_REPLY_TO')
+  if (fromEnv) return fromEnv
+  const { data } = await db.from('verification_settings').select('value').eq('key', 'email_reply_to').maybeSingle()
+  return typeof data?.value === 'string' ? data.value : ''
+}
+
 async function sendCodeEmail(to: string, mail: { subject: string; html: string; text: string }) {
   try {
     const apiKey = await secret('RESEND_API_KEY', 'resend_api_key')
@@ -304,14 +312,16 @@ async function sendCodeEmail(to: string, mail: { subject: string; html: string; 
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: env('EMAIL_FROM', 'NEXUS-E <noreply@nexuse.org>'),
-        to: [to],
-        subject: mail.subject,
-        html: mail.html,
-        text: mail.text,
-        ...(env('EMAIL_REPLY_TO') ? { reply_to: env('EMAIL_REPLY_TO') } : {}),
-      }),
+      body: JSON.stringify(
+        buildSendBody({
+          from: env('EMAIL_FROM', 'NEXUS-E <noreply@nexuse.org>'),
+          to,
+          subject: mail.subject,
+          html: mail.html,
+          text: mail.text,
+          replyTo: await replyToAddress(),
+        }),
+      ),
     })
     if (!res.ok) console.error('Sign-in code email was not accepted', res.status)
   } catch {

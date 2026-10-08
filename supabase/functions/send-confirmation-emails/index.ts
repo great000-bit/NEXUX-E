@@ -6,7 +6,7 @@
 // Secrets come from the function environment or Supabase Vault. Nothing here is ever logged except ids and error text.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { composeEmail } from './status-emails.ts'
-import { classifyResendError, processOutbox, type Deps, type OutboxJob, type SendResult } from './logic.ts'
+import { buildSendBody, classifyResendError, processOutbox, type Deps, type OutboxJob, type SendResult } from './logic.ts'
 
 const env = (name: string, fallback = ''): string => Deno.env.get(name) ?? fallback
 const intEnv = (name: string, fallback: number): number => {
@@ -51,7 +51,15 @@ Deno.serve(async (req) => {
 
   const apiKey = await secret('RESEND_API_KEY', 'resend_api_key')
   const from = env('EMAIL_FROM', 'NEXUS-E <noreply@nexuse.org>')
-  const replyTo = env('EMAIL_REPLY_TO')
+  // An environment secret wins. Otherwise the value lives in public.verification_settings, where it is easy to change.
+  const setting = async (envName: string, key: string): Promise<string> => {
+    const fromEnv = env(envName)
+    if (fromEnv) return fromEnv
+    const { data } = await db.from('verification_settings').select('value').eq('key', key).maybeSingle()
+    return typeof data?.value === 'string' ? data.value : ''
+  }
+  const replyTo = await setting('EMAIL_REPLY_TO', 'email_reply_to')
+  const contactEmail = await setting('CONTACT_EMAIL', 'contact_email')
   const siteUrl = env('SITE_URL', 'https://register.nexuse.org')
   const maxAttempts = intEnv('EMAIL_MAX_ATTEMPTS', 5)
   const dailyCap = intEnv('EMAIL_DAILY_CAP', 100)
@@ -101,7 +109,7 @@ Deno.serve(async (req) => {
     async send(job): Promise<SendResult> {
       let email
       try {
-        email = composeEmail(job, { siteUrl, contactEmail: env('CONTACT_EMAIL') || undefined })
+        email = composeEmail(job, { siteUrl, contactEmail: contactEmail || undefined })
       } catch (e) {
         // An unknown template can never succeed, so give up on the row instead of retrying.
         return { ok: false, kind: 'permanent', message: e instanceof Error ? e.message : 'Could not build the email' }
@@ -116,14 +124,9 @@ Deno.serve(async (req) => {
             // The outbox row id never repeats, even if test data is deleted and Expert IDs restart at 1.
             'Idempotency-Key': `nexus-e-confirmation/outbox-${job.id}`,
           },
-          body: JSON.stringify({
-            from,
-            to: [job.to_email],
-            subject: email.subject,
-            html: email.html,
-            text: email.text,
-            ...(replyTo ? { reply_to: replyTo } : {}),
-          }),
+          body: JSON.stringify(
+            buildSendBody({ from, to: job.to_email, subject: email.subject, html: email.html, text: email.text, replyTo }),
+          ),
         })
         const body = await res.json().catch(() => null)
         if (res.ok && body?.id) return { ok: true, providerId: String(body.id) }

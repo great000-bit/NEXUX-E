@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { checkFile, detectType, extensionOf, MAX_BYTES } from './filecheck.ts'
 import { codeHash, ipHash, isPlausibleEmail, normaliseEmail, randomCode, randomHex, sha256Hex } from './hash.ts'
-import { buildCodeEmail, CODE_SUBJECT, greeting } from './mail.ts'
+import { buildCodeEmail, buildSendBody, CODE_SUBJECT, greeting } from './mail.ts'
 
 const bytes = (...b: number[]) => new Uint8Array(b)
 const text = (s: string) => new TextEncoder().encode(s)
@@ -111,4 +111,11 @@ test('sign-in code email: shows the code, escapes the name, no dashes', () => {
   }
   assert.equal(greeting('Other', 'Ada Obi'), 'Ada Obi')
   assert.equal(greeting('Dr', 'Dr Ada Obi'), 'Dr Ada Obi')
+})
+
+test('sign-in code emails also carry the Reply-To header when one is configured', () => {
+  const mail = buildCodeEmail({ title: 'Dr', fullName: 'Ada Obi', code: '123456' })
+  const body = buildSendBody({ from: 'NEXUS-E <noreply@nexuse.org>', to: 'ada@example.org', ...mail, replyTo: 'help@nexuse.org' })
+  assert.equal(body.reply_to, 'help@nexuse.org')
+  assert.ok(!('reply_to' in buildSendBody({ from: 'a', to: 'b', ...mail })))
 })

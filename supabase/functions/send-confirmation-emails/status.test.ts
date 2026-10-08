@@ -2,6 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { buildEmail } from './email.ts'
 import { composeEmail, STATUS_TEMPLATES, type EmailJob } from './status-emails.ts'
+import { buildSendBody } from './logic.ts'
 
 const opts = { siteUrl: 'https://register.nexuse.org' }
 const job = (template: string, payload: Record<string, unknown> = {}): EmailJob => ({
@@ -82,4 +83,13 @@ test('messages are escaped in HTML and trimmed to a sensible length', () => {
 
 test('an unknown template is an error, so the sender can give up on that row', () => {
   assert.throws(() => composeEmail(job('mystery'), opts), /Unknown email template/)
+})
+
+test('every email carries a Reply-To header when one is configured, and none when it is not', () => {
+  const base = { from: 'NEXUS-E <noreply@nexuse.org>', to: 'ada@example.org', subject: 's', html: '<p>h</p>', text: 't' }
+  const withReply = buildSendBody({ ...base, replyTo: 'help@nexuse.org' })
+  assert.equal(withReply.reply_to, 'help@nexuse.org')
+  assert.deepEqual(withReply.to, ['ada@example.org'])
+  assert.ok(!('reply_to' in buildSendBody(base)))
+  assert.ok(!('reply_to' in buildSendBody({ ...base, replyTo: '' })))
 })

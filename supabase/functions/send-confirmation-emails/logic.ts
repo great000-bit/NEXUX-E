@@ -149,3 +149,15 @@ export async function processOutbox(deps: Deps): Promise<Summary> {
     }
   }
 }
+
+/** The JSON body for Resend. A Reply-To header is added only when an address is configured. */
+export function buildSendBody(i: { from: string; to: string; subject: string; html: string; text: string; replyTo?: string }) {
+  return {
+    from: i.from,
+    to: [i.to],
+    subject: i.subject,
+    html: i.html,
+    text: i.text,
+    ...(i.replyTo ? { reply_to: i.replyTo } : {}),
+  }
+}
