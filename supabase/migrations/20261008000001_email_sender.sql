@@ -159,6 +159,8 @@ begin
 end;
 $$;
 
+revoke all on function public.notify_email_outbox() from public, anon, authenticated;
+
 drop trigger if exists email_outbox_notify on public.email_outbox;
 create trigger email_outbox_notify
   after insert on public.email_outbox
