@@ -153,7 +153,7 @@ test('the navigation has the right links, a Register button in the mobile sheet,
   assert.match(nav, /to="\/experts"/)
   assert.match(nav, /to="\/verify"/)
   assert.match(nav, />Register now</)
-  assert.doesNotMatch(nav, /\/admin/)
+  assert.doesNotMatch(nav, /(to|href)=["'{`]+\/admin/, 'no link to the admin (the string only detects the admin route)')
   assert.match(nav, /aria-expanded/)
   assert.match(nav, /Escape/)
   assert.doesNotMatch(read('src/components/Footer.tsx'), /admin/i)

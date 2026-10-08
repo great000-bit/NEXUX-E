@@ -58,6 +58,21 @@ export function Navbar() {
     }
   }, [open, close])
 
+  // The admin area has its own navigation inside the page. Its header is the logo alone, on the left, so nothing
+  // from the public menu sits over the admin tools.
+  if (pathname.startsWith('/admin')) {
+    return (
+      <header className="site-header sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
+        <div className="mx-auto flex max-w-[88rem] items-center justify-start">
+          <Link to="/" className="inline-flex min-h-11 items-center rounded-xl">
+            <Logo onDark />
+            <span className="sr-only">Home page</span>
+          </Link>
+        </div>
+      </header>
+    )
+  }
+
   return (
     <header className="site-header sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
       <div className="mx-auto flex max-w-[88rem] items-center justify-between gap-4">
