@@ -251,24 +251,22 @@ export default function Register() {
                   fieldKey="state" label="State of residence or practice" required placeholder="Select your state"
                   options={STATES} value={form.state} onChange={(v) => set('state', v)} error={errors.state}
                 />
-                <fieldset
-                  className={`rounded-[var(--radius-lg)] bg-green-50 p-4 ${errors.contact ? 'border-2 border-danger-600' : 'border-2 border-transparent'}`}
-                >
+                <fieldset className="rounded-[var(--radius-lg)] bg-green-50 p-4">
                   <legend className="px-1 text-sm font-bold text-green-900">How can we reach you?</legend>
-                  <p className="mb-4 text-sm text-ink-700">Provide at least one. Both is better.</p>
+                  <p className="mb-4 text-sm text-ink-700">Your email is required. Your phone number is optional.</p>
                   <div className="space-y-5">
                     <TextField
-                      fieldKey="phone" label="Phone or WhatsApp" tag="One contact required" type="tel" inputMode="tel" autoComplete="tel"
-                      placeholder="0803 123 4567"
-                      value={form.phone} onChange={(v) => set('phone', v)} error={errors.phone} invalid={Boolean(errors.contact)}
+                      fieldKey="email" label="Email" required type="email" inputMode="email" autoComplete="email"
+                      placeholder="you@example.com"
+                      hint="We send your Expert ID here, and you use it to sign in and verify your profile."
+                      value={form.email} onChange={(v) => set('email', v)} error={errors.email}
                     />
                     <TextField
-                      fieldKey="email" label="Email" tag="One contact required" type="email" inputMode="email" autoComplete="email"
-                      placeholder="you@example.com"
-                      value={form.email} onChange={(v) => set('email', v)} error={errors.email} invalid={Boolean(errors.contact)}
+                      fieldKey="phone" label="Phone or WhatsApp" type="tel" inputMode="tel" autoComplete="tel"
+                      placeholder="0803 123 4567"
+                      value={form.phone} onChange={(v) => set('phone', v)} error={errors.phone}
                     />
                   </div>
-                  {errors.contact && <p id="field-contact-err" className="field-error mt-4">{errors.contact}</p>}
                 </fieldset>
               </div>
             )}

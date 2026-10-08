@@ -19,7 +19,7 @@ const FIELD_ERRORS: Record<string, { field: ErrorKey; message: string }> = {
   invalid_email: { field: 'email', message: 'Enter a valid email address, like name@example.com.' },
   invalid_phone: { field: 'phone', message: 'Enter a valid phone number, like 0803 123 4567.' },
   invalid_url: { field: 'profile_url', message: 'Enter a valid link that starts with http or https, or leave it empty.' },
-  contact_required: { field: 'contact', message: 'Add a phone number or an email address so we can reach you. One is enough.' },
+  email_required: { field: 'email', message: 'Enter your email address, like name@example.com. We send your Expert ID there, and you use it to sign in and verify your profile.' },
   consent_required: { field: 'consent_contact', message: 'Please tick this box. We need your consent to contact you before we can register you.' },
   too_many_secondary: { field: 'secondary_expertise', message: 'You can choose up to 3 secondary areas. Please untick some.' },
 }

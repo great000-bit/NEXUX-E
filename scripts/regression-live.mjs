@@ -51,7 +51,8 @@ const expectError = async (label, p, code) => {
   const r = await register(p)
   check(`registration rejects: ${label}`, r.json?.ok === false && r.json?.error === code, `${r.status} ${JSON.stringify(r.json)}`)
 }
-await expectError('no phone and no email', {}, 'contact_required')
+await expectError('no email at all', {}, 'email_required')
+await expectError('a phone number but no email', { phone: '08000009001' }, 'email_required')
 await expectError('a badly formed email', { email: 'not-an-email' }, 'invalid_email')
 await expectError('a badly formed phone', { phone: '123' }, 'invalid_phone')
 await expectError('a script link as profile URL', { email: 'x.y@example.org', profile_url: 'javascript:alert(1)' }, 'invalid_url')

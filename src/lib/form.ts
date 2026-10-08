@@ -50,7 +50,7 @@ export const emptyForm: FormData = {
   website: '',
 }
 
-export type ErrorKey = keyof FormData | 'contact'
+export type ErrorKey = keyof FormData
 export type Errors = Partial<Record<ErrorKey, string>>
 
 export type StepIndex = 0 | 1 | 2
@@ -63,9 +63,8 @@ export const FIELD_INFO: Partial<Record<ErrorKey, { label: string; step: StepInd
   organisation: { label: 'Organisation', step: 0, anchor: 'organisation' },
   position: { label: 'Position', step: 0, anchor: 'position' },
   state: { label: 'State', step: 0, anchor: 'state' },
-  contact: { label: 'Phone number or email', step: 0, anchor: 'phone' },
-  phone: { label: 'Phone number', step: 0, anchor: 'phone' },
   email: { label: 'Email address', step: 0, anchor: 'email' },
+  phone: { label: 'Phone number', step: 0, anchor: 'phone' },
   primary_expertise: { label: 'Primary expertise', step: 1, anchor: 'primary_expertise' },
   secondary_expertise: { label: 'Secondary expertise', step: 1, anchor: 'secondary_expertise' },
   years_experience: { label: 'Years of experience', step: 1, anchor: 'years_experience' },
@@ -125,13 +124,15 @@ export function validateStep(step: StepIndex, f: FormData): Errors {
     req('organisation', 'Enter the organisation or institution where you work.')
     req('position', 'Enter your current position, like Senior Lecturer.')
     req('state', 'Choose your state from the list.')
-    const hasPhone = f.phone.trim() !== ''
-    const hasEmail = f.email.trim() !== ''
-    if (!hasPhone && !hasEmail) {
-      e.contact = 'Add a phone number or an email address so we can reach you. One is enough.'
+    // Email is required: it is where the Expert ID is sent and how an expert signs in to verify. Phone is optional.
+    if (f.email.trim() === '') {
+      e.email = 'Enter your email address, like name@example.com. We send your Expert ID there, and you use it to sign in and verify your profile.'
+    } else if (!EMAIL_RE.test(f.email.trim())) {
+      e.email = 'Enter a valid email address, like name@example.com.'
     }
-    if (hasPhone && !isValidPhone(f.phone)) e.phone = 'Enter a valid phone number, like 0803 123 4567.'
-    if (hasEmail && !EMAIL_RE.test(f.email.trim())) e.email = 'Enter a valid email address, like name@example.com.'
+    if (f.phone.trim() !== '' && !isValidPhone(f.phone)) {
+      e.phone = 'Enter a valid phone number, like 0803 123 4567, or leave it empty.'
+    }
   }
 
   if (step === 1) {

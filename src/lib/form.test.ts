@@ -33,16 +33,20 @@ test('a complete registration passes every screen', () => {
   assert.equal(firstInvalidStep(valid), null)
 })
 
-test('screen 1: every required field is checked, and one contact route is enough', () => {
+test('screen 1: every required field is checked, and email is required while phone is optional', () => {
   const e = validateStep(0, emptyForm)
-  for (const k of ['full_name', 'title', 'organisation', 'position', 'state', 'contact'] as const) assert.ok(e[k], k)
-  assert.deepEqual(validateStep(0, { ...valid, email: '' }), {}, 'phone alone is enough')
+  for (const k of ['full_name', 'title', 'organisation', 'position', 'state', 'email'] as const) assert.ok(e[k], k)
+  assert.equal(e.phone, undefined, 'an empty phone is fine')
   assert.deepEqual(validateStep(0, { ...valid, phone: '' }), {}, 'email alone is enough')
-  assert.ok(validateStep(0, { ...valid, phone: '', email: '' }).contact)
+  const noEmail = validateStep(0, { ...valid, email: '' })
+  assert.match(noEmail.email ?? '', /Enter your email address, like name@example.com/)
+  assert.equal(noEmail.phone, undefined, 'a phone number does not replace the email')
+  assert.ok(validateStep(0, { ...valid, email: '   ' }).email, 'spaces do not count')
 })
 
-test('screen 1: bad phone and email are named individually', () => {
+test('screen 1: bad phone and email are named individually, and a bad phone is still caught when email is fine', () => {
   assert.ok(validateStep(0, { ...valid, phone: '123' }).phone)
+  assert.match(validateStep(0, { ...valid, phone: '123' }).phone ?? '', /or leave it empty/)
   assert.ok(validateStep(0, { ...valid, email: 'ada@@example' }).email)
   assert.ok(validateStep(0, { ...valid, email: 'ada@example' }).email)
   assert.equal(validateStep(0, { ...valid, email: 'ada@example.org' }).email, undefined)
@@ -97,7 +101,7 @@ test('error messages are plain, specific and free of dashes', () => {
 
 test('errors are listed in the order they appear on the page', () => {
   const list = errorList(validateStep(0, emptyForm))
-  assert.deepEqual(list.map((i) => i.key), ['full_name', 'title', 'organisation', 'position', 'state', 'contact'])
+  assert.deepEqual(list.map((i) => i.key), ['full_name', 'title', 'organisation', 'position', 'state', 'email'])
   assert.ok(list.every((i) => i.label && i.anchor))
 })
 
