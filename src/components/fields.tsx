@@ -49,7 +49,7 @@ export function TextField(
   props: BaseProps & {
     value: string
     onChange: (v: string) => void
-    type?: 'text' | 'email' | 'tel' | 'url'
+    type?: 'text' | 'email' | 'tel' | 'url' | 'date'
     autoComplete?: string
     inputMode?: 'text' | 'email' | 'tel' | 'url' | 'numeric'
     placeholder?: string
@@ -68,6 +68,37 @@ export function TextField(
         value={value}
         autoComplete={autoComplete}
         inputMode={inputMode}
+        placeholder={placeholder}
+        aria-required={rest.required || undefined}
+        aria-invalid={bad ? true : undefined}
+        aria-describedby={describe(id, rest.hint, rest.error)}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </Wrap>
+  )
+}
+
+export function TextAreaField(
+  props: BaseProps & {
+    value: string
+    onChange: (v: string) => void
+    rows?: number
+    maxLength?: number
+    placeholder?: string
+  },
+) {
+  const { fieldKey, value, onChange, rows = 6, maxLength, placeholder, invalid, ...rest } = props
+  const id = fieldId(fieldKey)
+  const bad = Boolean(rest.error) || Boolean(invalid)
+  return (
+    <Wrap id={id} {...rest}>
+      <textarea
+        id={id}
+        name={fieldKey}
+        className="input"
+        rows={rows}
+        value={value}
+        maxLength={maxLength}
         placeholder={placeholder}
         aria-required={rest.required || undefined}
         aria-invalid={bad ? true : undefined}
