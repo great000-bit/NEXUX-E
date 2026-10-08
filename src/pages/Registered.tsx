@@ -109,7 +109,10 @@ export default function Registered() {
         </p>
       </section>
 
-      <Link to="/" className="btn btn-ghost mt-8">Back to home</Link>
+      <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <Link to="/verify" className="btn btn-primary w-full sm:w-auto">Verify my profile</Link>
+        <Link to="/" className="btn btn-ghost w-full sm:w-auto">Back to home</Link>
+      </div>
     </div>
   )
 }

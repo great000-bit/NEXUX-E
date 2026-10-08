@@ -62,10 +62,16 @@ export default function Home() {
         </p>
       </section>
 
-      <div className="mt-10 flex justify-center">
+      <div className="mt-10 flex flex-col items-center gap-4">
         <Link to="/register" className="btn btn-primary w-full sm:w-auto sm:px-12">
           Register
         </Link>
+        <p className="text-sm text-ink-700">
+          Already registered?{' '}
+          <Link to="/verify" className="font-bold text-green-800 underline underline-offset-4">
+            Verify your profile
+          </Link>
+        </p>
       </div>
     </div>
   )
