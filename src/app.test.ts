@@ -77,3 +77,12 @@ test('admin tabs, sign out and file buttons have comfortable tap targets', () =>
   assert.match(area, /whitespace-nowrap/)
   assert.match(read('src/pages/admin/Review.tsx'), /min-h-12 w-full/)
 })
+
+test('the daily retention job also removes stored files that no record points to', () => {
+  const fn = read('supabase/functions/verification-admin/index.ts')
+  assert.match(fn, /system_orphan_files/)
+  const sql = read('supabase/migrations/20261010000002_orphan_files.sql')
+  assert.match(sql, /f\.state <> 'deleted'/, 'a file still counts when any live record uses it')
+  assert.match(sql, /grant execute on function public\.system_orphan_files\(\) to service_role/)
+  assert.match(sql, /revoke all on function public\.system_orphan_files\(\) from public, anon, authenticated/)
+})

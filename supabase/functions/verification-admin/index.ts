@@ -2,7 +2,8 @@
 //
 //   delete_files  An admin removes everything an expert uploaded (a data deletion request).
 //   retention     Deletes files of experts marked Not verified once the retention period has passed,
-//                 and clears uploads that never finished. Called daily by pg_cron with the webhook secret.
+//                 clears uploads that never finished, and removes stored files that no record points to.
+//                 Called daily by pg_cron with the webhook secret.
 //
 // Admins are identified by their Supabase login and the public.admins allow-list. Expert portal sessions
 // are a different system and are never accepted here. File paths are never written to logs.
@@ -114,6 +115,9 @@ Deno.serve(async (req) => {
     if (action === 'retention') {
       const { data: stale } = await db.rpc('system_expire_stale_uploads')
       const staleCount = Array.isArray(stale) && stale.length ? await removeObjects(stale as string[]) : 0
+      // Stored files that no live record points to, for example after an expert's record was deleted.
+      const { data: orphans } = await db.rpc('system_orphan_files')
+      const orphanCount = Array.isArray(orphans) && orphans.length ? await removeObjects(orphans as string[]) : 0
       const { data: candidates } = await db.rpc('system_retention_candidates')
       let experts = 0
       let files = 0
@@ -121,8 +125,8 @@ Deno.serve(async (req) => {
         files += await deleteExpertFiles(id, 'system:retention', 'system', 'Retention period after Not verified decision has passed')
         experts++
       }
-      console.log(JSON.stringify({ message: 'Retention run finished', experts, files, staleUploads: staleCount }))
-      return respond(200, { ok: true, experts, files, staleUploads: staleCount })
+      console.log(JSON.stringify({ message: 'Retention run finished', experts, files, staleUploads: staleCount, orphans: orphanCount }))
+      return respond(200, { ok: true, experts, files, staleUploads: staleCount, orphans: orphanCount })
     }
 
     return respond(400, { ok: false, message: 'That request is not recognised.' })

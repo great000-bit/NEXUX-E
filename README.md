@@ -133,7 +133,7 @@ select key, value from public.verification_settings;
 update public.verification_settings set value = '14' where key = 'rejected_retention_days';
 ```
 
-A daily job (pg_cron, 03:00 UTC) calls the `verification-admin` function, which deletes the files of every expert who has been Not verified for longer than that, logs it, and clears uploads that were started but never finished. Verified experts keep their files until an administrator deletes them. The Not verified email tells the expert that files are only kept for a short time.
+A daily job (pg_cron, 03:00 UTC) calls the `verification-admin` function, which deletes the files of every expert who has been Not verified for longer than that, logs it, clears uploads that were started but never finished, and removes any stored file that no record points to (for example after an expert's record is deleted, which removes the file records but not the stored files). Verified experts keep their files until an administrator deletes them. The Not verified email tells the expert that files are only kept for a short time.
 
 ### Setup
 
