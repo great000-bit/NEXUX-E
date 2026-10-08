@@ -72,6 +72,12 @@ export default function Home() {
             Verify your profile
           </Link>
         </p>
+        <p className="text-sm text-ink-700">
+          Looking for an expert?{' '}
+          <Link to="/experts" className="font-bold text-green-800 underline underline-offset-4">
+            Search the directory
+          </Link>
+        </p>
       </div>
     </div>
   )

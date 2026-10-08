@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ListingCard } from '../components/ListingCard'
+import { OpportunitiesSection } from '../components/OpportunitiesSection'
 import { StatusBadge } from '../components/StatusBadge'
 import { Notice, Spinner } from '../components/ui'
 import { checkBeforeUpload, formatSize } from '../lib/fileCheck'
@@ -42,6 +44,8 @@ export default function VerifyDashboard() {
     },
     [navigate],
   )
+
+  const sessionEnded = useCallback(() => endSession('Your session has ended, so please sign in again.'), [endSession])
 
   const refresh = useCallback(async () => {
     if (!token) return endSession('Please sign in to see your verification.')
@@ -222,6 +226,14 @@ export default function VerifyDashboard() {
         )}
       </section>
 
+      {/* Verified experts see what is open to them first. Everyone else sees the evidence steps first, as before. */}
+      {status === 'verified' && (
+        <>
+          <OpportunitiesSection token={token} onSessionEnded={sessionEnded} />
+          <ListingCard expertId={expert.expert_id} verified listed={expert.discoverable} token={token} onChanged={refresh} onSessionEnded={sessionEnded} />
+        </>
+      )}
+
       {/* Evidence */}
       <section aria-labelledby="evidence-title" className="space-y-4">
         <div>
@@ -305,6 +317,13 @@ export default function VerifyDashboard() {
         </section>
       )}
 
+      {status !== 'verified' && (
+        <>
+          <ListingCard expertId={expert.expert_id} verified={false} listed={expert.discoverable} token={token} onChanged={refresh} onSessionEnded={sessionEnded} />
+          <OpportunitiesSection token={token} onSessionEnded={sessionEnded} />
+        </>
+      )}
+
       {/* Registered details */}
       <section className="card p-5 sm:p-6" aria-labelledby="details-title">
         <h2 id="details-title" className="text-xl font-semibold text-green-900">Details you registered with</h2>
@@ -325,7 +344,7 @@ export default function VerifyDashboard() {
           ] as [string, string | null][]).map(([k, v]) => (
             <div key={k} className="grid grid-cols-[9.5rem_1fr] gap-3 py-2.5">
               <dt className="font-bold text-ink-500">{k}</dt>
-              <dd className="break-words text-ink-900">{v ?? <span className="text-ink-300">Not provided</span>}</dd>
+              <dd className="min-w-0 break-words text-ink-900">{v ?? <span className="text-ink-300">Not provided</span>}</dd>
             </div>
           ))}
         </dl>

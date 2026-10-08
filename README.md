@@ -46,6 +46,8 @@ Run the files in `supabase/migrations` in order in the Supabase SQL editor.
 4. `20261008000001_email_sender.sql`, `20261008000002_security_hardening.sql`, `20261008000003_function_secrets.sql`: confirmation emails and security fixes. See Confirmation emails below.
 5. `20261009000001` to `20261009000004`: Phase 2 verification. See Verification below.
 6. `20261010000001_email_required_and_settings.sql`: email required for new registrations, the `admin_set_expert_email` action, and the Reply-To and contact settings.
+7. `20261010000002_orphan_files.sql`: lets the daily job remove stored files that no record points to.
+8. `20261011000001_phase3_directory_and_opportunities.sql`: the public directory and project opportunities. See Directory and opportunities (Phase 3) below. Additive only: nothing existing is changed or removed.
 
 Then create the admin user and allow-list them:
 
@@ -70,6 +72,9 @@ How access works:
 | `/verify/dashboard` | Status, evidence upload and submit for review |
 | `/admin` | Admin sign in, registrations (search, filters, status, detail, CSV export) |
 | `/admin/verification` | Review queue by status, then `/admin/verification/NEX-000123` to review one expert |
+| `/experts` | Public directory of Verified Experts who chose to be listed: search, filters, sorting, pages |
+| `/experts/NEX-000123` | One public profile (not found unless that expert is Verified and listed) |
+| `/admin/opportunities` | Opportunities: list by status, then `/new` and `/<id>` to create or edit, see who is interested, export CSV |
 
 ## Deploy
 
@@ -176,19 +181,52 @@ The live script prints the SQL that removes the test expert it created. The deci
   Never do this for real decisions.
 - **Stuck or unwanted sessions.** `update public.expert_sessions set revoked_at = now() where expert_id = 'NEX-000123';`
 
+## Directory and opportunities (Phase 3)
+
+Two things were added, and nothing about registration or verification changed.
+
+### The public directory
+
+- **Who appears.** Only experts who are **Verified** and answered **Yes** to "Discoverable by organisations". Nobody else, ever: not in the list, not in search, not by typing their profile address, not through the API.
+- **How that is enforced.** In the database, not the page. The public (anon) role still cannot read any table. It can call exactly two functions, `directory_search` and `directory_profile`, and both only return rows where `verification_status = 'verified'` and `discoverable is true`, with a fixed list of public fields. A test reads the migration to keep it that way.
+- **What is shown.** Title and name, position and organisation, state, primary and secondary expertise, years of experience, highest qualification, memberships, the assignments the expert is open to, geographic availability, the optional profile link, and a Verified Expert badge. Never a phone number, an email address or any evidence file.
+- **Taking effect at once.** There is no cache. If an expert turns listing off, or their status stops being Verified, their page returns "not available" on the next request.
+- **Search engines.** A listed expert's page says `index, follow` and has a canonical link on `register.nexuse.org`. Every other state says `noindex`. `public/robots.txt` keeps `/admin` and `/verify` out of search.
+- **Speed on weak data.** The directory pages load only when opened (registration's bundle did not grow), pages hold 12 experts, and the list returns only the fields the cards show.
+- **The expert's control.** On their dashboard, "Your public listing" says exactly what becomes public and has one button to list or remove themselves. Each change is written to the verification log.
+
+### Opportunities
+
+- **Admin, Opportunities tab.** Create, edit, publish (Open), close and delete. Fields: title, description, type (the same assignment options as registration), expertise needed, location, deadline, status (Draft, Open, Closed).
+- **Deadlines.** An opportunity stays open through the whole of its deadline day, Nigerian time, then stops showing to experts and stops accepting interest. It is shown to the admin as "Open, past deadline" until they close it.
+- **What experts see.** Open opportunities on their dashboard. Ones whose expertise needed includes the expert's primary or secondary expertise, or whose type is an assignment the expert chose at registration, come first with a "Matches your profile" label. That is a plain comparison and nothing more.
+- **Express interest.** Only Verified Experts, only on an open opportunity before its deadline. They can withdraw at any time. Closed, draft and expired opportunities refuse interest in the database.
+- **What the admin sees.** For each opportunity, the experts who currently have their hand up, with the details they registered, and an Export CSV button.
+- **The notification email.** When an expert expresses interest, one email goes to `opportunity_notify_email` (below), through the same outbox, retries and daily cap as every other email. It is sent once per expert and opportunity, so switching interest off and on cannot flood the inbox. It names the expert and the opportunity and links to the admin screen. It carries no phone number or email address.
+- **The change log.** Every create, edit, publish, close, reopen and delete is written to `public.opportunity_audit`. Like the verification log, it cannot be updated, deleted or truncated, and it survives deleting the opportunity.
+- **Not built, on purpose.** Organisation accounts, in-site messaging and automatic matching emails.
+
+### Testing Phase 3
+
+- `npm test` includes `src/phase3.test.ts` (privacy and migration rules), `src/lib/directoryFilters.test.ts`, `src/lib/opportunities.test.ts` and the CSV tests.
+- `node scripts/regression-live.mjs` checks a real project with only the public key: nothing private is readable, the new functions are closed, and the directory returns only public fields. Add `--write` to also prove a new expert who said Yes to discoverability stays hidden until verified. Add `--env=.env.staging.local` to point it at the staging project.
+- Staging is a separate free Supabase project (`nexus-e-staging`). Run the migrations and deploy the three Edge Functions there first, point the Vercel **Preview** environment variables at it, and only then release to production.
+
 ## Settings you can change
 
-Two addresses are used by the emails. They live in `public.verification_settings` (readable by administrators only), and an Edge Function secret of the same purpose overrides them if you ever set one.
+These live in `public.verification_settings` (readable by administrators only). An Edge Function secret of the same purpose overrides the first two if you ever set one.
 
 | Setting | Edge Function secret | Used for |
 | --- | --- | --- |
 | `email_reply_to` | `EMAIL_REPLY_TO` | The Reply-To header on every email: registration confirmation, sign-in codes and the four status emails. Replies from experts land here. |
 | `contact_email` | `CONTACT_EMAIL` | The address named in the Not verified email ("please write to ..."). |
+| `opportunity_notify_email` | none | Where the "an expert is interested" email goes. Starts as the contact address. Leave it empty to turn those emails off. |
+| `allowed_origins_extra` | none | Optional. Extra web addresses (comma separated) allowed to call the Edge Functions, such as a Vercel preview address. Not set in production. |
 
-Both are currently `greatemmanwori@gmail.com`. To change them, in the SQL editor:
+All of the first three are currently `greatemmanwori@gmail.com`. To change them, in the SQL editor:
 
 ```sql
-update public.verification_settings set value = 'help@nexuse.org' where key in ('email_reply_to', 'contact_email');
+update public.verification_settings set value = 'help@nexuse.org' where key in ('email_reply_to', 'contact_email', 'opportunity_notify_email');
 ```
 
 `rejected_retention_days` (default 30) lives in the same table.

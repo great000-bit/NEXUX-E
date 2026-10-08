@@ -1,7 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { buildEmail } from './email.ts'
-import { composeEmail, STATUS_TEMPLATES, type EmailJob } from './status-emails.ts'
+import { ADMIN_TEMPLATES, composeEmail, STATUS_TEMPLATES, type EmailJob } from './status-emails.ts'
 import { buildSendBody } from './logic.ts'
 
 const opts = { siteUrl: 'https://register.nexuse.org' }
@@ -92,4 +92,30 @@ test('every email carries a Reply-To header when one is configured, and none whe
   assert.deepEqual(withReply.to, ['ada@example.org'])
   assert.ok(!('reply_to' in buildSendBody(base)))
   assert.ok(!('reply_to' in buildSendBody({ ...base, replyTo: '' })))
+})
+
+const OPP_ID = '0b6f3f3e-6a52-4c9e-9a3a-5b3e0f1d2c44'
+
+test('opportunity interest: goes to the admin, names the expert and the opportunity, links to it, no contact details', () => {
+  const mail = composeEmail(job('opportunity_interest', { opportunity_id: OPP_ID, opportunity_title: 'Wetland survey, Delta' }), opts)
+  assert.ok(ADMIN_TEMPLATES.includes('opportunity_interest'))
+  assert.ok(!STATUS_TEMPLATES.includes('opportunity_interest'), 'the expert facing list is unchanged')
+  assert.ok(mail.text.startsWith('Hello,'))
+  assert.ok(!mail.text.includes('Dear'))
+  assert.ok(mail.subject.includes('Ada Obi') && mail.subject.includes('Wetland survey, Delta'))
+  assert.ok(mail.text.includes('Dr Ada Obi (NEX-000042)'))
+  assert.ok(mail.text.includes(`https://register.nexuse.org/admin/opportunities/${OPP_ID}`))
+  assert.ok(mail.html.includes('administrator of NEXUS-E'))
+  assert.ok(!mail.html.includes('because you registered'))
+  assert.ok(!/@|\+234|phone/i.test(mail.text), 'the email carries no email address or phone number')
+  for (const part of [mail.subject, mail.text, mail.html]) assert.ok(noDashes(part), 'no dashes')
+})
+
+test('opportunity interest: a title with line breaks or markup cannot break the subject or the page', () => {
+  const title = ['Survey', 'Bcc: x@y.z <b>hi</b>'].join(String.fromCharCode(13, 10))
+  const mail = composeEmail(job('opportunity_interest', { opportunity_id: 'not-an-id', opportunity_title: title }), opts)
+  assert.ok(![13, 10].some((code) => mail.subject.includes(String.fromCharCode(code))))
+  assert.ok(!mail.html.includes('<b>hi</b>'))
+  assert.ok(mail.text.includes('https://register.nexuse.org/admin/opportunities'))
+  assert.ok(!mail.text.includes('not-an-id'), 'a bad id is never put in the link')
 })

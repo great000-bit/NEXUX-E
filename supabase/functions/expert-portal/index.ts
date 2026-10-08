@@ -46,6 +46,9 @@ const FRIENDLY: Record<string, [number, string]> = {
     'Please add at least one document before you submit: a membership card or certificate, a licence, or a qualification certificate.',
   ],
   not_found: [404, 'We could not find that file. Please refresh the page and try again.'],
+  not_verified: [403, 'Only Verified Experts can express interest. Once your verification is approved, you can.'],
+  not_open: [409, 'This opportunity is no longer open for interest. Please refresh the page to see what is open now.'],
+  bad_value: [400, 'That choice was not understood. Please try again.'],
 }
 
 function allowedOrigin(origin: string | null): string | null {
@@ -56,8 +59,17 @@ function allowedOrigin(origin: string | null): string | null {
   return null
 }
 
+/** The configured origins, localhost, or any origin listed in the allowed_origins_extra setting (used for preview sites). */
+async function originFor(origin: string | null): Promise<string | null> {
+  const known = allowedOrigin(origin)
+  if (known || !origin) return known
+  const { data } = await db.from('verification_settings').select('value').eq('key', 'allowed_origins_extra').maybeSingle()
+  const extra = typeof data?.value === 'string' ? data.value.split(',').map((x) => x.trim()) : []
+  return extra.includes(origin) ? origin : null
+}
+
 Deno.serve(async (req) => {
-  const origin = allowedOrigin(req.headers.get('origin'))
+  const origin = await originFor(req.headers.get('origin'))
   const cors: Record<string, string> = {
     'Access-Control-Allow-Headers': 'content-type, x-portal-session',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -277,6 +289,27 @@ Deno.serve(async (req) => {
 
     if (action === 'submit') {
       const out = await rpc('portal_submit', { p_expert_id: expertId })
+      return respond(200, { ok: true, ...(out as object) })
+    }
+
+    // ---------- Directory listing and opportunities ----------
+    if (action === 'set_discoverable') {
+      if (typeof body.value !== 'boolean') return fail(400, 'bad_value', 'That choice was not understood. Please try again.')
+      const out = await rpc('portal_set_discoverable', { p_expert_id: expertId, p_value: body.value })
+      return respond(200, { ok: true, ...(out as object) })
+    }
+
+    if (action === 'opportunities') {
+      const out = await rpc('portal_list_opportunities', { p_expert_id: expertId })
+      return respond(200, { ok: true, ...(out as object) })
+    }
+
+    if (action === 'interest') {
+      const id = String(body.opportunity_id ?? '')
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id) || typeof body.on !== 'boolean') {
+        return fail(400, 'bad_value', 'That choice was not understood. Please try again.')
+      }
+      const out = await rpc('portal_set_interest', { p_expert_id: expertId, p_opportunity_id: id, p_on: body.on })
       return respond(200, { ok: true, ...(out as object) })
     }
 

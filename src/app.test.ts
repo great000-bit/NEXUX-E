@@ -15,9 +15,21 @@ const publicFiles = (dir: string): string[] =>
     return /\.(ts|tsx)$/.test(e.name) && !/\.test\./.test(e.name) ? [rel] : []
   })
 
+// The directory keeps its search filters in the address bar. It is the only public page that does, and it
+// reads a fixed list of known keys (see the next test), so ?src=flier still changes nothing.
+const READS_ITS_OWN_FILTERS = [path.join('src', 'pages', 'Directory.tsx'), path.join('src', 'lib', 'directoryFilters.ts')]
+
 test('no public page reads the query string, so ?src=flier changes nothing', () => {
-  const offenders = publicFiles('src').filter((f) => /(?<!tab\.)location\.search|useSearchParams|URLSearchParams|window\.location\.href|document\.location/.test(read(f)))
+  const offenders = publicFiles('src')
+    .filter((f) => !READS_ITS_OWN_FILTERS.includes(f))
+    .filter((f) => /(?<!tab\.)location\.search|useSearchParams|URLSearchParams|window\.location\.href|document\.location/.test(read(f)))
   assert.deepEqual(offenders, [])
+})
+
+test('the directory only reads its own filter keys, so ?src=flier (or anything else) changes nothing there either', async () => {
+  const { filtersFromParams, EMPTY_FILTERS } = await import('./lib/directoryFilters.ts')
+  assert.deepEqual(filtersFromParams(new URLSearchParams('src=flier')), EMPTY_FILTERS)
+  assert.deepEqual(filtersFromParams(new URLSearchParams('src=flier&utm_source=print&ref=qr')), EMPTY_FILTERS)
 })
 
 test('the app has no redirect or route that depends on a src parameter', () => {
@@ -48,6 +60,16 @@ test('the QR PNG is 2000 px with a real alpha channel (transparent background)',
   assert.equal(png.readUInt32BE(16), 2000, 'width')
   assert.equal(png.readUInt32BE(20), 2000, 'height')
   assert.equal(png[25], 6, 'colour type 6 means RGBA')
+})
+
+test('the directory pages are lazy loaded, so the registration bundle does not grow with the database client', () => {
+  const app = read('src/App.tsx')
+  assert.doesNotMatch(app, /^import (Directory|ExpertProfile) from/m)
+  assert.match(app, /lazy\(\(\) => import\('\.\/pages\/Directory'\)\)/)
+  assert.match(app, /lazy\(\(\) => import\('\.\/pages\/ExpertProfile'\)\)/)
+  for (const f of ['src/pages/Register.tsx', 'src/pages/Registered.tsx', 'src/pages/Home.tsx']) {
+    assert.doesNotMatch(read(f), /lib\/directory|lib\/supabase/, f)
+  }
 })
 
 // Regression tests for the admin screens at phone width (360 px) and the detail drawer.

@@ -1,3 +1,4 @@
+import type { InterestedExpert } from '../../lib/opportunities'
 import { isStatus, STATUS_LABEL } from '../../lib/verification'
 
 const statusLabel = (s: string) => (isStatus(s) ? STATUS_LABEL[s] : s)
@@ -75,6 +76,52 @@ export function toCsv(rows: Expert[]): string {
   for (const r of rows) lines.push(COLUMNS.map((c) => cell(c.get(r))).join(','))
   // BOM so Excel reads UTF-8 names correctly.
   return '﻿' + lines.join('\r\n')
+}
+
+const INTEREST_COLUMNS: { header: string; get: (e: InterestedExpert) => string }[] = [
+  { header: 'Expert ID', get: (e) => e.expert_id },
+  { header: 'Expressed interest at', get: (e) => e.interested_at },
+  { header: 'Title', get: (e) => e.title },
+  { header: 'Full name', get: (e) => e.full_name },
+  { header: 'Organisation', get: (e) => e.organisation },
+  { header: 'Position', get: (e) => e.position },
+  { header: 'State', get: (e) => e.state },
+  { header: 'Phone', get: (e) => e.phone ?? '' },
+  { header: 'Email', get: (e) => e.email ?? '' },
+  { header: 'Primary expertise', get: (e) => e.primary_expertise },
+  { header: 'Secondary expertise', get: (e) => e.secondary_expertise.join('; ') },
+  { header: 'Years of experience', get: (e) => e.years_experience },
+  { header: 'Highest qualification', get: (e) => e.qualification },
+  { header: 'Memberships', get: (e) => e.memberships.join('; ') },
+  { header: 'Assignments', get: (e) => e.assignments.join('; ') },
+  { header: 'Availability', get: (e) => e.availability },
+  { header: 'Profile URL', get: (e) => e.profile_url ?? '' },
+  { header: 'Verification status', get: (e) => statusLabel(e.verification_status) },
+]
+
+/** The experts who are interested in one opportunity, with the details they registered. */
+export function interestToCsv(rows: InterestedExpert[]): string {
+  const lines = [INTEREST_COLUMNS.map((c) => cell(c.header)).join(',')]
+  for (const r of rows) lines.push(INTEREST_COLUMNS.map((c) => cell(c.get(r))).join(','))
+  return '﻿' + lines.join('\r\n')
+}
+
+/** A file name that is safe on every system, built from an opportunity title. */
+export function csvFileName(prefix: string, title: string, date: Date = new Date()): string {
+  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'opportunity'
+  return `${prefix}-${slug}-${date.toISOString().slice(0, 10)}.csv`
+}
+
+export function downloadCsvText(text: string, filename: string) {
+  const blob = new Blob([text], { type: 'text/csv;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
 }
 
 export function downloadCsv(rows: Expert[], filename: string) {

@@ -61,8 +61,17 @@ async function deleteExpertFiles(expertId: string, actor: string, actorType: 'ad
   return Number(n ?? 0)
 }
 
+/** The configured origins, localhost, or any origin listed in the allowed_origins_extra setting (used for preview sites). */
+async function originFor(origin: string | null): Promise<string | null> {
+  const known = allowedOrigin(origin)
+  if (known || !origin) return known
+  const { data } = await db.from('verification_settings').select('value').eq('key', 'allowed_origins_extra').maybeSingle()
+  const extra = typeof data?.value === 'string' ? data.value.split(',').map((x) => x.trim()) : []
+  return extra.includes(origin) ? origin : null
+}
+
 Deno.serve(async (req) => {
-  const origin = allowedOrigin(req.headers.get('origin'))
+  const origin = await originFor(req.headers.get('origin'))
   const cors: Record<string, string> = {
     'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info, x-webhook-secret',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',

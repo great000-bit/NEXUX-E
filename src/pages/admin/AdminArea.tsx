@@ -2,6 +2,8 @@ import { NavLink, Route, Routes } from 'react-router-dom'
 import Dashboard from './Dashboard'
 import Verification from './Verification'
 import Review from './Review'
+import Opportunities from './Opportunities'
+import OpportunityEdit from './OpportunityEdit'
 
 const tab = ({ isActive }: { isActive: boolean }) =>
   `inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold transition ${
@@ -13,9 +15,10 @@ export default function AdminArea({ email, onSignOut }: { email: string; onSignO
   return (
     <div>
       <div className="mb-6 flex flex-col gap-3 border-b border-line pb-4 sm:flex-row sm:items-center sm:justify-between">
-        <nav aria-label="Admin sections" className="flex gap-1">
+        <nav aria-label="Admin sections" className="flex flex-wrap gap-1">
           <NavLink to="/admin" end className={tab}>Registrations</NavLink>
           <NavLink to="/admin/verification" className={tab}>Verification</NavLink>
+          <NavLink to="/admin/opportunities" className={tab}>Opportunities</NavLink>
         </nav>
         <div className="flex min-w-0 items-center justify-between gap-3 text-sm sm:justify-end">
           <span className="min-w-0 truncate text-ink-500" title={email}>Signed in as {email}</span>
@@ -26,6 +29,9 @@ export default function AdminArea({ email, onSignOut }: { email: string; onSignO
         <Route index element={<Dashboard />} />
         <Route path="verification" element={<Verification />} />
         <Route path="verification/:expertId" element={<Review />} />
+        <Route path="opportunities" element={<Opportunities />} />
+        <Route path="opportunities/new" element={<OpportunityEdit />} />
+        <Route path="opportunities/:id" element={<OpportunityEdit />} />
       </Routes>
     </div>
   )

@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { toCsv, type Expert } from './csv.ts'
+import { csvFileName, interestToCsv, toCsv, type Expert } from './csv.ts'
+import type { InterestedExpert } from '../../lib/opportunities.ts'
 
 // Regression tests for the admin CSV export.
 
@@ -69,6 +70,53 @@ test('spreadsheet formulas typed into the public form cannot run', () => {
   const line = parse(toCsv([evil]))[1]
   for (const bad of ['"=HYPERLINK', '"+cmd', '"@SUM', '"-1+1']) assert.ok(!line.includes(bad), bad)
   assert.ok(line.includes('"\'=HYPERLINK'))
+})
+
+const interested: InterestedExpert = {
+  expert_id: 'NEX-000006',
+  title: 'Dr',
+  full_name: 'Ada "The Great" Obi',
+  organisation: 'Delta, State University',
+  position: 'Lecturer',
+  state: 'Delta',
+  email: 'ada@example.org',
+  phone: '2348031234567',
+  primary_expertise: 'ESIA and Safeguards',
+  secondary_expertise: ['Water and Hydrogeology', 'GIS and Remote Sensing'],
+  years_experience: '5 to 10',
+  qualification: 'HND',
+  memberships: ['NES'],
+  assignments: ['Consulting', 'Research'],
+  availability: 'Nigeria',
+  profile_url: null,
+  verification_status: 'verified',
+  interested_at: '2026-10-08T03:52:21Z',
+}
+
+test('the interested experts export has the registered details, readable status and a BOM', () => {
+  const csv = interestToCsv([interested])
+  const [head, line] = parse(csv)
+  const names = head.split(',').map((h) => h.replace(/"/g, ''))
+  assert.deepEqual(names.slice(0, 4), ['Expert ID', 'Expressed interest at', 'Title', 'Full name'])
+  assert.ok(names.includes('Email') && names.includes('Phone') && names.includes('Assignments'))
+  assert.ok(csv.startsWith('﻿'))
+  assert.ok(line.includes('"ada@example.org"') && line.includes('"Verified"'))
+  assert.ok(line.includes('"Water and Hydrogeology; GIS and Remote Sensing"'))
+  assert.ok(line.includes('"Ada ""The Great"" Obi"'))
+})
+
+test('the interested experts export cannot run spreadsheet formulas, and an empty list is just the header', () => {
+  const evil = { ...interested, full_name: '=HYPERLINK("http://evil")', organisation: '+cmd', email: '@x' }
+  const line = parse(interestToCsv([evil]))[1]
+  for (const bad of ['"=HYPERLINK', '"+cmd', '"@x']) assert.ok(!line.includes(bad), bad)
+  assert.equal(parse(interestToCsv([])).length, 1)
+})
+
+test('the export file name is safe on every system', () => {
+  const when = new Date('2026-10-08T10:00:00Z')
+  assert.equal(csvFileName('interested', 'Wetland survey: Niger Delta / phase 2!', when), 'interested-wetland-survey-niger-delta-phase-2-2026-10-08.csv')
+  assert.equal(csvFileName('interested', '!!!', when), 'interested-opportunity-2026-10-08.csv')
+  assert.ok(!/[\\/:*?"<>|\s]/.test(csvFileName('interested', '..\\evil/../name', when)))
 })
 
 test('every status has a readable label in the export', () => {
