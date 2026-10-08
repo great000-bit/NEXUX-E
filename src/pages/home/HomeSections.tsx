@@ -176,12 +176,12 @@ function WhyRegister() {
 function WhoFindsYou() {
   return (
     <Section id="who-finds-you" eyebrow={AUDIENCE.eyebrow} title={AUDIENCE.title}>
-      <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
+      <ul className="mt-10 grid grid-cols-1 gap-3 min-[460px]:grid-cols-2 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
         {AUDIENCE.items.map((a, i) => (
-          <li key={a.label} {...fadeUp(i % 4)}>
+          <li key={a.label} {...fadeUp(i % 4)} className="min-w-0">
             <GlassCard flat hover className="flex h-full items-center gap-3.5 p-4 sm:p-5">
               <span className="icon-tile !h-11 !w-11"><Icon name={a.icon} className="h-5 w-5" /></span>
-              <span className="font-display text-[0.95rem] font-semibold leading-snug text-white">{a.label}</span>
+              <span className="min-w-0 break-words font-display text-[0.95rem] font-semibold leading-snug text-white">{a.label}</span>
             </GlassCard>
           </li>
         ))}

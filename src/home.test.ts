@@ -17,7 +17,7 @@ const walk = (dir: string): string[] =>
   })
 // The icon map lives in a .tsx file that Node cannot import here, so read it as text.
 const EXPERTISE_ICON: Record<string, string> = Object.fromEntries(
-  [...read('src/components/icons.tsx').matchAll(/^  '([^']+)': '([a-z-]+)',$/gm)].map((m) => [m[1], m[2]]),
+  [...read('src/components/icons.tsx').matchAll(/^ {2}'([^']+)': '([a-z-]+)',$/gm)].map((m) => [m[1], m[2]]),
 )
 const sources = walk('src').filter((f) => /\.(tsx?|css)$/.test(f) && !/\.test\./.test(f))
 

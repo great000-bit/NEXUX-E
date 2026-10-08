@@ -40,7 +40,7 @@ export function Footer() {
           <p>&copy; 2026 NEXUS-E. A stronger environment. A brighter Nigeria.</p>
           <p className="flex items-center gap-4">
             <span className="uppercase tracking-[0.2em] text-lime-500/90">People · Planet · Solutions · Nigeria</span>
-            <Link to="/admin" className="inline-flex min-h-11 items-center text-white/50 underline-offset-4 hover:text-white hover:underline">Admin</Link>
+            <Link to="/admin" className="inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-white/60 underline-offset-4 hover:text-white hover:underline">Admin</Link>
           </p>
         </div>
       </div>
