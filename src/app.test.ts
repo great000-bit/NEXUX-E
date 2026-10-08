@@ -15,9 +15,21 @@ const publicFiles = (dir: string): string[] =>
     return /\.(ts|tsx)$/.test(e.name) && !/\.test\./.test(e.name) ? [rel] : []
   })
 
+// The directory keeps its search filters in the address bar. It is the only public page that does, and it
+// reads a fixed list of known keys (see the next test), so ?src=flier still changes nothing.
+const READS_ITS_OWN_FILTERS = [path.join('src', 'pages', 'Directory.tsx'), path.join('src', 'lib', 'directoryFilters.ts')]
+
 test('no public page reads the query string, so ?src=flier changes nothing', () => {
-  const offenders = publicFiles('src').filter((f) => /(?<!tab\.)location\.search|useSearchParams|URLSearchParams|window\.location\.href|document\.location/.test(read(f)))
+  const offenders = publicFiles('src')
+    .filter((f) => !READS_ITS_OWN_FILTERS.includes(f))
+    .filter((f) => /(?<!tab\.)location\.search|useSearchParams|URLSearchParams|window\.location\.href|document\.location/.test(read(f)))
   assert.deepEqual(offenders, [])
+})
+
+test('the directory only reads its own filter keys, so ?src=flier (or anything else) changes nothing there either', async () => {
+  const { filtersFromParams, EMPTY_FILTERS } = await import('./lib/directoryFilters.ts')
+  assert.deepEqual(filtersFromParams(new URLSearchParams('src=flier')), EMPTY_FILTERS)
+  assert.deepEqual(filtersFromParams(new URLSearchParams('src=flier&utm_source=print&ref=qr')), EMPTY_FILTERS)
 })
 
 test('the app has no redirect or route that depends on a src parameter', () => {

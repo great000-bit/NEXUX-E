@@ -7,6 +7,8 @@ import Registered from './pages/Registered'
 import NotFound from './pages/NotFound'
 import Verify from './pages/Verify'
 import VerifyDashboard from './pages/VerifyDashboard'
+import Directory from './pages/Directory'
+import ExpertProfile from './pages/ExpertProfile'
 import { Spinner } from './components/ui'
 
 // The admin area is only for staff, so keep it out of the public bundle.
@@ -21,6 +23,8 @@ export default function App() {
         <Route path="registered" element={<Registered />} />
         <Route path="verify" element={<Verify />} />
         <Route path="verify/dashboard" element={<VerifyDashboard />} />
+        <Route path="experts" element={<Directory />} />
+        <Route path="experts/:expertId" element={<ExpertProfile />} />
         <Route
           path="admin/*"
           element={
