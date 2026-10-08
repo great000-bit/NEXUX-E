@@ -49,3 +49,31 @@ test('the QR PNG is 2000 px with a real alpha channel (transparent background)',
   assert.equal(png.readUInt32BE(20), 2000, 'height')
   assert.equal(png[25], 6, 'colour type 6 means RGBA')
 })
+
+// Regression tests for the admin screens at phone width (360 px) and the detail drawer.
+
+test('the registration detail drawer clears its own state on close, so it can be opened again', () => {
+  const src = read('src/pages/admin/Dashboard.tsx')
+  assert.match(src, /const closeNow = \(\) => \{\s*ref\.current\?\.close\(\)\s*onClose\(\)\s*\}/)
+  assert.match(src, /onClick=\{closeNow\}/, 'the Close button uses it')
+})
+
+test('admin detail rows stack on phones and sit in two columns from the sm breakpoint', () => {
+  for (const file of ['src/pages/admin/Dashboard.tsx', 'src/pages/admin/Review.tsx']) {
+    const src = read(file)
+    assert.match(src, /grid-cols-1[^"]*sm:grid-cols-\[9rem_1fr\]/, file)
+    assert.match(src, /min-w-0 break-words/, `${file}: long values such as emails must wrap`)
+  }
+})
+
+test('the review screen cards can shrink, so a long email never makes the page scroll sideways', () => {
+  const src = read('src/pages/admin/Review.tsx')
+  assert.ok((src.match(/card min-w-0/g) ?? []).length >= 2)
+})
+
+test('admin tabs, sign out and file buttons have comfortable tap targets', () => {
+  const area = read('src/pages/admin/AdminArea.tsx')
+  assert.match(area, /min-h-11/)
+  assert.match(area, /whitespace-nowrap/)
+  assert.match(read('src/pages/admin/Review.tsx'), /min-h-12 w-full/)
+})

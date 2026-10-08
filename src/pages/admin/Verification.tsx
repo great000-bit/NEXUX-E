@@ -83,12 +83,12 @@ export default function Verification() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
           <h1 className="text-3xl font-semibold text-green-900">Verification</h1>
           <p className="text-sm text-ink-500">Oldest submissions first, so nobody waits longer than they need to.</p>
         </div>
-        <button className="btn btn-ghost !min-h-10 !px-4" onClick={() => void load()}>Refresh</button>
+        <button className="btn btn-ghost !min-h-11 flex-none !px-4" onClick={() => void load()}>Refresh</button>
       </div>
 
       <div role="tablist" aria-label="Verification status" className="mt-6 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
@@ -100,7 +100,7 @@ export default function Verification() {
               role="tab"
               aria-selected={active}
               onClick={() => setParams(s === 'under_review' ? {} : { status: s })}
-              className={`rounded-[var(--radius-lg)] border p-4 text-left transition ${
+              className={`rounded-[var(--radius-lg)] border p-4 text-left transition last:odd:col-span-2 sm:last:odd:col-span-1 ${
                 active ? 'border-green-900 bg-green-900 text-white shadow-md' : 'border-line bg-surface hover:border-green-600'
               }`}
             >

@@ -106,7 +106,7 @@ export default function Review() {
 
 function BackLink() {
   return (
-    <Link to="/admin/verification" className="inline-flex items-center gap-1 text-sm font-bold text-green-800 underline-offset-4 hover:underline">
+    <Link to="/admin/verification" className="inline-flex min-h-11 items-center gap-1 text-sm font-bold text-green-800 underline-offset-4 hover:underline">
       <span aria-hidden="true">&larr;</span> Back to the queue
     </Link>
   )
@@ -252,7 +252,7 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-700">{expert.expert_id}</p>
-          <h1 className="mt-1 text-3xl font-semibold text-green-900">{expert.title} {expert.full_name}</h1>
+          <h1 className="mt-1 break-words text-3xl font-semibold text-green-900">{expert.title} {expert.full_name}</h1>
         </div>
         <StatusBadge status={status} className="!text-sm" />
       </div>
@@ -261,20 +261,20 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Left: registered details */}
-        <section className="card p-5" aria-labelledby="details-h" style={{ borderRadius: 'var(--radius-lg)' }}>
+        <section className="card min-w-0 p-5" aria-labelledby="details-h" style={{ borderRadius: 'var(--radius-lg)' }}>
           <h2 id="details-h" className="text-lg font-semibold text-green-900">Registered details</h2>
           <dl className="mt-2 divide-y divide-line text-sm">
             {detail.map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[9rem_1fr] gap-3 py-2">
+              <div key={k} className="grid grid-cols-1 gap-0.5 py-2 sm:grid-cols-[9rem_1fr] sm:gap-3">
                 <dt className="font-bold text-ink-500">{k}</dt>
-                <dd className="break-words">{v ?? <span className="text-ink-300">Not provided</span>}</dd>
+                <dd className="min-w-0 break-words">{v ?? <span className="text-ink-300">Not provided</span>}</dd>
               </div>
             ))}
           </dl>
         </section>
 
         {/* Right: evidence and viewer */}
-        <section className="card p-5" aria-labelledby="files-h" style={{ borderRadius: 'var(--radius-lg)' }}>
+        <section className="card min-w-0 p-5" aria-labelledby="files-h" style={{ borderRadius: 'var(--radius-lg)' }}>
           <h2 id="files-h" className="text-lg font-semibold text-green-900">Uploaded evidence ({live.length})</h2>
           {live.length === 0 ? (
             <p className="mt-2 text-sm text-ink-700">
@@ -290,7 +290,7 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
                     <button
                       onClick={() => setSelected(f.id)}
                       aria-current={f.id === selected}
-                      className={`flex w-full items-center justify-between gap-2 rounded-[var(--radius-md)] border px-3 py-2 text-left text-sm transition ${
+                      className={`flex min-h-12 w-full items-center justify-between gap-2 rounded-[var(--radius-md)] border px-3 py-2 text-left text-sm transition ${
                         f.id === selected ? 'border-green-700 bg-green-50' : 'border-line hover:border-green-600'
                       }`}
                     >
@@ -310,17 +310,17 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
                 <div className="mt-4">
                   <div className="mb-2 flex items-center justify-between gap-2">
                     <p className="truncate text-sm font-bold text-ink-700">{current.original_name}</p>
-                    <button className="rounded-full px-3 py-1 text-sm font-bold text-green-800 hover:bg-green-100" onClick={() => void openInTab(current)}>
+                    <button className="inline-flex min-h-11 flex-none items-center rounded-full px-3 text-sm font-bold text-green-800 hover:bg-green-100" onClick={() => void openInTab(current)}>
                       Open in a new tab
                     </button>
                   </div>
                   {viewerError && <Notice>{viewerError}</Notice>}
                   {!viewerError && !viewer && <div className="grid h-48 place-items-center text-green-800"><Spinner label="Opening the file" className="h-6 w-6" /></div>}
                   {viewer && viewer.mime.startsWith('image/') && (
-                    <img src={viewer.url} alt={`Evidence: ${current.original_name}`} className="max-h-[70vh] w-full rounded-[var(--radius-md)] border border-line bg-paper object-contain" />
+                    <img src={viewer.url} alt={`Evidence: ${current.original_name}`} className="max-h-[60vh] w-full rounded-[var(--radius-md)] border border-line bg-paper object-contain sm:max-h-[70vh]" />
                   )}
                   {viewer && viewer.mime === 'application/pdf' && (
-                    <iframe title={`Evidence: ${current.original_name}`} src={viewer.url} className="h-[70vh] w-full rounded-[var(--radius-md)] border border-line bg-paper" />
+                    <iframe title={`Evidence: ${current.original_name}`} src={viewer.url} className="h-[60vh] w-full rounded-[var(--radius-md)] border border-line bg-paper sm:h-[70vh]" />
                   )}
                 </div>
               )}

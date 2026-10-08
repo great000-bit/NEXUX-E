@@ -118,7 +118,7 @@ function PasswordField({ value, onChange }: { value: string; onChange: (v: strin
         <button
           type="button"
           onClick={() => setShow((s) => !s)}
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full px-3 py-1 text-sm font-bold text-green-800 hover:bg-green-50"
+          className="absolute right-1 top-1/2 inline-flex h-11 min-w-16 -translate-y-1/2 items-center justify-center rounded-full px-3 text-sm font-bold text-green-800 hover:bg-green-50"
           aria-pressed={show}
         >
           {show ? 'Hide' : 'Show'}
