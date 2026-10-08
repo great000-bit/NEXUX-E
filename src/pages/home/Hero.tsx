@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useRef, useState, type PointerEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Emblem } from '../../components/Logo'
 import { Icon } from '../../components/icons'
 import { Button } from '../../components/ds'
+import { NETWORK_QUERY } from '../../lib/network'
 import { EXPERTISE } from '../../lib/options'
 import { ReelBoard } from '../../lib/reels'
 import { scrollToId } from '../../lib/scroll'
@@ -15,6 +16,9 @@ import { useHeroMotion } from './useHeroMotion'
 import { HERO, HERO_HOOKS, HERO_NODES, MEMBERSHIP_STRIP } from './content'
 import './home.css'
 
+// The network background is a separate chunk. It is fetched only on a large screen with a mouse, after the page is idle.
+const NetworkBackground = lazy(() => import('./NetworkBackground'))
+
 /**
  * The first screen. The headline is real text and is the largest thing painted, so it is what the browser
  * measures as the page loaded. Everything behind it is decoration, and none of it is needed to read the page.
@@ -26,7 +30,22 @@ export default function Hero() {
   const [board] = useState(() => new ReelBoard(1000))
   const wide = useMediaQuery('(min-width: 768px)')
   const hooks = useMediaQuery('(min-width: 1024px)')
+  const desktopPointer = useMediaQuery(NETWORK_QUERY)
+  const [networkReady, setNetworkReady] = useState(false)
   const extraWide = useMediaQuery('(min-width: 1280px) and (min-height: 820px)')
+
+  // Phones and tablets never mount it, and never download it. Reduced motion, data saver and weak devices keep the poster
+  // (motion is false for all of them), so they get nothing extra either. It waits until the page is idle so it cannot touch the LCP.
+  const wantNetwork = motion && desktopPointer
+  useEffect(() => {
+    if (!wantNetwork) return
+    const w = window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number; cancelIdleCallback?: (n: number) => void }
+    const id = w.requestIdleCallback ? w.requestIdleCallback(() => setNetworkReady(true), { timeout: 2500 }) : window.setTimeout(() => setNetworkReady(true), 1500)
+    return () => {
+      if (w.requestIdleCallback) w.cancelIdleCallback?.(id)
+      else window.clearTimeout(id)
+    }
+  }, [wantNetwork])
 
   // The reels pause while the hero is off screen. (They also pause while the tab is hidden: see useHeroMotion.)
   const [inView, setInView] = useState(true)
@@ -79,6 +98,11 @@ export default function Hero() {
           <div className="hero-mass hero-mass-b" />
           <div className="hero-mass hero-mass-c" />
           {motion && <StarDust />}
+          {wantNetwork && networkReady && (
+            <Suspense fallback={null}>
+              <NetworkBackground />
+            </Suspense>
+          )}
           {motion && <div className="hero-glow" />}
           <div className="hero-streaks">
             <i /><i /><i /><i /><i />
