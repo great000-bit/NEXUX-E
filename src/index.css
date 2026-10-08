@@ -1,27 +1,61 @@
-@import '@fontsource-variable/manrope';
-@import '@fontsource-variable/fraunces';
 @import 'tailwindcss';
 
+/* Fonts are served from /public/fonts (latin and latin-ext only) so they can be preloaded at a stable address. */
+@font-face {
+  font-family: 'Sora Variable';
+  font-style: normal; font-display: swap; font-weight: 100 800;
+  src: url('/fonts/sora-latin.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sora Variable';
+  font-style: normal; font-display: swap; font-weight: 100 800;
+  src: url('/fonts/sora-latin-ext.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Manrope Variable';
+  font-style: normal; font-display: swap; font-weight: 200 800;
+  src: url('/fonts/manrope-latin.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Manrope Variable';
+  font-style: normal; font-display: swap; font-weight: 200 800;
+  src: url('/fonts/manrope-latin-ext.woff2') format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 /*
-  NEXUS-E design tokens.
-  Brand colours were sampled from the conference flier (docs/flier.jpg):
-    deep green  #06361E  wordmark, footer bands
-    forest      #0B4A2A  section bars
-    emblem      #0A663F  logo emblem
-    leaf        #62AA2A  "Verified" pill, check marks
-    lime        #C5DC3F  headline accent
-    blue        #0B7CD0  logo "E", water icons
-    mint        #E6F2D0  light panels
+  NEXUS-E design system. Full notes in docs/design-system.md.
+
+  Layer 1, reference tokens (@theme): the flier colours plus the night shell.
+    deep green #06361E  forest #0B4A2A  emblem #0A663F  leaf #62AA2A  lime #C5DC3F  blue #0B7CD0  mint #E6F2D0
+  Layer 2, semantic tokens (plain custom properties, set per surface): text, lines, ring, button colours.
+    .theme-dark  is the night shell. Text on it is light.
+    .theme-light is any solid panel placed on the shell (forms, admin sheet, badges). Text on it is dark.
+  Layer 3, components (below): glass, buttons, fields, chips.
 */
 :root {
-  --ring: 0 0 0 3px rgb(11 124 208 / 0.35);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-1: 150ms;
+  --dur-2: 240ms;
+  --dur-3: 420ms;
+  --dur-4: 700ms;
+
+  /* Semantic defaults are the light surface values. */
+  --ring: 0 0 0 3px rgb(11 124 208 / 0.4);
+  --btn-primary-bg: #0b4a2a;
+  --btn-primary-bg-hover: #06361e;
+  --btn-primary-fg: #ffffff;
 }
 
 @theme static {
   --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font-display: 'Sora Variable', 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
 
+  /* Flier colours */
   --color-green-950: #04271a;
   --color-green-900: #06361e;
   --color-green-800: #0b4a2a;
@@ -49,28 +83,72 @@
   --color-danger-100: #fdeceb;
   --color-warn-100: #fff4d6;
 
+  /* Night shell */
+  --color-night-950: #03110a;
+  --color-night-900: #051a10;
+  --color-night-800: #082316;
+  --color-night-700: #0d3320;
+  --color-sage-300: #a9c4b0;
+  --color-sage-200: #c9ddce;
+  --color-mint-200: #d5ecc4;
+
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
   --radius-lg: 1.25rem;
   --radius-xl: 1.75rem;
+  --radius-2xl: 2rem;
 
   --shadow-sm: 0 1px 2px rgb(6 54 30 / 0.06), 0 1px 1px rgb(6 54 30 / 0.04);
-  --shadow-md: 0 8px 24px -8px rgb(6 54 30 / 0.18), 0 2px 6px rgb(6 54 30 / 0.06);
-  --shadow-lg: 0 24px 48px -16px rgb(6 54 30 / 0.28), 0 4px 12px rgb(6 54 30 / 0.08);
+  --shadow-md: 0 8px 24px -8px rgb(6 54 30 / 0.22), 0 2px 6px rgb(6 54 30 / 0.08);
+  --shadow-lg: 0 24px 48px -16px rgb(6 54 30 / 0.34), 0 4px 12px rgb(6 54 30 / 0.1);
 
   /* Spacing scale: 4px base. Tailwind multiplies this (p-4 = 1rem, p-8 = 2rem). */
   --spacing: 0.25rem;
+}
+
+/* ---------- Surfaces ---------- */
+.theme-dark {
+  --color-green-900: #f1f8e6; /* headings */
+  --color-green-800: #d3ebb4; /* links, ghost buttons */
+  --color-green-700: #b9dc8f; /* eyebrows */
+  --color-ink-900: #f1f8e6;
+  --color-ink-700: #cbdacf;   /* body */
+  --color-ink-500: #9fb6a6;   /* muted */
+  --color-line: rgb(255 255 255 / 0.14);
+  --color-line-strong: rgb(255 255 255 / 0.24);
+  --ring: 0 0 0 3px rgb(197 220 63 / 0.55);
+  --btn-primary-bg: #c5dc3f;
+  --btn-primary-bg-hover: #d3e663;
+  --btn-primary-fg: #04140d;
+  color: var(--color-ink-700);
+}
+/* Anything solid and light that sits on the shell restores the light values, so existing pages stay correct. */
+.theme-light, .card, .sheet {
+  --color-green-900: #06361e;
+  --color-green-800: #0b4a2a;
+  --color-green-700: #0a663f;
+  --color-ink-900: #0f1a14;
+  --color-ink-700: #2f3d35;
+  --color-ink-500: #5a695f;
+  --color-line: #dde5d6;
+  --color-line-strong: #c3cfbc;
+  --ring: 0 0 0 3px rgb(11 124 208 / 0.4);
+  --btn-primary-bg: #0b4a2a;
+  --btn-primary-bg-hover: #06361e;
+  --btn-primary-fg: #ffffff;
+  color: var(--color-ink-700);
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    background: var(--color-night-950);
   }
   body {
     margin: 0;
-    background: var(--color-paper);
-    color: var(--color-ink-900);
+    background: var(--color-night-950);
+    color: var(--color-ink-700);
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.6;
@@ -79,25 +157,45 @@
   }
   h1, h2, h3 {
     font-family: var(--font-display);
-    letter-spacing: -0.015em;
-    line-height: 1.15;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
     text-wrap: balance;
   }
   p { text-wrap: pretty; }
   :focus-visible {
-    outline: none;
+    outline: 2px solid transparent; /* keeps a visible outline in forced-colours mode */
     box-shadow: var(--ring);
     border-radius: var(--radius-sm);
   }
   ::selection { background: var(--color-lime-500); color: var(--color-green-950); }
 }
 
-/* Page transition */
+/* The night shell: near black green with a faint glow in the corners. Painted once, never animated. */
+.shell { position: relative; background: var(--color-night-950); isolation: isolate; }
+.shell::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(60rem 36rem at -8% -10%, rgb(124 168 140 / 0.22), transparent 62%),
+    radial-gradient(52rem 34rem at 108% 4%, rgb(181 214 190 / 0.14), transparent 60%),
+    radial-gradient(56rem 34rem at 100% 108%, rgb(110 150 120 / 0.2), transparent 62%),
+    radial-gradient(44rem 28rem at -6% 100%, rgb(150 190 120 / 0.1), transparent 64%);
+}
+
+/* A solid light panel for dense screens (the admin). */
+.sheet {
+  background: #fbfdf8; border: 1px solid rgb(255 255 255 / 0.5);
+  border-radius: var(--radius-2xl); padding: 1.25rem;
+  box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.7);
+}
+@media (min-width: 640px) { .sheet { padding: 2rem; } }
+
+/* ---------- Motion ---------- */
 @keyframes rise {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-.page-enter { animation: rise 420ms var(--ease) both; }
+.page-enter { animation: rise var(--dur-3) var(--ease) both; }
 @keyframes attention {
   0%, 100% { box-shadow: 0 0 0 0 rgb(180 35 24 / 0); }
   30% { box-shadow: 0 0 0 6px rgb(180 35 24 / 0.28); }
@@ -120,25 +218,70 @@
   }
 }
 
-/* Reusable component classes */
+/* ---------- Glass ---------- */
+/*
+  Glass is for containers and marketing cards only, never for form inputs or large scrolling lists.
+  .glass       blurred. Use sparingly: a screen should hold only a handful.
+  .glass-flat  the same look without backdrop-filter, for grids and lists, so mid-range phones stay smooth.
+*/
+.glass, .glass-flat {
+  background: rgb(255 255 255 / 0.07);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 14px 40px -18px rgb(0 0 0 / 0.7);
+}
+.glass {
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+.glass-flat { background: rgb(255 255 255 / 0.06); }
+.glass-strong { background: rgb(255 255 255 / 0.1); border-color: rgb(255 255 255 / 0.18); }
+@media (max-width: 640px) {
+  .glass { -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+}
+/* Without backdrop-filter, the glass becomes a solid dark green so text stays readable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: rgb(9 38 25 / 0.94); }
+}
+.glass-hover { transition: transform var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease); }
+.glass-hover:hover { transform: translateY(-3px); border-color: rgb(197 220 63 / 0.4); background: rgb(255 255 255 / 0.1); }
+
+/* ---------- Components ---------- */
 @layer components {
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
     min-height: 3rem; padding: 0 1.5rem;
     border-radius: 999px; border: 1px solid transparent;
-    font-weight: 700; font-size: 0.975rem; letter-spacing: 0.005em;
-    cursor: pointer; user-select: none;
-    transition: transform 160ms var(--ease), background-color 160ms var(--ease),
-      box-shadow 160ms var(--ease), border-color 160ms var(--ease), opacity 160ms;
+    font-weight: 700; font-size: 0.975rem; letter-spacing: 0.005em; line-height: 1.2;
+    cursor: pointer; user-select: none; text-decoration: none; white-space: nowrap;
+    transition: transform var(--dur-1) var(--ease), background-color var(--dur-1) var(--ease),
+      box-shadow var(--dur-2) var(--ease), border-color var(--dur-1) var(--ease), opacity var(--dur-1);
   }
-  .btn:active:not(:disabled) { transform: translateY(1px) scale(0.99); }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); }
+  .btn:active:not(:disabled) { transform: translateY(1px) scale(0.985); }
   .btn:disabled { opacity: 0.55; cursor: not-allowed; }
-  .btn-primary { background: var(--color-green-800); color: #fff; box-shadow: var(--shadow-md); }
-  .btn-primary:hover:not(:disabled) { background: var(--color-green-900); box-shadow: var(--shadow-lg); }
+  .btn-primary { background: var(--btn-primary-bg); color: var(--btn-primary-fg); box-shadow: var(--shadow-md); }
+  .btn-primary:hover:not(:disabled) { background: var(--btn-primary-bg-hover); box-shadow: var(--shadow-lg); }
   .btn-accent { background: var(--color-lime-500); color: var(--color-green-950); box-shadow: var(--shadow-md); }
   .btn-accent:hover:not(:disabled) { background: var(--color-lime-400); }
   .btn-ghost { background: transparent; color: var(--color-green-800); border-color: var(--color-line-strong); }
-  .btn-ghost:hover:not(:disabled) { background: var(--color-green-50); border-color: var(--color-green-600); }
+  .btn-ghost:hover:not(:disabled) { background: rgb(127 160 100 / 0.12); border-color: var(--color-green-600); }
+  .btn-glass {
+    background: rgb(255 255 255 / 0.08); color: #f1f8e6; border-color: rgb(255 255 255 / 0.2);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  }
+  .btn-glass:hover:not(:disabled) { background: rgb(255 255 255 / 0.14); border-color: rgb(197 220 63 / 0.5); }
+  .theme-light .btn-glass, .card .btn-glass, .sheet .btn-glass {
+    background: var(--color-green-50); color: var(--color-green-800); border-color: var(--color-line-strong);
+    -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none;
+  }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.25rem;
+    padding: 0.35rem 0.85rem; border-radius: 999px;
+    font-size: 0.8125rem; font-weight: 600; color: #e6f0dc;
+    background: rgb(255 255 255 / 0.07); border: 1px solid rgb(255 255 255 / 0.15);
+  }
 
   .field-label { display: block; font-weight: 700; font-size: 0.875rem; color: var(--color-ink-900); margin-bottom: 0.4rem; }
   .field-hint { font-size: 0.8125rem; color: var(--color-ink-500); margin-top: 0.35rem; }
@@ -163,54 +306,93 @@
   .group-field:focus { outline: none; }
   .attention { animation: attention 1.2s var(--ease) 1; }
 
+  /* Inputs stay solid and high contrast everywhere. */
   .input {
     width: 100%; min-height: 3rem; padding: 0.7rem 0.95rem;
-    background: var(--color-surface); color: var(--color-ink-900);
-    border: 1px solid var(--color-line-strong); border-radius: var(--radius-md);
+    background: var(--color-surface); color: #0f1a14;
+    border: 1px solid #b4c3ae; border-radius: var(--radius-md);
     font: inherit; font-size: 1rem; /* 16px stops iOS zoom on focus */
-    transition: border-color 160ms var(--ease), box-shadow 160ms var(--ease), background-color 160ms;
+    transition: border-color var(--dur-1) var(--ease), box-shadow var(--dur-2) var(--ease), background-color var(--dur-1);
   }
-  .input::placeholder { color: #75827a; }
+  .input::placeholder { color: #66746b; }
   .input:hover { border-color: var(--color-green-600); }
-  .input:focus { outline: none; border-color: var(--color-blue-600); box-shadow: var(--ring); }
+  .input:focus { outline: none; border-color: var(--color-blue-600); box-shadow: 0 0 0 3px rgb(11 124 208 / 0.4); }
   .input[aria-invalid='true'] { border-color: var(--color-danger-600); background: var(--color-danger-100); }
   .input[aria-invalid='true']:focus { box-shadow: 0 0 0 3px rgb(180 35 24 / 0.25); }
 
   .choice {
     display: flex; align-items: flex-start; gap: 0.75rem;
     padding: 0.65rem 0.9rem; cursor: pointer;
-    background: var(--color-surface); border: 1px solid var(--color-line-strong);
-    border-radius: var(--radius-md);
-    transition: border-color 160ms var(--ease), background-color 160ms var(--ease), box-shadow 160ms var(--ease);
+    background: var(--color-surface); border: 1px solid #b4c3ae;
+    border-radius: var(--radius-md); color: #0f1a14;
+    transition: border-color var(--dur-1) var(--ease), background-color var(--dur-1) var(--ease), box-shadow var(--dur-2) var(--ease);
   }
   .choice:hover { border-color: var(--color-green-600); }
-  .choice:has(input:focus-visible) { box-shadow: var(--ring); border-color: var(--color-blue-600); }
+  .choice:has(input:focus-visible) { box-shadow: 0 0 0 3px rgb(11 124 208 / 0.4); border-color: var(--color-blue-600); }
   .choice[data-checked='true'] { background: var(--color-green-50); border-color: var(--color-green-700); }
   .choice[data-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
   .choice[data-error='true'] { border-color: var(--color-danger-600); background: var(--color-danger-100); }
   .choice-mark {
     flex: none; width: 1.25rem; height: 1.25rem; margin-top: 0.1rem;
-    border: 1.5px solid var(--color-ink-300); background: #fff;
+    border: 1.5px solid #8a9b90; background: #fff;
     display: grid; place-items: center;
-    transition: background-color 160ms var(--ease), border-color 160ms var(--ease);
+    transition: background-color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
   }
   .choice-radio { border-radius: 999px; }
   .choice-check { border-radius: 0.375rem; }
   .choice[data-checked='true'] .choice-mark { background: var(--color-green-700); border-color: var(--color-green-700); }
   .choice-radio::after {
     content: ''; width: 0.45rem; height: 0.45rem; border-radius: 999px; background: #fff;
-    transform: scale(0); transition: transform 160ms var(--ease);
+    transform: scale(0); transition: transform var(--dur-1) var(--ease);
   }
   .choice[data-checked='true'] .choice-radio::after { transform: scale(1); }
   .choice-check::after {
     content: ''; width: 0.3rem; height: 0.6rem; margin-top: -0.1rem;
     border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0);
-    transition: transform 160ms var(--ease);
+    transition: transform var(--dur-1) var(--ease);
   }
   .choice[data-checked='true'] .choice-check::after { transform: rotate(45deg) scale(1); }
 
+  /* A solid panel: forms, dashboard sections, admin blocks. */
   .card {
-    background: var(--color-surface); border: 1px solid var(--color-line);
-    border-radius: var(--radius-xl); box-shadow: var(--shadow-md);
+    background: #fbfdf8; border: 1px solid rgb(255 255 255 / 0.55);
+    border-radius: var(--radius-xl); box-shadow: 0 24px 60px -28px rgb(0 0 0 / 0.75), 0 2px 6px rgb(0 0 0 / 0.12);
   }
+  .sheet .card { background: #fff; border-color: var(--color-line); box-shadow: var(--shadow-md); }
+  a.card, .card.card-link { transition: transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease); }
+  a.card:hover { transform: translateY(-2px); }
+
+  /* Section rhythm used on the home page. */
+  .eyebrow { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-green-700); }
+  .t-h2 { font-size: clamp(1.75rem, 1.2rem + 2.4vw, 3rem); font-weight: 600; letter-spacing: -0.035em; color: var(--color-green-900); }
+  .t-lead { font-size: clamp(1rem, 0.95rem + 0.3vw, 1.175rem); color: var(--color-ink-700); max-width: 38rem; }
+}
+
+/* Slim, quiet scrollbars on the dark shell. */
+.theme-dark { scrollbar-color: rgb(255 255 255 / 0.25) transparent; }
+
+/* The Verified badge: lime on the dark shell, soft green on a light panel. */
+.badge-verified { background: rgb(197 220 63 / 0.14); color: #d9ec7a; box-shadow: inset 0 0 0 1px rgb(197 220 63 / 0.38); }
+.theme-light .badge-verified, .card .badge-verified, .sheet .badge-verified { background: var(--color-green-100); color: var(--color-green-800); box-shadow: none; }
+
+.toast { animation: rise var(--dur-3) var(--ease) both; }
+
+/* Navigation */
+.nav-pill { transition: background-color var(--dur-3) var(--ease), box-shadow var(--dur-3) var(--ease), border-color var(--dur-3) var(--ease); }
+.nav-pill[data-scrolled='true'] {
+  background: rgb(8 30 20 / 0.72); border-color: rgb(255 255 255 / 0.2);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 18px 44px -14px rgb(0 0 0 / 0.75);
+}
+.sheet-menu {
+  background: rgb(3 17 10 / 0.9);
+  -webkit-backdrop-filter: blur(22px) saturate(140%); backdrop-filter: blur(22px) saturate(140%);
+  animation: rise var(--dur-3) var(--ease) both;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sheet-menu { background: rgb(3 17 10 / 0.98); }
+}
+/* A soft fade behind the sticky header, so scrolled text never shows through the logo. */
+.site-header::before {
+  content: ''; position: absolute; inset: 0 0 -1.25rem 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(to bottom, rgb(3 17 10 / 0.9) 0%, rgb(3 17 10 / 0.6) 60%, transparent 100%);
 }

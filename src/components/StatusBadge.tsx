@@ -51,7 +51,7 @@ export function StatusBadge({ status, className = '' }: { status: string; classN
   const s: VStatus = isStatus(status) ? status : 'pending'
   return (
     <span
-      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold ${STYLE[s]} ${className}`}
+      className={`theme-light inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold ${STYLE[s]} ${className}`}
     >
       <Icon status={s} />
       {STATUS_LABEL[s]}
