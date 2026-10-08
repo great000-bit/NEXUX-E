@@ -1,32 +1,47 @@
 import { Link } from 'react-router-dom'
-import { Icon } from '../../components/icons'
+import { EXPERTISE_ICON } from '../../components/icons'
+import type { ReelMode } from '../../lib/motion'
+import type { ReelBoard } from '../../lib/reels'
+import { EXPERTISE } from '../../lib/options'
 import { HERO_NODES } from './content'
+import { Reel } from './Reel'
 
-const SIDE: Record<'tl' | 'tr' | 'bl' | 'br', 'left' | 'right'> = { tl: 'left', bl: 'left', tr: 'right', br: 'right' }
+const SIDE: Record<'tl' | 'tr' | 'bl' | 'br', 'start' | 'end'> = { tl: 'start', bl: 'start', tr: 'end', br: 'end' }
+export const iconForExpertise = (t: string) => EXPERTISE_ICON[t]
 
 /**
  * Four expertise nodes on thin lines that curve toward the centre, as in the reference composition.
- * Tablet and desktop only: phones get the same four as chips. The lines draw in on load and the nodes
- * float a few pixels at different depths. Each node links to the expertise section.
+ * Tablet and desktop only: phones get four chips instead. Each label is a reel that changes on its own timer.
+ * Each node links to the expertise section.
  */
-export function CornerNodes() {
+export function CornerNodes({ board, mode, active, lower }: { board: ReelBoard; mode: ReelMode; active: boolean; lower: boolean }) {
+  // Tablets get the two upper nodes only: below the headline there is no room for the lower pair.
+  const nodes = lower ? HERO_NODES : HERO_NODES.filter((x) => x.corner === 'tl' || x.corner === 'tr')
   return (
-    <div className="hero-nodes hidden md:block" aria-label="Areas of expertise">
+    <div className="hero-nodes" aria-label="Areas of expertise">
       <svg className="hero-lines" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 66H190C240 66 275 46 322 20" pathLength="1" />
-        <path d="M1000 66H810C760 66 725 46 678 20" pathLength="1" />
-        <path d="M0 396H190C240 396 275 424 322 458" pathLength="1" />
-        <path d="M1000 396H810C760 396 725 424 678 458" pathLength="1" />
+        <path d="M0 33H190C240 33 275 22 322 6" pathLength="1" />
+        <path d="M1000 33H810C760 33 725 22 678 6" pathLength="1" />
+        {lower && <path d="M0 420H190C240 420 275 446 322 476" pathLength="1" />}
+        {lower && <path d="M1000 420H810C760 420 725 446 678 476" pathLength="1" />}
       </svg>
 
-      {HERO_NODES.map((n, i) => (
-        <Link key={n.corner} to="/#expertise" className={`hero-node hero-node-${n.corner}`} data-depth={i} data-side={SIDE[n.corner]}>
+      {nodes.map((n, i) => (
+        <Link key={n.corner} to="/#expertise" className={`hero-node hero-node-${n.corner}`} data-depth={i} data-side={SIDE[n.corner] === 'start' ? 'left' : 'right'}>
           <span className="hero-node-float">
-            <span className="hero-node-icon glass-flat">
-              <Icon name={n.icon} className="h-[1.15rem] w-[1.15rem]" strokeWidth={1.7} />
-            </span>
+            <span className="hero-node-dot" aria-hidden="true" />
             <span className="hero-node-label">
-              <span className="hero-node-name">{n.label}</span>
+              <Reel
+                id={`node-${n.corner}`}
+                board={board}
+                pool={EXPERTISE}
+                initial={n.label}
+                iconFor={iconForExpertise}
+                mode={mode}
+                active={active}
+                align={SIDE[n.corner]}
+                className="reel-node"
+              />
               <span className="hero-node-sub">Expertise area</span>
             </span>
           </span>

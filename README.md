@@ -331,6 +331,8 @@ The whole product uses a dark-green glass look. Visuals and copy only; registrat
 - **Components:** `src/components/ds/` (Button, GlassCard, Chip, Section, Badge, Toast) plus Navbar, Footer, inputs and the error summary.
 - **Home page:** `src/pages/home/`. The hero is its own chunk; the scroll sections (with AOS) load after idle or first scroll. The hero falls back to a still poster for reduced motion, save-data, 4 or fewer cores, 2 GB or less memory, or a hidden tab.
 - **Brand files:** `npm run brand` regenerates the favicon, apple touch icon, light logo mark and share image from `scripts/generate-brand.mjs`.
+- **Hero motion (hero-motion release):** slot-machine text reels, an automatic tagline, a drifting aurora background, a pointer glow, and a developer credit in the footer. Details are in the "Hero motion" part of `docs/design-system.md`. The reels and the aurora run only when the device allows (see the motion rules there); everything else shows a still poster.
+- **Hero audit:** `scripts/hero-audit.js` does the same kind of read-only check for the hero: overlaps with the headline and buttons, and whether every possible text fits its reel window.
 - **Layout audit:** paste `scripts/layout-audit.js` into the browser console at 360, 390, 768 and 1280 px to check sideways scroll, 44 px tap targets and heading order. It reads the page only.
 - **Footer contact address:** set `VITE_CONTACT_EMAIL` in Vercel (see `.env.example`). Until then the footer shows a fallback line.
 - **Tests:** `src/design.test.ts` (contrast audit) and `src/home.test.ts` (motion rules, copy, structure).
