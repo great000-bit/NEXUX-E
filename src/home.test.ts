@@ -140,7 +140,8 @@ test('the navigation has the right links, a Register button in the mobile sheet,
   assert.doesNotMatch(nav, /\/admin/)
   assert.match(nav, /aria-expanded/)
   assert.match(nav, /Escape/)
-  assert.match(read('src/components/Footer.tsx'), /to="\/admin"/)
+  assert.doesNotMatch(read('src/components/Footer.tsx'), /admin/i)
+  assert.doesNotMatch(read('src/pages/NotFound.tsx'), /\/admin/)
 })
 
 test('AOS is loaded only by the home sections, so no other route downloads it', () => {

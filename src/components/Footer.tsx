@@ -38,10 +38,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-5 py-5 text-xs text-white/60 sm:flex-row sm:items-center sm:px-8">
           <p>&copy; 2026 NEXUS-E. A stronger environment. A brighter Nigeria.</p>
-          <p className="flex items-center gap-4">
-            <span className="uppercase tracking-[0.2em] text-lime-500/90">People · Planet · Solutions · Nigeria</span>
-            <Link to="/admin" className="inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-white/60 underline-offset-4 hover:text-white hover:underline">Admin</Link>
-          </p>
+          <p className="uppercase tracking-[0.2em] text-lime-500/90">People · Planet · Solutions · Nigeria</p>
         </div>
       </div>
     </footer>
