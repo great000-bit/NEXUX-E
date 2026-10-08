@@ -3,16 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import { StatusBadge } from '../components/StatusBadge'
 import { Notice, Spinner } from '../components/ui'
 import { checkBeforeUpload, formatSize } from '../lib/fileCheck'
+import { prepareImage } from '../lib/image'
 import {
   call, clearSession, getSession, uploadToSignedUrl,
   type EvidenceFile, type MeResponse,
 } from '../lib/portal'
 import {
-  BODIES, isStatus, KIND_INFO, MAX_FILES, STATUS_HELP, STATUS_LABEL,
+  BODIES, isStatus, KIND_INFO, MAX_FILE_BYTES, MAX_FILES, STATUS_HELP, STATUS_LABEL,
   type EvidenceKind,
 } from '../lib/verification'
 
-type Transfer = { key: string; kind: EvidenceKind; name: string; progress: number; phase: 'sending' | 'checking' }
+type Transfer = { key: string; kind: EvidenceKind; name: string; progress: number; phase: 'preparing' | 'sending' | 'checking' }
 
 const KINDS: EvidenceKind[] = ['membership', 'licence', 'qualification', 'cv']
 
@@ -95,19 +96,32 @@ export default function VerifyDashboard() {
     await refresh()
   }
 
-  const addFile = async (kind: EvidenceKind, label: string, file: File) => {
+  const addFile = async (kind: EvidenceKind, label: string, picked: File) => {
     setSlotError(kind, undefined)
     setSubmitError(null)
     if (evidenceCount >= MAX_FILES) {
       return setSlotError(kind, `You can keep up to ${MAX_FILES} files. Please delete one before adding another.`)
     }
-    const check = await checkBeforeUpload(file)
-    if (!check.ok) return setSlotError(kind, check.message)
-
     const key = crypto.randomUUID()
     const patch = (p: Partial<Transfer>) => setTransfers((t) => t.map((x) => (x.key === key ? { ...x, ...p } : x)))
     const drop = () => setTransfers((t) => t.filter((x) => x.key !== key))
-    setTransfers((t) => [...t, { key, kind, name: file.name, progress: 0, phase: 'sending' }])
+    setTransfers((t) => [...t, { key, kind, name: picked.name, progress: 0, phase: 'preparing' }])
+
+    // Big phone photos are shrunk here first (PDFs are left alone), so they upload quickly on weak data.
+    const prepared = await prepareImage(picked)
+    const file = prepared.file
+    const check = await checkBeforeUpload(file)
+    if (!check.ok) {
+      drop()
+      const stillBig = prepared.resized && file.size > MAX_FILE_BYTES
+      return setSlotError(
+        kind,
+        stillBig
+          ? `We shrank this photo as far as we sensibly can, and it is still over 5 MB. Please retake it at a lower quality setting, or send a PDF.`
+          : check.message,
+      )
+    }
+    patch({ name: file.name, phase: 'sending' })
 
     const slot = await call<{ file_id: string; upload_url: string }>(
       'upload_url',
@@ -399,7 +413,7 @@ function Slot({
               <div className="flex items-center justify-between gap-2 text-sm">
                 <p className="truncate font-semibold text-ink-900">{t.name}</p>
                 <p className="flex-none text-xs font-bold text-green-800" role="status">
-                  {t.phase === 'checking' ? 'Checking the file' : `${Math.round(t.progress * 100)}%`}
+                  {t.phase === 'preparing' ? 'Preparing the photo' : t.phase === 'checking' ? 'Checking the file' : `${Math.round(t.progress * 100)}%`}
                 </p>
               </div>
               <div
