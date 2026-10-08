@@ -53,7 +53,7 @@ function makeWorld(rows: Row[], sendImpl: (job: OutboxJob) => SendResult, maxAtt
 }
 
 const row = (id: number, expert_id: string): Row => ({
-  id, expert_id, to_email: `p${id}@example.org`, full_name: 'Ada Obi', title: 'Dr', attempts: 0, status: 'pending',
+  id, expert_id, to_email: `p${id}@example.org`, full_name: 'Ada Obi', title: 'Dr', template: 'registration_confirmation', payload: {}, attempts: 0, status: 'pending',
 })
 
 test('sends every pending row once and marks it sent', async () => {

@@ -26,6 +26,8 @@
     "supabase/functions/expert-portal/filecheck.ts",
     "supabase/functions/expert-portal/hash.ts",
     "supabase/functions/expert-portal/mail.ts",
-    "supabase/functions/expert-portal/portal.test.ts"
+    "supabase/functions/expert-portal/portal.test.ts",
+    "supabase/functions/send-confirmation-emails/status-emails.ts",
+    "supabase/functions/send-confirmation-emails/status.test.ts"
   ]
 }

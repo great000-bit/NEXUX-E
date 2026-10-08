@@ -7,6 +7,9 @@ export type OutboxJob = {
   to_email: string
   full_name: string
   title: string
+  /** Which email this row is: registration_confirmation or a verification_* status email. */
+  template: string
+  payload: Record<string, unknown>
   /** Includes the attempt now being made (the claim already incremented it). */
   attempts: number
 }

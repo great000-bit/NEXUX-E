@@ -5,7 +5,7 @@
 //
 // Secrets come from the function environment or Supabase Vault. Nothing here is ever logged except ids and error text.
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import { buildEmail } from './email.ts'
+import { composeEmail } from './status-emails.ts'
 import { classifyResendError, processOutbox, type Deps, type OutboxJob, type SendResult } from './logic.ts'
 
 const env = (name: string, fallback = ''): string => Deno.env.get(name) ?? fallback
@@ -91,13 +91,21 @@ Deno.serve(async (req) => {
           to_email: String(r.job_to_email),
           full_name: String(r.job_full_name),
           title: String(r.job_title),
+          template: String(r.job_template ?? 'registration_confirmation'),
+          payload: (r.job_payload ?? {}) as Record<string, unknown>,
           attempts: Number(r.job_attempts),
         }),
       )
     },
 
     async send(job): Promise<SendResult> {
-      const email = buildEmail(job, { siteUrl })
+      let email
+      try {
+        email = composeEmail(job, { siteUrl, contactEmail: env('CONTACT_EMAIL') || undefined })
+      } catch (e) {
+        // An unknown template can never succeed, so give up on the row instead of retrying.
+        return { ok: false, kind: 'permanent', message: e instanceof Error ? e.message : 'Could not build the email' }
+      }
       try {
         const res = await fetch('https://api.resend.com/emails', {
           method: 'POST',
