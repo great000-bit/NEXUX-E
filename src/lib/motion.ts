@@ -1,5 +1,7 @@
 // Decides when the home page may animate. Pure functions, so the rules are tested without a browser.
-import { NETWORK_QUERY } from './network'
+
+/** A screen at least 1024 px wide with a fine pointer: a laptop or desktop with a mouse or trackpad. */
+export const DESKTOP_POINTER_QUERY = '(min-width: 1024px) and (pointer: fine)'
 
 export type MotionInputs = {
   reducedMotion: boolean
@@ -58,7 +60,7 @@ export function readMotionInputs(): MotionInputs {
     cores: nav.hardwareConcurrency || undefined,
     memoryGb: nav.deviceMemory,
     hidden: document.hidden,
-    desktopPointer: window.matchMedia(NETWORK_QUERY).matches,
+    desktopPointer: window.matchMedia(DESKTOP_POINTER_QUERY).matches,
   }
 }
 

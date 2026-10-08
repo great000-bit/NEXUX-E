@@ -118,16 +118,6 @@ Visuals and motion only; everything below lives in `src/pages/home` and is switc
 - **Pointer:** a mouse gets a glow that follows it (moved by transform) and a small parallax on nodes and hook lines. Touch screens get neither.
 - **LCP:** the headline paints in the first frame and is the largest text block, so it is the LCP element. The subline slides in without fading, so it never becomes the LCP.
 
-### Desktop network background (hero-network release)
-
-A single canvas behind the hero text: glowing lime nodes (#C6F135) run quickly along thin, low-opacity green lines on an invisible 48 px circuit grid, sometimes turning a right angle. When two come within 150 px a right-angle link draws between them, a short pulse runs along it, and it fades (1.1 s). A mouse links to the nodes within 170 px for 0.7 s.
-
-- **Where it runs:** only when `(min-width: 1024px) and (pointer: fine)` **and** the hero may animate (so never with reduced motion or data saver; core and memory counts never block it). Below that nothing is mounted and the chunk is never downloaded; phones and tablets are exactly as before.
-- **Loading:** `NetworkBackground.tsx` is a lazy chunk (about 2 KB gzipped), requested only after the page is idle, so it cannot touch the LCP.
-- **Code:** `src/lib/network.ts` (geometry, link rules, node count: 40 to 60 by width), `src/lib/networkSim.ts` (the simulation, no DOM, tested in Node), `NetworkBackground.tsx` (drawing, pointer, visibility).
-- **Performance rules:** one canvas and one requestAnimationFrame loop; it stops when scrolled out of view (IntersectionObserver) or the tab is hidden; resize-safe (debounced rebuild). The glow is a stamped sprite, never a blur. Pixel ratio is capped at 1 (the brief allowed up to 2): on a machine without a GPU, 2x halved the frame rate and 1.5x still dropped frames, while 1x held 60 frames a second with no long tasks.
-- **Readability:** the canvas sits under the hero scrim, takes no pointer events, and the lines stay faint.
-
 ## 5. Accessibility
 
 - AA contrast everywhere, audited by `src/design.test.ts` (headings, body, muted, lime, buttons, the faded end of "Be found.", hero small print, footer, field borders).
