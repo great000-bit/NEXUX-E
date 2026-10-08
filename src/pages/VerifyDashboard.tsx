@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ListingCard } from '../components/ListingCard'
+import { OpportunitiesSection } from '../components/OpportunitiesSection'
 import { StatusBadge } from '../components/StatusBadge'
 import { Notice, Spinner } from '../components/ui'
 import { checkBeforeUpload, formatSize } from '../lib/fileCheck'
@@ -42,6 +44,8 @@ export default function VerifyDashboard() {
     },
     [navigate],
   )
+
+  const sessionEnded = useCallback(() => endSession('Your session has ended, so please sign in again.'), [endSession])
 
   const refresh = useCallback(async () => {
     if (!token) return endSession('Please sign in to see your verification.')
@@ -222,6 +226,14 @@ export default function VerifyDashboard() {
         )}
       </section>
 
+      {/* Verified experts see what is open to them first. Everyone else sees the evidence steps first, as before. */}
+      {status === 'verified' && (
+        <>
+          <OpportunitiesSection token={token} onSessionEnded={sessionEnded} />
+          <ListingCard expertId={expert.expert_id} verified listed={expert.discoverable} token={token} onChanged={refresh} onSessionEnded={sessionEnded} />
+        </>
+      )}
+
       {/* Evidence */}
       <section aria-labelledby="evidence-title" className="space-y-4">
         <div>
@@ -303,6 +315,13 @@ export default function VerifyDashboard() {
             <p className="mt-2 text-sm text-ink-500">The button turns on once you have added a membership, licence or qualification document.</p>
           )}
         </section>
+      )}
+
+      {status !== 'verified' && (
+        <>
+          <ListingCard expertId={expert.expert_id} verified={false} listed={expert.discoverable} token={token} onChanged={refresh} onSessionEnded={sessionEnded} />
+          <OpportunitiesSection token={token} onSessionEnded={sessionEnded} />
+        </>
       )}
 
       {/* Registered details */}
