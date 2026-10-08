@@ -210,7 +210,16 @@ Two things were added, and nothing about registration or verification changed.
 
 - `npm test` includes `src/phase3.test.ts` (privacy and migration rules), `src/lib/directoryFilters.test.ts`, `src/lib/opportunities.test.ts` and the CSV tests.
 - `node scripts/regression-live.mjs` checks a real project with only the public key: nothing private is readable, the new functions are closed, and the directory returns only public fields. Add `--write` to also prove a new expert who said Yes to discoverability stays hidden until verified. Add `--env=.env.staging.local` to point it at the staging project.
-- Staging is a separate free Supabase project (`nexus-e-staging`). Run the migrations and deploy the three Edge Functions there first, point the Vercel **Preview** environment variables at it, and only then release to production.
+- Staging is a separate free Supabase project (`nexus-e-staging`, project ref `hsqpqhgcwutoyfmruvco`, $0 a month). Run the migrations and deploy the three Edge Functions there first, test, and only then release to production. Its Resend key was deleted after the release, so staging cannot send email until you add a new sending key to its Vault (`resend_api_key`). A free project pauses after a period of no use and can be restored from the Supabase dashboard.
+
+### Release record: Phase 3 went live on 8 October 2026
+
+- **Before.** A full backup of production (every table the registration and verification code touches) was written to a local folder outside the repository. It holds personal data, so it is never committed.
+- **Database.** `20261011000001_phase3_directory_and_opportunities.sql` was applied to production. It is additive: one new empty column and one partial index on `experts`, one new setting, three new tables, and the new functions. It did not change any existing column, policy, row or the Expert ID sequence.
+- **Edge Functions.** `expert-portal`, `send-confirmation-emails` and `verification-admin` were redeployed. The deployed bundles are byte for byte the ones tested on staging (same SHA-256).
+- **Site.** `phase-3` was merged into `main`, and Vercel deployed it to `https://register.nexuse.org`.
+- **Checked on production.** The full flow was run once with clearly labelled test data: registration, confirmation email, sign-in code, upload, review, Verified status, directory listing, creating an opportunity, expressing interest, and the admin notification email. The test person was removed from the directory and back in, and the page stopped opening at once. Every test row, file, session and test login was then removed. Afterwards each table was compared with the backup and matched, apart from the two additive changes above.
+- **Expert IDs.** The next Expert ID after the release is `NEX-000002`.
 
 ## Settings you can change
 
