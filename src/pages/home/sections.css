@@ -1,0 +1,28 @@
+/* Home page scroll sections. Imported after the AOS stylesheet so these presets take precedence. */
+/* AOS presets: small, calm movements. The library only supplies the trigger and timing. */
+[data-aos='fade-up'] { transform: translate3d(0, 22px, 0); }
+[data-aos='soft-zoom'] { opacity: 0; transform: scale(0.965); }
+[data-aos='soft-zoom'].aos-animate { opacity: 1; transform: scale(1); }
+[data-aos='fade-in'] { opacity: 0; }
+[data-aos='fade-in'].aos-animate { opacity: 1; }
+
+.icon-tile {
+  display: grid; place-items: center; width: 3rem; height: 3rem; flex: none; border-radius: 0.95rem;
+  color: var(--color-lime-500); background: rgb(197 220 63 / 0.1); border: 1px solid rgb(197 220 63 / 0.25);
+}
+.expertise-card { display: flex; flex-direction: column; gap: 0.9rem; padding: 1.1rem; border-radius: var(--radius-lg); }
+.expertise-card:hover .icon-tile { background: rgb(197 220 63 / 0.18); border-color: rgb(197 220 63 / 0.5); }
+
+/* The how it works timeline. --p (0 to 1) is written as the section scrolls, and the line grows with it. */
+.timeline { --p: 0; position: relative; }
+.timeline-line { position: absolute; background: rgb(255 255 255 / 0.14); border-radius: 2px; }
+.timeline-line::after { content: ''; position: absolute; inset: 0; border-radius: 2px; background: linear-gradient(var(--tl-dir, 180deg), #c5dc3f, #62aa2a); transform-origin: top left; }
+.timeline-line-v { left: 1.35rem; top: 1.5rem; bottom: 1.5rem; width: 2px; }
+.timeline-line-v::after { transform: scaleY(var(--p)); }
+.timeline-line-h { left: 12.5%; right: 12.5%; top: 1.5rem; height: 2px; --tl-dir: 90deg; }
+.timeline-line-h::after { transform: scaleX(var(--p)); }
+.timeline-node { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; background: #072015; border: 1px solid rgb(255 255 255 / 0.2); color: var(--color-lime-500); position: relative; z-index: 1; }
+
+/* A soft glow behind the closing call to action. */
+.cta-glow { position: absolute; inset: auto; width: 34rem; height: 34rem; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgb(197 220 63 / 0.2), transparent 70%); }
