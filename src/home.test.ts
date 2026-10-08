@@ -249,3 +249,23 @@ test('the registration form, its fields and its logic were not touched by the re
     assert.doesNotMatch(read(f), /theme-dark|glass|aos/i, f)
   }
 })
+
+// ---------- Fixes found by Lighthouse ----------
+
+test('lazy pages hold a full screen of space while they load, so the footer never jumps', () => {
+  const app = read('src/App.tsx')
+  assert.match(app, /const loading = <div className="grid min-h-\[85svh\]/)
+  assert.doesNotMatch(app, /fallback=\{<div className="grid place-items-center py-24"/)
+  assert.match(read('src/pages/Directory.tsx'), /min-h-\[26rem\]/)
+})
+
+test('the logo link is named by its visible wordmark, and the emblem beside it is decorative', () => {
+  assert.doesNotMatch(read('src/components/Navbar.tsx'), /aria-label="NEXUS-E home"/)
+  assert.match(read('src/components/Navbar.tsx'), /<span className="sr-only">Home page<\/span>/)
+  assert.match(read('src/components/Logo.tsx'), /decorative/)
+})
+
+test('the unselected dropdown text is dark enough to read (the placeholder colour passes AA)', () => {
+  assert.match(read('src/components/fields.tsx'), /color: value \? undefined : '#66746b'/)
+  assert.doesNotMatch(read('src/components/fields.tsx'), /#75827a/)
+})

@@ -169,7 +169,8 @@ export default function Directory() {
         )}
       </form>
 
-      <section className="mt-6" aria-labelledby="results-title" aria-busy={!current}>
+      {/* The minimum height holds the space the results will fill, so the footer does not jump when they arrive. */}
+      <section className="mt-6 min-h-[26rem]" aria-labelledby="results-title" aria-busy={!current}>
         <h2 id="results-title" className="sr-only">Results</h2>
         <p className="text-sm font-semibold text-ink-700" role="status" aria-live="polite">
           {!current && 'Searching...'}

@@ -52,7 +52,7 @@ export default function Hero() {
 
         <div className="hero-content">
           <Link to="/register" className="hero-eyebrow glass group">
-            <Emblem onDark className="h-[1.1rem] w-auto flex-none" />
+            <Emblem onDark decorative className="h-[1.1rem] w-auto flex-none" />
             <span>{HERO.eyebrow}</span>
             <Icon name="arrow-right" className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={2.2} />
           </Link>

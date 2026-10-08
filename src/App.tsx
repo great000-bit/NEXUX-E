@@ -17,7 +17,8 @@ const Admin = lazy(() => import('./pages/admin/Admin'))
 // bundle keeps the registration page as light as it was on a weak connection.
 const Directory = lazy(() => import('./pages/Directory'))
 const ExpertProfile = lazy(() => import('./pages/ExpertProfile'))
-const loading = <div className="grid place-items-center py-24"><Spinner label="Loading" /></div>
+// A placeholder as tall as the screen keeps the footer below the fold while a page arrives, so nothing jumps when it appears.
+const loading = <div className="grid min-h-[85svh] place-items-center"><Spinner label="Loading" /></div>
 
 /** Holds the hero's place while its code arrives, so nothing jumps when it appears. */
 const heroPlaceholder = (
@@ -40,7 +41,7 @@ export default function App() {
         <Route
           path="admin/*"
           element={
-            <Suspense fallback={<div className="grid place-items-center py-24"><Spinner label="Loading" /></div>}>
+            <Suspense fallback={loading}>
               <Admin />
             </Suspense>
           }

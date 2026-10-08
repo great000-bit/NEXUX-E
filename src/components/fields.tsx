@@ -134,7 +134,7 @@ export function SelectField(
           aria-invalid={bad ? true : undefined}
           aria-describedby={describe(id, rest.hint, rest.error)}
           onChange={(e) => onChange(e.target.value)}
-          style={{ color: value ? undefined : '#75827a' }}
+          style={{ color: value ? undefined : '#66746b' }}
         >
           <option value="" disabled>{placeholder}</option>
           {options.map((o) => (

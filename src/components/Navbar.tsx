@@ -61,8 +61,9 @@ export function Navbar() {
   return (
     <header className="site-header sticky top-0 z-40 px-3 pt-3 sm:px-6 sm:pt-4">
       <div className="mx-auto flex max-w-[88rem] items-center justify-between gap-4">
-        <Link to="/" aria-label="NEXUS-E home" className="inline-flex min-h-11 items-center rounded-xl">
+        <Link to="/" className="inline-flex min-h-11 items-center rounded-xl">
           <Logo onDark />
+          <span className="sr-only">Home page</span>
         </Link>
 
         {/* Desktop: a floating glass pill */}
@@ -119,8 +120,9 @@ export function Navbar() {
           className="sheet-menu fixed inset-0 z-50 flex flex-col px-5 pb-6 pt-4 lg:hidden"
         >
           <div className="flex items-center justify-between">
-            <Link to="/" aria-label="NEXUS-E home" className="inline-flex min-h-11 items-center rounded-xl" onClick={() => setOpen(false)}>
+            <Link to="/" className="inline-flex min-h-11 items-center rounded-xl" onClick={() => setOpen(false)}>
               <Logo onDark />
+              <span className="sr-only">Home page</span>
             </Link>
             <button type="button" className="glass grid h-11 w-11 place-items-center rounded-full text-white" aria-label="Close menu" onClick={close}>
               <Icon name="close" className="h-5 w-5" strokeWidth={2} />

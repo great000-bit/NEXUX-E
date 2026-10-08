@@ -25,11 +25,11 @@ const PALETTE = {
   },
 } as const
 
-export function Emblem({ className, onDark = false }: { className?: string; onDark?: boolean }) {
+export function Emblem({ className, onDark = false, decorative = false }: { className?: string; onDark?: boolean; decorative?: boolean }) {
   const id = useId().replace(/:/g, '')
   const p = onDark ? PALETTE.dark : PALETTE.light
   return (
-    <svg viewBox="0 0 170 215" className={className} role="img" aria-label="NEXUS-E emblem">
+    <svg viewBox="0 0 170 215" className={className} role={decorative ? undefined : "img"} aria-label={decorative ? undefined : "NEXUS-E emblem"} aria-hidden={decorative ? true : undefined}>
       <defs>
         <linearGradient id={`${id}-body`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor={p.bodyFrom} />
@@ -68,7 +68,7 @@ export function Logo({ variant = 'full', className = '', onDark = false }: Props
   if (variant === 'mark') return <Emblem className={className} onDark={onDark} />
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      <Emblem className="h-11 w-auto shrink-0 sm:h-12" onDark={onDark} />
+      <Emblem className="h-11 w-auto shrink-0 sm:h-12" onDark={onDark} decorative />
       <div className="leading-none">
         <div className="font-display text-[1.55rem] font-bold sm:text-[1.7rem]" style={{ letterSpacing: '-0.04em' }}>
           <span className={onDark ? 'text-white' : 'text-green-900'}>NEXUS</span>
