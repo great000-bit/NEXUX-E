@@ -13,7 +13,7 @@ export type HeroMotion = {
 const read = (): HeroMotion => {
   const inputs = readMotionInputs()
   // A hidden tab pauses the hero rather than switching motion off, so coming back never replays the entrance.
-  return { motion: heroMotionAllowed({ ...inputs, hidden: false }), reels: reelMode(inputs), hidden: inputs.hidden }
+  return { motion: heroMotionAllowed(inputs), reels: reelMode(inputs), hidden: inputs.hidden }
 }
 
 export function useHeroMotion(): HeroMotion {

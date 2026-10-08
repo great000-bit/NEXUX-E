@@ -23,19 +23,35 @@ const sources = walk('src').filter((f) => /\.(tsx?|css)$/.test(f) && !/\.test\./
 
 // ---------- Motion ----------
 
-const calm: MotionInputs = { reducedMotion: false, saveData: false, cores: 8, memoryGb: 8, hidden: false }
+// A phone or tablet (no desktop-width screen with a fine pointer), and a laptop or desktop.
+const calm: MotionInputs = { reducedMotion: false, saveData: false, cores: 8, memoryGb: 8, hidden: false, desktopPointer: false }
+const desktop: MotionInputs = { ...calm, desktopPointer: true }
 
-test('the hero animates on a capable device and shows the still poster in every cautious case', () => {
+test('the hero animates for everyone except reduced motion, data saver and very weak phones', () => {
   assert.equal(heroMotionAllowed(calm), true)
   assert.equal(heroMotionAllowed({ ...calm, cores: undefined, memoryGb: undefined }), true, 'unknown hardware is trusted')
   assert.equal(heroMotionAllowed({ ...calm, reducedMotion: true }), false, 'prefers reduced motion')
   assert.equal(heroMotionAllowed({ ...calm, saveData: true }), false, 'data saver is on')
-  assert.equal(heroMotionAllowed({ ...calm, hidden: true }), false, 'the tab is in the background')
-  assert.equal(heroMotionAllowed({ ...calm, cores: 4 }), false, 'four cores or fewer')
+  assert.equal(heroMotionAllowed({ ...calm, hidden: true }), true, 'a hidden tab pauses in place; it is not a reason to switch motion off')
+  // Very weak phones: two cores or fewer, or 1 GB or less.
   assert.equal(heroMotionAllowed({ ...calm, cores: 2 }), false)
-  assert.equal(heroMotionAllowed({ ...calm, cores: 5 }), true)
-  assert.equal(heroMotionAllowed({ ...calm, memoryGb: 2 }), false, 'two gigabytes or less')
-  assert.equal(heroMotionAllowed({ ...calm, memoryGb: 4 }), true)
+  assert.equal(heroMotionAllowed({ ...calm, cores: 1 }), false)
+  assert.equal(heroMotionAllowed({ ...calm, memoryGb: 1 }), false)
+  assert.equal(heroMotionAllowed({ ...calm, memoryGb: 0.5 }), false)
+  assert.equal(heroMotionAllowed({ ...calm, cores: 3 }), true)
+  assert.equal(heroMotionAllowed({ ...calm, cores: 4 }), true, 'an ordinary 4 core phone animates')
+  assert.equal(heroMotionAllowed({ ...calm, memoryGb: 2 }), true)
+})
+
+test('core and memory counts never block a desktop-width screen with a fine pointer', () => {
+  for (const cores of [undefined, 1, 2, 4, 8, 16]) {
+    for (const memoryGb of [undefined, 0.25, 1, 2, 4, 8]) {
+      assert.equal(heroMotionAllowed({ ...desktop, cores, memoryGb }), true, `cores ${cores}, memory ${memoryGb}`)
+    }
+  }
+  // Only the two things a person chooses still stop it.
+  assert.equal(heroMotionAllowed({ ...desktop, reducedMotion: true }), false)
+  assert.equal(heroMotionAllowed({ ...desktop, saveData: true }), false)
 })
 
 test('star dust is capped at 60 on desktop and 25 on a phone', () => {
