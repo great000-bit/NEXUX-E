@@ -337,6 +337,13 @@ function Detail({ expert: r, onClose, onEmailAdded }: { expert: Expert; onClose:
     if (d && !d.open) d.showModal()
   }, [])
 
+  // Close the dialog and clear the selection straight away. The browser's own close event is kept for the
+  // Escape key, but nothing depends on it, so the drawer can always be opened again.
+  const closeNow = () => {
+    ref.current?.close()
+    onClose()
+  }
+
   const list = (v: string[]) => (v.length ? v.join(', ') : 'None')
   const rows: [string, string | null][] = [
     ['Organisation', r.organisation],
@@ -364,7 +371,7 @@ function Detail({ expert: r, onClose, onEmailAdded }: { expert: Expert; onClose:
     <dialog
       ref={ref}
       onClose={onClose}
-      onClick={(e) => { if (e.target === ref.current) ref.current?.close() }}
+      onClick={(e) => { if (e.target === ref.current) closeNow() }}
       aria-labelledby="detail-title"
       className="m-0 ml-auto h-dvh max-h-none w-full max-w-lg overflow-y-auto bg-surface p-0 shadow-lg backdrop:bg-green-950/50"
     >
@@ -374,7 +381,7 @@ function Detail({ expert: r, onClose, onEmailAdded }: { expert: Expert; onClose:
           <h2 id="detail-title" className="mt-1 text-2xl font-semibold text-green-900">{r.title} {r.full_name}</h2>
         </div>
         <div className="flex flex-col items-end gap-2">
-          <button className="btn btn-ghost !min-h-10 !px-4" onClick={() => ref.current?.close()}>Close</button>
+          <button className="btn btn-ghost !min-h-11 !px-4" onClick={closeNow}>Close</button>
           <Link to={`/admin/verification/${r.expert_id}`} className="text-sm font-bold text-green-800 underline underline-offset-4">Open review</Link>
         </div>
       </div>
