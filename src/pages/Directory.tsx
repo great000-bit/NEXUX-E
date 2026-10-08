@@ -150,7 +150,7 @@ export default function Directory() {
         </div>
 
         {showFilters && (
-          <div id="directory-filters" className="card grid gap-4 p-4 sm:grid-cols-2" style={{ borderRadius: 'var(--radius-lg)' }}>
+          <div id="directory-filters" className="glass-flat grid gap-4 rounded-[var(--radius-lg)] p-4 sm:grid-cols-2 sm:p-5">
             {FILTER_KEYS.map((k) => (
               <div key={k}>
                 <label htmlFor={`directory-${k}`} className="field-label">{FILTER_LABEL[k]}</label>
@@ -188,7 +188,7 @@ export default function Directory() {
         )}
 
         {current?.ok && total === 0 && (
-          <div className="card mt-3 p-8 text-center">
+          <div className="glass-flat mt-3 rounded-[var(--radius-xl)] p-8 text-center">
             <h3 className="text-xl font-semibold text-green-900">
               {hasAnyFilter(filters) ? 'Nobody matches those choices' : 'No experts are listed yet'}
             </h3>
@@ -204,13 +204,12 @@ export default function Directory() {
         )}
 
         {current?.ok && total > 0 && (
-          <ul className="mt-3 space-y-3">
+          <ul className="mt-3 grid gap-3 md:grid-cols-2">
             {current.items.map((e) => (
               <li key={e.expert_id}>
                 <Link
                   to={`/experts/${e.expert_id}`}
-                  className="card block p-4 transition hover:border-green-600 sm:p-5"
-                  style={{ borderRadius: 'var(--radius-lg)' }}
+                  className="glass-flat glass-hover block h-full rounded-[var(--radius-lg)] p-4 sm:p-5"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <p className="min-w-0 text-lg font-semibold text-green-900">{displayName(e.title, e.full_name)}</p>

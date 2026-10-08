@@ -98,7 +98,7 @@ export default function ExpertProfile() {
         <Link to="/experts" className="font-bold text-green-800 underline underline-offset-4">All experts</Link>
       </nav>
 
-      <header className="card p-5 sm:p-7">
+      <header className="glass rounded-[var(--radius-xl)] p-5 sm:p-7">
         <VerifiedBadge />
         <h1 id="profile-name" className="mt-3 text-3xl font-semibold text-green-900 sm:text-4xl">
           {displayName(profile.title, profile.full_name)}
@@ -110,7 +110,7 @@ export default function ExpertProfile() {
         </p>
       </header>
 
-      <section className="card p-5 sm:p-6" aria-labelledby="profile-details">
+      <section className="glass-flat rounded-[var(--radius-xl)] p-5 sm:p-6" aria-labelledby="profile-details">
         <h2 id="profile-details" className="text-xl font-semibold text-green-900">Expertise and experience</h2>
         <dl className="mt-3 divide-y divide-line text-sm">
           {rows.filter(([, v]) => v).map(([k, v]) => (
