@@ -23,6 +23,19 @@ export function heroMotionAllowed(i: MotionInputs): boolean {
   return true
 }
 
+export type ReelMode = 'spin' | 'swap' | 'off'
+
+/**
+ * How the hero's text reels behave. They spin when the hero may animate. With reduced motion they swap the text
+ * instantly with no spin. With data saver on, or while the tab is hidden, they stay on the first text.
+ * (Low-end devices keep the still poster, like every other hero effect.)
+ */
+export function reelMode(i: MotionInputs): ReelMode {
+  if (i.hidden || i.saveData) return 'off'
+  if (i.reducedMotion) return 'swap'
+  return heroMotionAllowed(i) ? 'spin' : 'off'
+}
+
 /** Star dust is capped: about 60 particles on desktop and 25 on a phone. */
 export function particleCount(viewportWidth: number): number {
   return viewportWidth < 640 ? 25 : 60

@@ -19,6 +19,18 @@ export const HERO_NODES: { label: string; icon: IconName; corner: 'tl' | 'tr' | 
   { label: 'Biodiversity and Ecosystems', icon: 'sprout', corner: 'br' },
 ]
 
+/** Hook lines for the floating pills. They take turns on the reels; each is copy from the flier and the PRD. */
+export const HERO_HOOKS = [
+  'Your expertise, verified.',
+  'Discovered by the people who fund the work.',
+  'One profile. Many opportunities.',
+  'Be found. Be verified. Be engaged.',
+  'Where Nigerian environmental expertise gets noticed.',
+  'Built for ESIA, safeguards and research.',
+  'Ready for World Bank, AfDB and DFI projects.',
+  'Your credentials, in one trusted profile.',
+] as const
+
 export const TAGLINES = [
   { title: 'Be found.', text: 'Get discovered for projects, research and development finance.' },
   { title: 'Be verified.', text: 'Back your profile with evidence.' },
