@@ -11,7 +11,8 @@ import { EXPERTISE } from './lib/options.ts'
 
 const root = path.resolve(import.meta.dirname, '..')
 const read = (p: string) => fs.readFileSync(path.join(root, p), 'utf8')
-const calm: MotionInputs = { reducedMotion: false, saveData: false, cores: 8, memoryGb: 8, hidden: false }
+const calm: MotionInputs = { reducedMotion: false, saveData: false, cores: 8, memoryGb: 8, hidden: false, desktopPointer: false }
+const desktop: MotionInputs = { ...calm, desktopPointer: true }
 
 /** A small deterministic random source. */
 const seeded = (seed: number) => () => {
@@ -23,10 +24,13 @@ test('the reels spin only when the hero may animate, swap instantly for reduced 
   assert.equal(reelMode(calm), 'spin')
   assert.equal(reelMode({ ...calm, reducedMotion: true }), 'swap')
   assert.equal(reelMode({ ...calm, reducedMotion: true, cores: 2 }), 'swap', 'reduced motion still swaps text on a weak device')
+  assert.equal(reelMode({ ...desktop, cores: 4, memoryGb: 4 }), 'spin', 'a 4 core laptop spins')
+  assert.equal(reelMode({ ...desktop, cores: 2, memoryGb: 1 }), 'spin', 'core count never blocks a desktop-width screen')
   assert.equal(reelMode({ ...calm, saveData: true }), 'off')
   assert.equal(reelMode({ ...calm, hidden: true }), 'off', 'timers rest while the tab is hidden')
-  assert.equal(reelMode({ ...calm, cores: 4 }), 'off', 'low-end devices keep the still poster')
-  assert.equal(reelMode({ ...calm, memoryGb: 2 }), 'off')
+  assert.equal(reelMode({ ...calm, cores: 2 }), 'off', 'very weak phones keep the still poster')
+  assert.equal(reelMode({ ...calm, memoryGb: 1 }), 'off')
+  assert.equal(reelMode({ ...calm, cores: 4 }), 'spin', 'an ordinary phone spins')
 })
 
 test('a reel never lands on what it shows now or on what another slot shows, and never repeats in a row', () => {
@@ -132,7 +136,8 @@ test('the footer credits the developer with a safe external link, and no public 
 
 test('a hidden tab pauses the hero in place, so coming back never replays the entrance', () => {
   const hook = read('src/pages/home/useHeroMotion.ts')
-  assert.ok(hook.includes('heroMotionAllowed({ ...inputs, hidden: false })'))
+  assert.ok(hook.includes('motion: heroMotionAllowed(inputs)'), 'a hidden tab never switches motion off')
+  assert.doesNotMatch(read('src/lib/motion.ts'), /i\.hidden\) return false|\.cores <= 4|\.memoryGb <= 2/, 'the old weak-device rule is gone')
   assert.ok(read('src/pages/home/Hero.tsx').includes("data-paused={hidden ? '' : undefined}"))
   assert.match(read('src/pages/home/home.css'), /\.hero-card\[data-paused\] \.hero-mass,[^}]*animation-play-state: paused/)
 })
