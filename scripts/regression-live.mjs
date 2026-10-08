@@ -54,7 +54,7 @@ const expectError = async (label, p, code) => {
 await expectError('no email at all', {}, 'email_required')
 await expectError('a phone number but no email', { phone: '08000009001' }, 'email_required')
 await expectError('a badly formed email', { email: 'not-an-email' }, 'invalid_email')
-await expectError('a badly formed phone', { phone: '123' }, 'invalid_phone')
+await expectError('a badly formed phone', { email: 'x.p@example.org', phone: '123' }, 'invalid_phone')
 await expectError('a script link as profile URL', { email: 'x.y@example.org', profile_url: 'javascript:alert(1)' }, 'invalid_url')
 await expectError('more than three secondary areas', { email: 'x.z@example.org', secondary_expertise: ['a', 'b', 'c', 'd'] }, 'too_many_secondary')
 await expectError('missing consent', { email: 'x.w@example.org', consent_contact: false }, 'consent_required')
