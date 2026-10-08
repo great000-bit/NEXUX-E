@@ -6,7 +6,7 @@ import path from 'node:path'
 // Tests for what visitors can see: no email address on the public site, and a logo-only header in the admin area.
 
 const root = path.resolve(import.meta.dirname, '..')
-const read = (p: string) => fs.readFileSync(path.join(root, p), 'utf8')
+const read = (p: string) => fs.readFileSync(path.join(root, p), 'utf8').split('\r\n').join('\n') // same text on every checkout
 const walk = (dir: string): string[] =>
   fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap((e) => {
     const rel = path.join(dir, e.name)
