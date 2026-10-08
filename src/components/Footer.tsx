@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
 import { Icon } from './icons'
-import { CONTACT_EMAIL } from '../lib/config'
 
 const DEVELOPER_URL = 'https://www.greatemmanwori.cv'
 
@@ -11,7 +10,7 @@ const link = 'inline-flex min-h-11 items-center text-sm font-semibold text-white
 export function Footer() {
   return (
     <footer className="mt-10 border-t border-white/10 bg-night-900/60">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-8 md:grid-cols-[1.6fr_1fr]">
         <div>
           <Logo onDark />
           <p className="mt-5 font-display text-lg font-semibold text-white">Be Found. Be Verified. Be Engaged.</p>
@@ -27,15 +26,6 @@ export function Footer() {
           <Link to="/experts" className={link}>Directory</Link>
           <Link to="/#privacy" className={link}>Your privacy</Link>
         </nav>
-
-        <div className={col}>
-          <p className="eyebrow mb-1 !text-lime-500">Contact</p>
-          {CONTACT_EMAIL ? (
-            <a href={`mailto:${CONTACT_EMAIL}`} className={`${link} break-all`}>{CONTACT_EMAIL}</a>
-          ) : (
-            <p className="text-sm text-white/70">Write to the NEXUS-E team at the address on your confirmation email.</p>
-          )}
-        </div>
       </div>
 
       <div className="border-t border-white/10">

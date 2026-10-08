@@ -232,7 +232,7 @@ These live in `public.verification_settings` (readable by administrators only). 
 | `opportunity_notify_email` | none | Where the "an expert is interested" email goes. Starts as the contact address. Leave it empty to turn those emails off. |
 | `allowed_origins_extra` | none | Optional. Extra web addresses (comma separated) allowed to call the Edge Functions, such as a Vercel preview address. Not set in production. |
 
-All of the first three are currently `greatemmanwori@gmail.com`. To change them, in the SQL editor:
+All of the first three are currently set to the owner's own address (never shown on the site). To change them, in the SQL editor:
 
 ```sql
 update public.verification_settings set value = 'help@nexuse.org' where key in ('email_reply_to', 'contact_email', 'opportunity_notify_email');
@@ -334,7 +334,7 @@ The whole product uses a dark-green glass look. Visuals and copy only; registrat
 - **Hero motion (hero-motion release):** slot-machine text reels, an automatic tagline, a drifting aurora background, a pointer glow, and a developer credit in the footer. Details are in the "Hero motion" part of `docs/design-system.md`. The hero animates for everyone except reduced-motion and data-saver users and very weak phones; core counts never block a laptop or desktop (see the motion rules there). Those cases show a still poster.
 - **Hero audit:** `scripts/hero-audit.js` does the same kind of read-only check for the hero: overlaps with the headline and buttons, and whether every possible text fits its reel window.
 - **Layout audit:** paste `scripts/layout-audit.js` into the browser console at 360, 390, 768 and 1280 px to check sideways scroll, 44 px tap targets and heading order. It reads the page only.
-- **Footer contact address:** set `VITE_CONTACT_EMAIL` in Vercel (see `.env.example`). Until then the footer shows a fallback line.
+- **No public email address:** the site shows no email address to visitors (the footer has no Contact column). Replies to emails go to the Reply-To address kept in the database settings (see "Settings you can change").
 - **Tests:** `src/design.test.ts` (contrast audit) and `src/home.test.ts` (motion rules, copy, structure).
 
 ## Design tokens
