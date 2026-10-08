@@ -317,12 +317,12 @@ begin
   select * into v_old from public.opportunities o where o.id = p_id for update;
   if not found then raise exception 'not_found' using errcode = 'P0001'; end if;
 
-  if v_old.title is distinct from v_title then v_changed := v_changed || 'title'; end if;
-  if v_old.description is distinct from v_desc then v_changed := v_changed || 'description'; end if;
-  if v_old.opp_type is distinct from v_type then v_changed := v_changed || 'type'; end if;
-  if v_old.expertise_needed is distinct from v_needed then v_changed := v_changed || 'expertise_needed'; end if;
-  if v_old.location is distinct from v_loc then v_changed := v_changed || 'location'; end if;
-  if v_old.deadline is distinct from v_deadline then v_changed := v_changed || 'deadline'; end if;
+  if v_old.title is distinct from v_title then v_changed := array_append(v_changed, 'title'); end if;
+  if v_old.description is distinct from v_desc then v_changed := array_append(v_changed, 'description'); end if;
+  if v_old.opp_type is distinct from v_type then v_changed := array_append(v_changed, 'type'); end if;
+  if v_old.expertise_needed is distinct from v_needed then v_changed := array_append(v_changed, 'expertise_needed'); end if;
+  if v_old.location is distinct from v_loc then v_changed := array_append(v_changed, 'location'); end if;
+  if v_old.deadline is distinct from v_deadline then v_changed := array_append(v_changed, 'deadline'); end if;
 
   begin
     update public.opportunities
