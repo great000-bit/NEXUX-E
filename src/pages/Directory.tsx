@@ -51,6 +51,14 @@ export default function Directory() {
     }
   }, [key, retry])
 
+  // A link to a page past the end (an old bookmark, or experts who left the list) lands on the last real page.
+  const lastPage = loaded?.key === key && loaded.ok ? pageCount(loaded.total) : null
+  useEffect(() => {
+    if (lastPage !== null && filters.page > lastPage) {
+      setParams(paramsFromFilters({ ...filters, page: lastPage }), { replace: true })
+    }
+  }, [lastPage, filters, setParams])
+
   // After the person changes page, bring the top of the results into view for screen readers and thumbs.
   useEffect(() => {
     if (firstRun.current) {
