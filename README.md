@@ -43,6 +43,7 @@ Run the files in `supabase/migrations` in order in the Supabase SQL editor.
 1. `20261007000001_experts.sql`: tables, the `NEX-000001` ID sequence and constraints.
 2. `20261007000002_rls_and_rpc.sql`: Row Level Security and the `register_expert` function.
 3. `20261007000003_ensure_unique_indexes.sql`: guarantees duplicate email and phone are blocked. Safe to repeat.
+4. `20261008000001_email_sender.sql`, `20261008000002_security_hardening.sql`, `20261008000003_function_secrets.sql`: confirmation emails and security fixes. See Confirmation emails below.
 
 Then create the admin user and allow-list them:
 
@@ -79,47 +80,55 @@ Any static host works (Vercel, Netlify, Cloudflare Pages).
 
 ## Confirmation emails (Resend)
 
-How it works: `register_expert` saves the registration and queues one row in `public.email_outbox`. A database trigger wakes the `send-confirmation-emails` Edge Function, which sends the email through Resend. A schedule retries failures every 10 minutes. Registration never waits for email: the trigger is asynchronous and swallows its own errors, so a Resend outage cannot fail a registration.
+How it works: `register_expert` saves the registration and queues one row in `public.email_outbox`. A database trigger wakes the `send-confirmation-emails` Edge Function within a second, and the function sends the email through Resend. A schedule retries failures every 10 minutes. Registration never waits for email: the trigger is asynchronous and swallows its own errors, so a Resend outage cannot fail a registration.
 
-Row states: `pending`, `sending`, `sent`, `failed` (will retry with growing delays of 5, 20, 80 and 320 minutes), `dead` (gave up after 5 attempts or the address was rejected). Each expert can have only one confirmation row, and Resend is sent an idempotency key, so the same email is never sent twice.
+Row states: `pending`, `sending`, `sent`, `failed` (will retry after 5, 20, 80 and 320 minutes), `dead` (gave up after 5 attempts or the address was rejected). Each expert can have only one confirmation row, and Resend receives an idempotency key built from the outbox row id, so the same email is never sent twice.
 
-The free Resend plan allows 100 emails a day. The function stops at 100 sent per UTC day (`EMAIL_DAILY_CAP`). If Resend itself reports the limit, the function logs `RESEND_DAILY_LIMIT_HIT`, leaves the remaining rows queued and tries again later. A bad key or unverified domain logs `RESEND_CONFIG_ERROR` and also leaves rows queued.
+The free Resend plan allows 100 emails a day. The function stops at 100 sent per UTC day (`EMAIL_DAILY_CAP`). If Resend itself reports the limit, the function logs `RESEND_DAILY_LIMIT_HIT`, leaves the remaining rows queued and tries again later. A bad key or unverified domain logs `RESEND_CONFIG_ERROR` and also leaves rows queued, untouched.
 
-### Setup (once)
+### How production was set up
 
-1. **Run the migration.** In the Supabase SQL editor, run `supabase/migrations/20261008000001_email_sender.sql`. If it complains about `pg_net` or `pg_cron`, enable both under Database, Extensions, then run it again.
-2. **Create a webhook secret.** Run this and keep the output for the next two steps:
+Done on 8 October 2026 for the `nexus-e` Supabase project. Repeat these steps for another project.
+
+1. **Migrations.** Apply, in order, `20261008000001_email_sender.sql` (outbox columns, claim function, trigger, retry schedule; it enables `pg_net` and `pg_cron`), `20261008000002_security_hardening.sql` and `20261008000003_function_secrets.sql`.
+2. **Deploy the function** with verify-JWT turned off, because it checks its own `x-webhook-secret` header:
    ```bash
-   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-   ```
-3. **Fill in the function secrets.** Copy `supabase/functions/send-confirmation-emails/.env.example` to `supabase/.env.local` (gitignored) and set `RESEND_API_KEY` and `WEBHOOK_SECRET`. Never commit this file.
-4. **Deploy the function and set the secrets.** You need the Supabase CLI and a login:
-   ```bash
-   npx supabase login
-   npx supabase link --project-ref <your-project-ref>
-   npx supabase secrets set --env-file supabase/.env.local
    npx supabase functions deploy send-confirmation-emails --no-verify-jwt
    ```
-   The function checks its own `x-webhook-secret` header, so the JWT check is off (also set in `supabase/config.toml`).
-5. **Tell the database where the function is.** In the SQL editor, with your own project ref and the secret from step 2:
+3. **Store three secrets in Supabase Vault** (SQL editor). The webhook secret is generated inside the database, so nobody has to see or copy it:
    ```sql
+   select vault.create_secret('<Resend sending-only key>', 'resend_api_key');
+   select vault.create_secret(encode(extensions.gen_random_bytes(32), 'hex'), 'email_webhook_secret');
    select vault.create_secret('https://<your-project-ref>.supabase.co/functions/v1/send-confirmation-emails', 'email_function_url');
-   select vault.create_secret('<the same webhook secret>', 'email_webhook_secret');
    ```
-   Until both exist, the trigger does nothing and rows simply wait in the outbox.
+   The trigger uses `email_function_url` and `email_webhook_secret`. The function reads `resend_api_key` and `email_webhook_secret`. If you prefer, set `RESEND_API_KEY` and `WEBHOOK_SECRET` as Edge Function environment secrets instead: the environment wins when both exist.
+4. **Resend.** `nexuse.org` is verified. The key is a "Sending access" key restricted to that domain, so it cannot read or manage anything.
+
+Optional function settings (environment secrets): `EMAIL_FROM` (default `NEXUS-E <noreply@nexuse.org>`), `EMAIL_REPLY_TO`, `SITE_URL`, `EMAIL_DAILY_CAP`, `EMAIL_MAX_ATTEMPTS`, `EMAIL_BATCH_SIZE`.
+
+### Rotating the Resend key
+
+Create a new sending-only key in Resend, then replace the Vault value. A Resend key is exactly 36 characters, so check the length after pasting:
+
+```sql
+select vault.update_secret(id, '<new key>') from vault.secrets where name = 'resend_api_key';
+select length(decrypted_secret) from vault.decrypted_secrets where name = 'resend_api_key';
+```
 
 ### Testing
 
 - Unit tests for the sending rules and the email content: `npm run test:email`.
-- Send one real email with the production template: `node scripts/send-test-email.mjs --to you@example.com --id NEX-000123 --name "Ada Obi" --title Dr`. It reads the key from `supabase/.env.local`.
-- Full path: register a test expert, then look at the outbox. The status should become `sent` within seconds.
+- Send one real email with the production template, straight to Resend: `node scripts/send-test-email.mjs --to you@example.com --id NEX-000123 --name "Ada Obi" --title Dr`. It reads a key from `supabase/.env.local` (gitignored).
+- Full path: register a test expert on the live site, then look at the outbox. The status should become `sent` within a few seconds.
   ```sql
   select expert_id, status, attempts, last_error, sent_at from public.email_outbox order by id desc limit 10;
   ```
 - To wake the sender by hand: `select public.invoke_email_sender('manual');`. Logs are under Edge Functions, `send-confirmation-emails`, Logs.
-- Clean up test data, which also removes its outbox rows:
+- Clean up test data (delete the outbox first, then reset the numbering):
   ```sql
-  delete from public.experts where full_name like '%(delete me)%' or full_name like 'TEST%';
+  delete from public.email_outbox;
+  delete from public.experts where full_name like '%(delete me)%';
+  alter sequence public.expert_id_seq restart with 1;  -- only when the table is empty
   ```
 
 ### Operating it
@@ -128,8 +137,7 @@ The free Resend plan allows 100 emails a day. The function stops at 100 sent per
   ```sql
   update public.email_outbox set status = 'pending', attempts = 0, next_attempt_at = now(), last_error = null where id = <row id>;
   ```
-- Settings: `EMAIL_FROM`, `EMAIL_REPLY_TO`, `SITE_URL`, `EMAIL_DAILY_CAP`, `EMAIL_MAX_ATTEMPTS` and `EMAIL_BATCH_SIZE` are function secrets. Change them with `npx supabase secrets set NAME=value`.
-- Registrations made before the function was switched on stay queued and are sent once it is live. Delete test registrations first so they do not receive email.
+- Registrations made before the sender was switched on stay queued and are emailed once it is live. Delete test registrations first so they do not receive email.
 
 ## Hooks left for later
 
