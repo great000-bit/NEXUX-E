@@ -3,7 +3,7 @@
 // Wake-ups: a database trigger on public.email_outbox (new row) and a pg_cron sweep every 10 minutes.
 // Both call this function with the x-webhook-secret header. See README for setup.
 //
-// Secrets are read from the environment only. Nothing here is ever logged except ids and error text.
+// Secrets come from the function environment or Supabase Vault. Nothing here is ever logged except ids and error text.
 import { createClient } from 'npm:@supabase/supabase-js@2'
 import { buildEmail } from './email.ts'
 import { classifyResendError, processOutbox, type Deps, type OutboxJob, type SendResult } from './logic.ts'
@@ -27,16 +27,29 @@ const json = (body: unknown, status = 200) =>
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405)
 
-  const webhookSecret = env('WEBHOOK_SECRET')
+  const db = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), {
+    auth: { persistSession: false, autoRefreshToken: false },
+  })
+
+  // A secret comes from the function's environment if set, otherwise from Supabase Vault.
+  const secret = async (envName: string, vaultName: string): Promise<string> => {
+    const fromEnv = env(envName)
+    if (fromEnv) return fromEnv
+    const { data, error } = await db.rpc('get_function_secret', { p_name: vaultName })
+    if (error) console.error(JSON.stringify({ message: 'Could not read secret from Vault', name: vaultName }))
+    return typeof data === 'string' ? data : ''
+  }
+
+  const webhookSecret = await secret('WEBHOOK_SECRET', 'email_webhook_secret')
   if (!webhookSecret) {
-    console.error('WEBHOOK_SECRET is not set on this function')
+    console.error('No webhook secret: set WEBHOOK_SECRET or the email_webhook_secret Vault secret')
     return json({ error: 'not_configured' }, 500)
   }
   if (!safeEqual(req.headers.get('x-webhook-secret') ?? '', webhookSecret)) {
     return json({ error: 'unauthorized' }, 401)
   }
 
-  const apiKey = env('RESEND_API_KEY')
+  const apiKey = await secret('RESEND_API_KEY', 'resend_api_key')
   const from = env('EMAIL_FROM', 'NEXUS-E <noreply@nexuse.org>')
   const replyTo = env('EMAIL_REPLY_TO')
   const siteUrl = env('SITE_URL', 'https://register.nexuse.org')
@@ -44,13 +57,9 @@ Deno.serve(async (req) => {
   const dailyCap = intEnv('EMAIL_DAILY_CAP', 100)
 
   if (!apiKey) {
-    console.error('RESEND_API_KEY is not set on this function')
+    console.error('No Resend key: set RESEND_API_KEY or the resend_api_key Vault secret')
     return json({ error: 'not_configured' }, 500)
   }
-
-  const db = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), {
-    auth: { persistSession: false, autoRefreshToken: false },
-  })
 
   const iso = (secondsFromNow: number) => new Date(Date.now() + secondsFromNow * 1000).toISOString()
 
@@ -96,7 +105,8 @@ Deno.serve(async (req) => {
             Authorization: `Bearer ${apiKey}`,
             'Content-Type': 'application/json',
             // Resend ignores a repeat of the same key for 24 hours, so a retry can never double send.
-            'Idempotency-Key': `nexus-e-confirmation/${job.expert_id}`,
+            // The outbox row id never repeats, even if test data is deleted and Expert IDs restart at 1.
+            'Idempotency-Key': `nexus-e-confirmation/outbox-${job.id}`,
           },
           body: JSON.stringify({
             from,
