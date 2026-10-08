@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "qr": "node scripts/generate-qr.mjs",
-    "test:email": "node --test supabase/functions/send-confirmation-emails/logic.test.ts"
+    "test:email": "node --test supabase/functions/send-confirmation-emails/logic.test.ts",
+    "test:portal": "node --test supabase/functions/expert-portal/portal.test.ts",
+    "test": "npm run test:email && npm run test:portal"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",

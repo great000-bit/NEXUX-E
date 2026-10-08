@@ -2,7 +2,9 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.functions.tsbuildinfo",
     "target": "ES2022",
-    "lib": ["ES2023"],
+    "lib": [
+      "ES2023"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
@@ -13,11 +15,17 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "supabase/functions/send-confirmation-emails/email.ts",
     "supabase/functions/send-confirmation-emails/logic.ts",
-    "supabase/functions/send-confirmation-emails/logic.test.ts"
+    "supabase/functions/send-confirmation-emails/logic.test.ts",
+    "supabase/functions/expert-portal/filecheck.ts",
+    "supabase/functions/expert-portal/hash.ts",
+    "supabase/functions/expert-portal/mail.ts",
+    "supabase/functions/expert-portal/portal.test.ts"
   ]
 }
