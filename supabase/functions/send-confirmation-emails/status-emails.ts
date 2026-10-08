@@ -7,6 +7,7 @@ export type StatusTemplate =
   | 'verification_more_evidence'
   | 'verification_verified'
   | 'verification_not_verified'
+  | 'opportunity_interest'
 
 export type EmailJob = {
   template: string
@@ -26,6 +27,10 @@ const INK = '#0f1a14'
 const INK_SOFT = '#2f3d35'
 
 type Content = {
+  /** Replaces "Dear <name>," (used for emails that go to an administrator). */
+  greeting?: string
+  /** Replaces the default line at the bottom of the email. */
+  footer?: string
   subject: string
   heading: string
   paragraphs: string[]
@@ -56,6 +61,22 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
     : 'If you would like to talk this through, please contact the NEXUS-E team.'
 
   switch (template) {
+    case 'opportunity_interest': {
+      const oppTitle = clean(job.payload?.opportunity_title, 200).replace(/\s+/g, ' ')
+      const oppId = String(job.payload?.opportunity_id ?? '')
+      const isId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(oppId)
+      return {
+        greeting: 'Hello,',
+        footer: 'You are receiving this because you are an administrator of NEXUS-E.',
+        subject: `${job.full_name} is interested in "${oppTitle}": NEXUS-E`,
+        heading: 'An expert is interested',
+        paragraphs: [
+          `${job.title} ${job.full_name} (${job.expert_id}) has expressed interest in the opportunity "${oppTitle}".`,
+          'Open the opportunity in the admin area to see their registered details, and everyone else who has expressed interest.',
+        ],
+        button: { label: 'Open the opportunity', href: `${site}/admin/opportunities${isId ? `/${oppId}` : ''}` },
+      }
+    }
     case 'verification_received':
       return {
         subject: 'We have received your evidence: NEXUS-E',
@@ -110,8 +131,9 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
 }
 
 function render(c: Content, name: string): { html: string; text: string } {
+  const greeting = c.greeting ?? `Dear ${name},`
   const text = [
-    `Dear ${name},`,
+    greeting,
     '',
     ...c.paragraphs.flatMap((p) => [p, '']),
     ...(c.quote ? [`${c.quoteLabel}:`, c.quote, ''] : []),
@@ -144,7 +166,7 @@ function render(c: Content, name: string): { html: string; text: string } {
       </td></tr>
       <tr><td style="padding:32px 32px 8px 32px;font-family:Arial,Helvetica,sans-serif;color:${INK};">
         <h1 style="margin:0 0 16px 0;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.2;color:${GREEN_900};">${escapeHtml(c.heading)}</h1>
-        ${p(`Dear ${name},`, INK)}
+        ${p(greeting, INK)}
         ${c.paragraphs.map((s) => p(s)).join('\n        ')}
       </td></tr>
       ${
@@ -169,7 +191,7 @@ function render(c: Content, name: string): { html: string; text: string } {
         With thanks,<br><strong style="color:${GREEN_900};">The NEXUS-E team</strong>
       </td></tr>
       <tr><td style="background:${GREEN_900};padding:18px 32px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#cfe3bf;">
-        You are receiving this because you registered on NEXUS-E.
+        ${escapeHtml(c.footer ?? 'You are receiving this because you registered on NEXUS-E.')}
       </td></tr>
     </table>
   </td></tr>
@@ -187,12 +209,15 @@ export const STATUS_TEMPLATES: StatusTemplate[] = [
   'verification_not_verified',
 ]
 
+/** Emails that go to an administrator, not to the expert. They greet with "Hello," and say why the admin got them. */
+export const ADMIN_TEMPLATES: StatusTemplate[] = ['opportunity_interest']
+
 /** Builds the email for any outbox row. Throws for a template it does not know. */
 export function composeEmail(job: EmailJob, opts: EmailOptions): BuiltEmail {
   if (job.template === 'registration_confirmation') {
     return buildEmail({ expert_id: job.expert_id, full_name: job.full_name, title: job.title }, { siteUrl: opts.siteUrl })
   }
-  if ((STATUS_TEMPLATES as string[]).includes(job.template)) {
+  if (([...STATUS_TEMPLATES, ...ADMIN_TEMPLATES] as string[]).includes(job.template)) {
     const content = contentFor(job.template as StatusTemplate, job, opts)
     const { html, text } = render(content, greetingName(job.title, job.full_name))
     return { subject: content.subject, html, text }
