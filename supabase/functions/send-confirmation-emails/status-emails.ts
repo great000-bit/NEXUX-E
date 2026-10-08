@@ -63,12 +63,13 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
   switch (template) {
     case 'opportunity_interest': {
       const oppTitle = clean(job.payload?.opportunity_title, 200).replace(/\s+/g, ' ')
+      const who = clean(job.full_name, 120).replace(/\s+/g, ' ')
       const oppId = String(job.payload?.opportunity_id ?? '')
       const isId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(oppId)
       return {
         greeting: 'Hello,',
         footer: 'You are receiving this because you are an administrator of NEXUS-E.',
-        subject: `${job.full_name} is interested in "${oppTitle}": NEXUS-E`,
+        subject: `${who} is interested in "${oppTitle}": NEXUS-E`,
         heading: 'An expert is interested',
         paragraphs: [
           `${job.title} ${job.full_name} (${job.expert_id}) has expressed interest in the opportunity "${oppTitle}".`,
