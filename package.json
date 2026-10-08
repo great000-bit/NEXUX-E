@@ -13,12 +13,15 @@
     "test:email": "node --test supabase/functions/send-confirmation-emails/logic.test.ts supabase/functions/send-confirmation-emails/status.test.ts",
     "test:portal": "node --test supabase/functions/expert-portal/portal.test.ts",
     "test": "npm run test:app && npm run test:email && npm run test:portal",
-    "test:app": "node --import ./scripts/register-ts.mjs --test src/lib/form.test.ts src/lib/image.test.ts src/lib/directoryFilters.test.ts src/lib/opportunities.test.ts src/pages/admin/csv.test.ts src/app.test.ts src/phase3.test.ts"
+    "test:app": "node --import ./scripts/register-ts.mjs --test src/lib/form.test.ts src/lib/image.test.ts src/lib/directoryFilters.test.ts src/lib/opportunities.test.ts src/pages/admin/csv.test.ts src/app.test.ts src/phase3.test.ts",
+    "brand": "node scripts/generate-brand.mjs"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource-variable/sora": "^5.3.0",
     "@supabase/supabase-js": "^2.117.3",
+    "aos": "^3.0.0-beta.6",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-router-dom": "^7.18.4"
@@ -27,6 +30,7 @@
     "@eslint/js": "^9.39.5",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/aos": "^3.0.8",
     "@types/node": "^26.6.4",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
