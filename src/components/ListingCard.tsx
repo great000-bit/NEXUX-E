@@ -88,7 +88,7 @@ export function ListingCard({
           </button>
         )}
         {live && (
-          <Link to={`/experts/${expertId}`} className="font-bold text-green-800 underline underline-offset-4">
+          <Link to={`/experts/${expertId}`} className="inline-flex min-h-11 items-center font-bold text-green-800 underline underline-offset-4">
             View my public page
           </Link>
         )}

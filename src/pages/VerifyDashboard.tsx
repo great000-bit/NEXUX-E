@@ -344,7 +344,7 @@ export default function VerifyDashboard() {
           ] as [string, string | null][]).map(([k, v]) => (
             <div key={k} className="grid grid-cols-[9.5rem_1fr] gap-3 py-2.5">
               <dt className="font-bold text-ink-500">{k}</dt>
-              <dd className="break-words text-ink-900">{v ?? <span className="text-ink-300">Not provided</span>}</dd>
+              <dd className="min-w-0 break-words text-ink-900">{v ?? <span className="text-ink-300">Not provided</span>}</dd>
             </div>
           ))}
         </dl>

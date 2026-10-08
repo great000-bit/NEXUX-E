@@ -195,6 +195,13 @@ test('verified experts see opportunities first, everyone else keeps the evidence
   assert.ok(verifiedBlock > 0 && verifiedBlock < evidence && evidence < others)
 })
 
+test('the expert dashboard fits a 360 px phone: long values can shrink and links are easy to tap', () => {
+  assert.match(read('src/pages/VerifyDashboard.tsx'), /<dd className="min-w-0 break-words/)
+  assert.match(read('src/components/ListingCard.tsx'), /inline-flex min-h-11 items-center/)
+  assert.match(read('src/pages/ExpertProfile.tsx'), /grid-cols-1[^"]*sm:grid-cols-\[11rem_1fr\]/)
+  assert.match(read('src/pages/admin/OpportunityEdit.tsx'), /min-w-0 break-words/)
+})
+
 test('no em or en dashes in any new copy', () => {
   const dash = new RegExp(`[${String.fromCharCode(0x2014, 0x2013)}]`)
   for (const f of NEW_COPY_FILES) assert.ok(!dash.test(read(f)), f)
