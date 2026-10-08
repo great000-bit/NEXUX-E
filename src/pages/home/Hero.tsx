@@ -20,7 +20,7 @@ import './home.css'
  * measures as the page loaded. Everything behind it is decoration, and none of it is needed to read the page.
  */
 export default function Hero() {
-  const { motion, reels } = useHeroMotion()
+  const { motion, reels, hidden } = useHeroMotion()
   const card = useRef<HTMLDivElement>(null)
   const frame = useRef(0)
   const [board] = useState(() => new ReelBoard(1000))
@@ -69,6 +69,7 @@ export default function Hero() {
         ref={card}
         className="hero-card"
         data-motion={motion ? 'on' : 'off'}
+        data-paused={hidden ? '' : undefined}
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
       >

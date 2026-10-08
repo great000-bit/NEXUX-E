@@ -72,6 +72,13 @@
   50% { transform: translate3d(14%, 6%, 0) rotate(6deg) scale(1.08); opacity: 1; }
 }
 
+/* A hidden tab pauses the looping animations in place; they resume where they were, and the entrance never replays. */
+.hero-card[data-paused] .hero-mass,
+.hero-card[data-paused] .hero-streaks i,
+.hero-card[data-paused] .hero-node-float,
+.hero-card[data-paused] .hero-cue-btn,
+.hero-card[data-paused] .hero-seg-fill { animation-play-state: paused; }
+
 /* A soft glow that follows a mouse. It is moved with transform only, and a touch screen never shows it. */
 .hero-glow {
   position: absolute; left: 0; top: 0; width: 30rem; height: 30rem; margin: -15rem 0 0 -15rem; border-radius: 50%; opacity: 0; pointer-events: none;

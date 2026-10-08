@@ -6,11 +6,14 @@ export type HeroMotion = {
   motion: boolean
   /** How the text reels behave (spin, instant swap, or still). */
   reels: ReelMode
+  /** The tab is in the background: every hero animation is paused in place (and picks up again when it returns). */
+  hidden: boolean
 }
 
 const read = (): HeroMotion => {
   const inputs = readMotionInputs()
-  return { motion: heroMotionAllowed(inputs), reels: reelMode(inputs) }
+  // A hidden tab pauses the hero rather than switching motion off, so coming back never replays the entrance.
+  return { motion: heroMotionAllowed({ ...inputs, hidden: false }), reels: reelMode(inputs), hidden: inputs.hidden }
 }
 
 export function useHeroMotion(): HeroMotion {
@@ -19,7 +22,7 @@ export function useHeroMotion(): HeroMotion {
   useEffect(() => {
     const update = () => {
       const next = read()
-      setState((s) => (s.motion === next.motion && s.reels === next.reels ? s : next))
+      setState((s) => (s.motion === next.motion && s.reels === next.reels && s.hidden === next.hidden ? s : next))
     }
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     document.addEventListener('visibilitychange', update)

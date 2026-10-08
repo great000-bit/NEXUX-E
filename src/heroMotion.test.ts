@@ -129,3 +129,10 @@ test('the footer credits the developer with a safe external link, and no public 
   assert.match(footer, /focus-visible:outline/)
   assert.doesNotMatch(footer, /admin/i)
 })
+
+test('a hidden tab pauses the hero in place, so coming back never replays the entrance', () => {
+  const hook = read('src/pages/home/useHeroMotion.ts')
+  assert.ok(hook.includes('heroMotionAllowed({ ...inputs, hidden: false })'))
+  assert.ok(read('src/pages/home/Hero.tsx').includes("data-paused={hidden ? '' : undefined}"))
+  assert.match(read('src/pages/home/home.css'), /\.hero-card\[data-paused\] \.hero-mass,[^}]*animation-play-state: paused/)
+})
