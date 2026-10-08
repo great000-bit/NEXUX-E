@@ -406,21 +406,21 @@ function Slot({
                 </p>
               </div>
               <div className="flex items-center gap-1">
-                <button className="rounded-full px-3 py-1.5 text-sm font-bold text-green-800 hover:bg-green-100" onClick={() => onView(f)}>
+                <button className="rounded-full inline-flex min-h-11 items-center px-3.5 text-sm font-bold text-green-800 hover:bg-green-100" onClick={() => onView(f)}>
                   View<span className="sr-only"> {f.original_name}</span>
                 </button>
                 {editable &&
                   (confirming === f.id ? (
                     <>
-                      <button className="rounded-full bg-danger-600 px-3 py-1.5 text-sm font-bold text-white" onClick={() => { setConfirming(null); onRemove(f) }}>
+                      <button className="rounded-full bg-danger-600 inline-flex min-h-11 items-center px-3.5 text-sm font-bold text-white" onClick={() => { setConfirming(null); onRemove(f) }}>
                         Yes, delete
                       </button>
-                      <button className="rounded-full px-3 py-1.5 text-sm font-bold text-ink-700 hover:bg-line" onClick={() => setConfirming(null)}>
+                      <button className="rounded-full inline-flex min-h-11 items-center px-3.5 text-sm font-bold text-ink-700 hover:bg-line" onClick={() => setConfirming(null)}>
                         Keep
                       </button>
                     </>
                   ) : (
-                    <button className="rounded-full px-3 py-1.5 text-sm font-bold text-danger-600 hover:bg-danger-100" onClick={() => setConfirming(f.id)}>
+                    <button className="rounded-full inline-flex min-h-11 items-center px-3.5 text-sm font-bold text-danger-600 hover:bg-danger-100" onClick={() => setConfirming(f.id)}>
                       Delete<span className="sr-only"> {f.original_name}</span>
                     </button>
                   ))}

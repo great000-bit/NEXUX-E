@@ -27,7 +27,7 @@ export function Notice({
     success: 'border-green-600/25 bg-green-50 text-green-800',
   }[tone]
   return (
-    <div role={tone === 'error' ? 'alert' : 'status'} className={`flex gap-3 rounded-[var(--radius-md)] border px-4 py-3 text-sm ${styles}`}>
+    <div role={tone === 'error' ? 'alert' : 'status'} className={`theme-light flex gap-3 rounded-[var(--radius-md)] border px-4 py-3 text-sm ${styles}`}>
       {tone === 'error' && <AlertIcon className="mt-0.5 h-4 w-4 flex-none" />}
       <div className="min-w-0">
         {title && <p className="font-bold">{title}</p>}
@@ -37,28 +37,33 @@ export function Notice({
   )
 }
 
+/** A refined step indicator for the dark shell: one lime segment per step, the current step named above. */
 export function ProgressBar({ step, total, labels }: { step: number; total: number; labels: string[] }) {
-  const pct = ((step + 1) / total) * 100
   return (
     <div>
-      <div className="flex items-baseline justify-between text-sm">
-        <span className="font-bold text-green-900">
+      <div className="flex items-baseline justify-between gap-3 text-sm">
+        <span className="font-display font-semibold text-green-900">
           Step {step + 1} of {total}
         </span>
-        <span className="font-medium text-ink-500">{labels[step]}</span>
+        <span className="text-right font-medium text-ink-500">{labels[step]}</span>
       </div>
       <div
-        className="mt-2 h-2 overflow-hidden rounded-full bg-green-100"
+        className="mt-3 grid gap-1.5"
+        style={{ gridTemplateColumns: `repeat(${total}, minmax(0, 1fr))` }}
         role="progressbar"
         aria-valuemin={1}
         aria-valuemax={total}
         aria-valuenow={step + 1}
         aria-label="Registration progress"
       >
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-green-700 to-green-500"
-          style={{ width: `${pct}%`, transition: 'width 450ms var(--ease)' }}
-        />
+        {Array.from({ length: total }, (_, i) => (
+          <span key={i} className="h-1.5 overflow-hidden rounded-full bg-white/15">
+            <span
+              className="block h-full origin-left rounded-full bg-gradient-to-r from-lime-500 to-green-500"
+              style={{ transform: `scaleX(${i <= step ? 1 : 0})`, transition: 'transform 450ms var(--ease)' }}
+            />
+          </span>
+        ))}
       </div>
     </div>
   )
@@ -93,7 +98,7 @@ export function ErrorSummary({
     <div
       role="alert"
       data-testid="error-summary"
-      className="rounded-[var(--radius-md)] border-2 border-danger-600 bg-danger-100 p-4"
+      className="theme-light rounded-[var(--radius-md)] border-2 border-danger-600 bg-danger-100 p-4"
     >
       <div className="flex gap-3">
         <AlertIcon className="mt-0.5 h-5 w-5 flex-none text-danger-600" />

@@ -53,8 +53,8 @@ export default function Registered() {
 
   return (
     <div className="mx-auto max-w-lg text-center">
-      <div className="pop mx-auto grid h-16 w-16 place-items-center rounded-full bg-green-500/15">
-        <svg viewBox="0 0 24 24" className="h-9 w-9 text-green-700" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
+      <div className="pop mx-auto grid h-16 w-16 place-items-center rounded-full bg-lime-500/15 ring-1 ring-lime-500/40">
+        <svg viewBox="0 0 24 24" className="h-9 w-9 text-lime-500" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
           <path d="m5 12.5 4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </div>
@@ -63,9 +63,9 @@ export default function Registered() {
 
       <section
         aria-labelledby="id-label"
-        className="relative mt-8 overflow-hidden rounded-[var(--radius-xl)] bg-green-900 px-6 py-8 text-white shadow-lg"
+        className="glass relative mt-8 overflow-hidden rounded-[var(--radius-xl)] px-6 py-8 text-white"
       >
-        <div aria-hidden="true" className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-green-700/60 blur-2xl" />
+        <div aria-hidden="true" className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-lime-500/20 blur-2xl" />
         <p id="id-label" className="relative text-xs font-bold uppercase tracking-[0.22em] text-lime-500">
           Your Expert ID
         </p>
@@ -102,7 +102,7 @@ export default function Registered() {
         )}
       </section>
 
-      <section className="mt-6 rounded-[var(--radius-lg)] bg-green-100 p-6 text-left">
+      <section className="theme-light mt-6 rounded-[var(--radius-lg)] bg-green-100 p-6 text-left">
         <h2 className="text-xl font-semibold text-green-900">Next: complete your verification</h2>
         <p className="mt-2 text-[0.95rem] text-ink-700">
           Complete verification to earn Verified Expert status. After the conference we will invite you to confirm your membership, licence and credentials using your Expert ID. There is nothing more to do today.
