@@ -44,6 +44,7 @@ Run the files in `supabase/migrations` in order in the Supabase SQL editor.
 2. `20261007000002_rls_and_rpc.sql`: Row Level Security and the `register_expert` function.
 3. `20261007000003_ensure_unique_indexes.sql`: guarantees duplicate email and phone are blocked. Safe to repeat.
 4. `20261008000001_email_sender.sql`, `20261008000002_security_hardening.sql`, `20261008000003_function_secrets.sql`: confirmation emails and security fixes. See Confirmation emails below.
+5. `20261009000001` to `20261009000004`: Phase 2 verification. See Verification below.
 
 Then create the admin user and allow-list them:
 
@@ -64,7 +65,10 @@ How access works:
 | `/` | Welcome and how it works |
 | `/register` | Three screen form, progress saved in sessionStorage |
 | `/registered` | Confirmation with Expert ID and copy button |
-| `/admin` | Admin sign in, dashboard, search, filters, record detail, CSV export |
+| `/verify` | Expert sign-in with an emailed one-time code |
+| `/verify/dashboard` | Status, evidence upload and submit for review |
+| `/admin` | Admin sign in, registrations (search, filters, status, detail, CSV export) |
+| `/admin/verification` | Review queue by status, then `/admin/verification/NEX-000123` to review one expert |
 
 ## Deploy
 
@@ -77,6 +81,99 @@ Any static host works (Vercel, Netlify, Cloudflare Pages).
   - Netlify and Cloudflare Pages: already handled by `public/_redirects`.
   - Vercel: already handled by `vercel.json`.
 - After deploying, set the Supabase Authentication URL configuration Site URL to your live address.
+
+## Verification (Phase 2)
+
+Experts upload evidence of their membership, licence and qualification. Administrators review it and decide. Everything is private, every decision is logged, and the expert is emailed at each step.
+
+### Statuses
+
+| Status | Meaning |
+| --- | --- |
+| Pending | Registered, no evidence submitted yet |
+| Under review | Evidence submitted, waiting for an administrator |
+| More evidence needed | An administrator asked for more. The expert can add or replace files and submit again |
+| Verified | Approved |
+| Not verified | Rejected, with a reason the expert can read |
+
+The PRD names three statuses (Pending, Verified, Not verified). The two extra ones, Under review and More evidence needed, are the working states between them.
+
+### What an expert does
+
+1. Open `/verify` and enter the email they registered with. A 6 digit code is emailed to them. The code works once, expires in 10 minutes, and five wrong guesses cancel it. The page gives the same answer whether or not the email is registered, so nobody can use it to find out who has registered. Expert IDs alone are never accepted, because they are sequential and guessable.
+2. On `/verify/dashboard` they read the privacy notice and agree to it, then upload documents: a membership card or certificate (they pick the body, such as NES or IEPN), a licence, a qualification certificate, and an optional CV. PDF, JPG or PNG only, 5 MB each, up to 8 files. Files are checked by their contents, not their names. Until they submit, they can delete and replace files.
+3. They press **Submit for review**. The status becomes Under review and the files are locked.
+
+Experts who registered with a phone number only cannot sign in, because the code goes to an email address. Add an email to their record first.
+
+### What an administrator does
+
+In `/admin`, the **Verification** tab shows counts per status and a queue, oldest first. Opening an expert shows their registered details beside their files, with a viewer for PDFs and images. Choose **Approve**, **Request more evidence** (a message is required) or **Reject** (a reason is required), add optional internal notes, and confirm. The expert is emailed. Every decision is written to the decision log, which nobody can edit or delete.
+
+The registrations table has a status badge, a status filter, and the CSV export includes the status, the submission date, who reviewed it, and when.
+
+**Data requests.** On an expert's review page, *Export this expert's data* downloads a JSON file (their record, the names of files uploaded, the decision log and the emails sent), and *Delete uploaded files* removes their files from storage and logs it.
+
+### How it is protected
+
+- **Experts have no database login.** The `expert-portal` Edge Function checks their session on every call and only ever touches that expert's own record and files. Sessions last 2 hours.
+- **Private storage.** The `expert-evidence` bucket is private, has no public URLs, and has no policy for the public or for experts. Administrators can read and remove files, and open them only through short lived signed links. Experts open their own files through 60 second signed links created after an ownership check. File paths are random, contain no Expert ID, and are never written to logs.
+- **Uploads go straight to storage** through a one-time signed URL, and the function then downloads the stored bytes to check them: the type must be PDF, JPG or PNG by its real content, the stored type must agree, the size must be 5 MB or less, and PDFs with scripts or launch actions are refused. Anything else is deleted at once.
+- **Administrators stay separate.** They sign in with Supabase Auth and must be on `public.admins`. Expert sessions are never accepted for admin actions, and admin logins are never accepted as expert sessions.
+- **Rate limits.** Code requests: 3 per email and 10 per network every 15 minutes. Code guesses: 20 per network every 15 minutes. A daily cap on sign-in emails (`PORTAL_DAILY_CODE_CAP`, default 40) stops anyone using up the Resend allowance of 100 emails a day.
+- **The decision log** (`verification_audit`) is append only. No API role can write to it, and database triggers reject any update, delete or truncate.
+
+### Retention of rejected uploads
+
+When an expert is marked Not verified, their files are deleted after a retention period. The default is **30 days**. It is a setting in the database:
+
+```sql
+select key, value from public.verification_settings;
+update public.verification_settings set value = '14' where key = 'rejected_retention_days';
+```
+
+A daily job (pg_cron, 03:00 UTC) calls the `verification-admin` function, which deletes the files of every expert who has been Not verified for longer than that, logs it, and clears uploads that were started but never finished. Verified experts keep their files until an administrator deletes them. The Not verified email tells the expert that files are only kept for a short time.
+
+### Setup
+
+1. **Migrations.** Run in order: `20261009000001_verification_schema.sql`, `20261009000002_verification_functions.sql`, `20261009000003_verification_maintenance.sql`, `20261009000004_session_index.sql`. They also create the private bucket and its policies.
+2. **Vault secrets** (SQL editor). `portal_pepper` is a random salt for hashing network addresses. `verification_function_url` is where the daily job calls. The existing `resend_api_key` and `email_webhook_secret` are reused.
+   ```sql
+   select vault.create_secret(encode(extensions.gen_random_bytes(32), 'hex'), 'portal_pepper');
+   select vault.create_secret('https://<your-project-ref>.supabase.co/functions/v1/verification-admin', 'verification_function_url');
+   ```
+3. **Deploy three functions.** `expert-portal` and `verification-admin` with the JWT check off (they do their own checks), and the updated `send-confirmation-emails`:
+   ```bash
+   npx supabase functions deploy expert-portal --no-verify-jwt
+   npx supabase functions deploy verification-admin --no-verify-jwt
+   npx supabase functions deploy send-confirmation-emails --no-verify-jwt
+   ```
+4. **Optional function settings** (Edge Function secrets): `ALLOWED_ORIGINS` (default `https://register.nexuse.org`), `CONTACT_EMAIL` (shown in the Not verified email), `PORTAL_DAILY_CODE_CAP`, plus the existing `EMAIL_FROM` and `EMAIL_REPLY_TO`. Set `EMAIL_REPLY_TO` before launch, so experts who reply to a status email reach a real inbox.
+
+### Emails
+
+The four status emails (evidence received, more evidence needed, verified, not verified) use the same outbox, retry rules, daily cap and "never twice" guarantee as the confirmation email. Each decision creates exactly one outbox row, keyed to its entry in the decision log. The sign-in code email is sent straight away rather than queued, because a code that arrives late is useless.
+
+### Testing
+
+```bash
+npm test                              # unit and regression tests for the app, the emails and the portal
+node scripts/regression-live.mjs      # read-only checks against the real project (public access is locked down)
+node scripts/regression-live.mjs --write   # also registers one labelled test expert and tries duplicates
+```
+
+The live script prints the SQL that removes the test expert it created. The decision log cannot be edited, so test decisions made through the review screen stay in it. See the note under Operating.
+
+### Operating
+
+- **Test data in the decision log.** Because the log is append only, rows created while testing cannot be deleted through the app. If you reset the Expert ID numbering after testing, delete the test rows first, or the next `NEX-000001` will inherit them. Doing that deliberately means pausing the protection for a moment, from the SQL editor as the project owner:
+  ```sql
+  alter table public.verification_audit disable trigger verification_audit_no_change;
+  delete from public.verification_audit where expert_id in ('NEX-000001', 'NEX-000002');  -- the test experts only
+  alter table public.verification_audit enable trigger verification_audit_no_change;
+  ```
+  Never do this for real decisions.
+- **Stuck or unwanted sessions.** `update public.expert_sessions set revoked_at = now() where expert_id = 'NEX-000123';`
 
 ## Confirmation emails (Resend)
 
