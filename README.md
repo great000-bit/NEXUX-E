@@ -45,6 +45,7 @@ Run the files in `supabase/migrations` in order in the Supabase SQL editor.
 3. `20261007000003_ensure_unique_indexes.sql`: guarantees duplicate email and phone are blocked. Safe to repeat.
 4. `20261008000001_email_sender.sql`, `20261008000002_security_hardening.sql`, `20261008000003_function_secrets.sql`: confirmation emails and security fixes. See Confirmation emails below.
 5. `20261009000001` to `20261009000004`: Phase 2 verification. See Verification below.
+6. `20261010000001_email_required_and_settings.sql`: email required for new registrations, the `admin_set_expert_email` action, and the Reply-To and contact settings.
 
 Then create the admin user and allow-list them:
 
@@ -101,10 +102,10 @@ The PRD names three statuses (Pending, Verified, Not verified). The two extra on
 ### What an expert does
 
 1. Open `/verify` and enter the email they registered with. A 6 digit code is emailed to them. The code works once, expires in 10 minutes, and five wrong guesses cancel it. The page gives the same answer whether or not the email is registered, so nobody can use it to find out who has registered. Expert IDs alone are never accepted, because they are sequential and guessable.
-2. On `/verify/dashboard` they read the privacy notice and agree to it, then upload documents: a membership card or certificate (they pick the body, such as NES or IEPN), a licence, a qualification certificate, and an optional CV. PDF, JPG or PNG only, 5 MB each, up to 8 files. Files are checked by their contents, not their names. Until they submit, they can delete and replace files.
+2. On `/verify/dashboard` they read the privacy notice and agree to it, then upload documents: a membership card or certificate (they pick the body, such as NES or IEPN), a licence, a qualification certificate, and an optional CV. PDF, JPG or PNG only, 5 MB each, up to 8 files. Files are checked by their contents, not their names. Big phone photos are shrunk in the browser before upload (to under 2 MB and at most 2000 pixels on the longest side, saved as JPG), PDFs are left exactly as they are, and a friendly message appears if a file is still over the 5 MB limit. Until they submit, they can delete and replace files.
 3. They press **Submit for review**. The status becomes Under review and the files are locked.
 
-Experts who registered with a phone number only cannot sign in, because the code goes to an email address. Add an email to their record first.
+Email is required when registering (phone is optional but checked if given). Older records that were saved with a phone number only have no email, so those experts cannot sign in until an administrator adds one: open the record in **Registrations**, and the detail panel shows an **Add email** box. The address is checked, must not belong to another expert, and the change is written to the decision log without copying the address into it.
 
 ### What an administrator does
 
@@ -174,6 +175,39 @@ The live script prints the SQL that removes the test expert it created. The deci
   ```
   Never do this for real decisions.
 - **Stuck or unwanted sessions.** `update public.expert_sessions set revoked_at = now() where expert_id = 'NEX-000123';`
+
+## Settings you can change
+
+Two addresses are used by the emails. They live in `public.verification_settings` (readable by administrators only), and an Edge Function secret of the same purpose overrides them if you ever set one.
+
+| Setting | Edge Function secret | Used for |
+| --- | --- | --- |
+| `email_reply_to` | `EMAIL_REPLY_TO` | The Reply-To header on every email: registration confirmation, sign-in codes and the four status emails. Replies from experts land here. |
+| `contact_email` | `CONTACT_EMAIL` | The address named in the Not verified email ("please write to ..."). |
+
+Both are currently `greatemmanwori@gmail.com`. To change them, in the SQL editor:
+
+```sql
+update public.verification_settings set value = 'help@nexuse.org' where key in ('email_reply_to', 'contact_email');
+```
+
+`rejected_retention_days` (default 30) lives in the same table.
+
+## Supabase Auth settings (dashboard)
+
+These cannot be set from code. In the Supabase dashboard, open the project, then:
+
+1. **Authentication, URL Configuration.** Set **Site URL** to `https://register.nexuse.org`. Under **Redirect URLs**, add `https://nexux-e.vercel.app` (and `http://localhost:5173` while developing).
+2. **Authentication, Sign In / Providers, Email.** Turn on **Prevent use of leaked passwords**. This needs the Pro plan. If the option is greyed out, it is the plan, not a setting you missed.
+3. In the same place, turn **off** **Allow new users to sign up**, so only people you create can sign in.
+
+## The flier QR code
+
+`public/qr/nexus-e-flier-qr.svg` and `.png` encode `https://register.nexuse.org/?src=flier` (error correction H, 4 module quiet zone, dark green on white, no logo, 2000 px transparent PNG). The PNG is transparent, so print it on white or another light colour. Regenerate and re-verify with `npm run qr`, which decodes both files and fails if they do not read back correctly. The app ignores the `src` parameter, and a test keeps it that way.
+
+## Checking the admin at phone width
+
+Every admin screen is built to work at 360 px. To check after changes, sign in, open the browser at 360 px wide, and run the snippet in `scripts/phone-audit.js` in the console. It reports any sideways scroll and any tap target under 40 px.
 
 ## Confirmation emails (Resend)
 
