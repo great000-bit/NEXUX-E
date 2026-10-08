@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { supabase } from '../../lib/supabase'
 import { Link } from 'react-router-dom'
 import { EXPERTISE, MEMBERSHIPS, STATES } from '../../lib/options'
@@ -226,7 +226,17 @@ export default function Dashboard() {
         )}
       </div>
 
-      {open && <Detail expert={open} onClose={() => setOpen(null)} />}
+      {open && (
+        <Detail
+          expert={open}
+          onClose={() => setOpen(null)}
+          onEmailAdded={async () => {
+            const fresh = await fetchAll()
+            setRows(fresh)
+            setOpen(fresh.find((x) => x.expert_id === open.expert_id) ?? null)
+          }}
+        />
+      )}
     </div>
   )
 }
@@ -261,7 +271,66 @@ function Filter({
   )
 }
 
-function Detail({ expert: r, onClose }: { expert: Expert; onClose: () => void }) {
+const EMAIL_ERRORS: Record<string, string> = {
+  invalid_email: 'Enter a valid email address, like name@example.com.',
+  email_taken: 'Another expert already uses this email address. Please check it.',
+  email_exists: 'This record already has an email address. Refresh the page to see it.',
+  not_admin: 'Your account is not on the admin list.',
+}
+
+/** For older records that have no email: adding one lets that expert sign in to verify. */
+function AddEmail({ expertId, onAdded }: { expertId: string; onAdded: () => Promise<void> }) {
+  const [value, setValue] = useState('')
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const id = `add-email-${expertId}`
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault()
+    const email = value.trim()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      setError(EMAIL_ERRORS.invalid_email)
+      document.getElementById(id)?.focus()
+      return
+    }
+    setError(null)
+    setBusy(true)
+    const { error: rpcError } = await supabase.rpc('admin_set_expert_email', { p_expert_id: expertId, p_email: email })
+    setBusy(false)
+    if (rpcError) return setError(EMAIL_ERRORS[rpcError.message] ?? 'We could not save that email address. Please try again.')
+    await onAdded()
+  }
+
+  return (
+    <form onSubmit={submit} noValidate>
+      <p className="text-ink-500">None on this record. Add one so this expert can sign in to verify.</p>
+      <label htmlFor={id} className="sr-only">Email address to add</label>
+      <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+        <input
+          id={id}
+          type="email"
+          inputMode="email"
+          autoComplete="off"
+          className="input min-w-0 flex-1"
+          placeholder="name@example.com"
+          value={value}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? `${id}-err` : undefined}
+          onChange={(e) => {
+            setValue(e.target.value)
+            setError(null)
+          }}
+        />
+        <button type="submit" className="btn btn-primary !min-h-12" disabled={busy}>
+          {busy ? 'Saving' : 'Add email'}
+        </button>
+      </div>
+      {error && <p id={`${id}-err`} className="field-error">{error}</p>}
+    </form>
+  )
+}
+
+function Detail({ expert: r, onClose, onEmailAdded }: { expert: Expert; onClose: () => void; onEmailAdded: () => Promise<void> }) {
   const ref = useRef<HTMLDialogElement>(null)
   useEffect(() => {
     const d = ref.current
@@ -311,10 +380,12 @@ function Detail({ expert: r, onClose }: { expert: Expert; onClose: () => void })
       </div>
       <dl className="divide-y divide-line px-5">
         {rows.map(([k, v]) => (
-          <div key={k} className="grid grid-cols-[9rem_1fr] gap-3 py-3 text-sm">
+          <div key={k} className="grid grid-cols-1 gap-1 py-3 text-sm sm:grid-cols-[9rem_1fr] sm:gap-3">
             <dt className="font-bold text-ink-500">{k}</dt>
-            <dd className="break-words text-ink-900">
-              {v ? (k === 'Profile link' && /^https?:\/\//i.test(v) ? <a className="text-blue-700 underline" href={v} target="_blank" rel="noopener noreferrer">{v}</a> : v) : <span className="text-ink-300">Not provided</span>}
+            <dd className="min-w-0 break-words text-ink-900">
+              {k === 'Email' && !r.email ? (
+                <AddEmail expertId={r.expert_id} onAdded={onEmailAdded} />
+              ) : v ? (k === 'Profile link' && /^https?:\/\//i.test(v) ? <a className="text-blue-700 underline" href={v} target="_blank" rel="noopener noreferrer">{v}</a> : v) : <span className="text-ink-300">Not provided</span>}
             </dd>
           </div>
         ))}
