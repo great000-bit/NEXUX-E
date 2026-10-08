@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { supabase } from '../../lib/supabase'
+import { Link } from 'react-router-dom'
 import { EXPERTISE, MEMBERSHIPS, STATES } from '../../lib/options'
+import { STATUS_LABEL, STATUS_ORDER } from '../../lib/verification'
+import { StatusBadge } from '../../components/StatusBadge'
 import { Notice, Spinner } from '../../components/ui'
 import { downloadCsv, type Expert } from './csv'
 
@@ -24,7 +27,7 @@ async function fetchAll(): Promise<Expert[]> {
 const fmt = (iso: string) =>
   new Date(iso).toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' })
 
-export default function Dashboard({ email, onSignOut }: { email: string; onSignOut: () => void }) {
+export default function Dashboard() {
   const [rows, setRows] = useState<Expert[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [q, setQ] = useState('')
@@ -32,6 +35,7 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
   const [state, setState] = useState('')
   const [membership, setMembership] = useState('')
   const [discoverable, setDiscoverable] = useState('')
+  const [vstatus, setVstatus] = useState('')
   const [open, setOpen] = useState<Expert | null>(null)
 
   const load = useCallback(async () => {
@@ -63,15 +67,16 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
       if (state && r.state !== state) return false
       if (membership === 'none' ? r.memberships.length > 0 : membership && !r.memberships.includes(membership)) return false
       if (discoverable && (discoverable === 'yes') !== r.discoverable) return false
+      if (vstatus && r.verification_status !== vstatus) return false
       if (!needle) return true
       const hay = [r.full_name, r.email ?? '', r.organisation, r.position, r.expert_id].join(' ').toLowerCase()
       return hay.includes(needle) || (digits.length >= 3 && (r.phone ?? '').includes(digits))
     })
-  }, [rows, q, expertise, state, membership, discoverable])
+  }, [rows, q, expertise, state, membership, discoverable, vstatus])
 
-  const filtersOn = Boolean(q || expertise || state || membership || discoverable)
+  const filtersOn = Boolean(q || expertise || state || membership || discoverable || vstatus)
   const clear = () => {
-    setQ(''); setExpertise(''); setState(''); setMembership(''); setDiscoverable('')
+    setQ(''); setExpertise(''); setState(''); setMembership(''); setDiscoverable(''); setVstatus('')
   }
 
   const stats = useMemo(() => {
@@ -89,13 +94,9 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
   return (
     <div className="-mx-1 sm:mx-0">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-semibold text-green-900">Registrations</h1>
-          <p className="text-sm text-ink-500">Signed in as {email}</p>
-        </div>
+        <h1 className="text-3xl font-semibold text-green-900">Registrations</h1>
         <div className="flex gap-2">
           <button className="btn btn-ghost !min-h-10 !px-4" onClick={load} disabled={rows === null && !error}>Refresh</button>
-          <button className="btn btn-ghost !min-h-10 !px-4" onClick={onSignOut}>Sign out</button>
         </div>
       </div>
 
@@ -113,7 +114,7 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
             placeholder="Search name, email, phone, organisation or Expert ID"
           />
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           <Filter label="Expertise" value={expertise} onChange={setExpertise} options={EXPERTISE} all="All expertise" />
           <Filter label="State" value={state} onChange={setState} options={STATES} all="All states" />
           <Filter
@@ -123,6 +124,10 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
           <Filter
             label="Discoverability" value={discoverable} onChange={setDiscoverable}
             options={['yes', 'no']} labels={{ yes: 'Discoverable', no: 'Not discoverable' }} all="Any"
+          />
+          <Filter
+            label="Verification" value={vstatus} onChange={setVstatus}
+            options={STATUS_ORDER} labels={STATUS_LABEL} all="Any status"
           />
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -181,6 +186,7 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
                     </div>
                     <p className="mt-0.5 text-sm text-ink-700">{r.organisation}</p>
                     <p className="mt-2 text-sm text-ink-500">{r.primary_expertise} · {r.state}</p>
+                    <div className="mt-2"><StatusBadge status={r.verification_status} /></div>
                   </button>
                 </li>
               ))}
@@ -189,7 +195,7 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
               <table className="w-full text-left text-sm">
                 <thead className="bg-green-50 text-xs uppercase tracking-wider text-ink-500">
                   <tr>
-                    {['Expert ID', 'Name', 'Organisation', 'Primary expertise', 'State', 'Discoverable', 'Registered'].map((h) => (
+                    {['Expert ID', 'Name', 'Organisation', 'Primary expertise', 'State', 'Discoverable', 'Verification', 'Registered'].map((h) => (
                       <th key={h} scope="col" className="px-4 py-3 font-bold">{h}</th>
                     ))}
                   </tr>
@@ -209,6 +215,7 @@ export default function Dashboard({ email, onSignOut }: { email: string; onSignO
                           {r.discoverable ? 'Yes' : 'No'}
                         </span>
                       </td>
+                      <td className="px-4 py-3"><StatusBadge status={r.verification_status} /></td>
                       <td className="whitespace-nowrap px-4 py-3 text-ink-500">{fmt(r.created_at)}</td>
                     </tr>
                   ))}
@@ -280,7 +287,7 @@ function Detail({ expert: r, onClose }: { expert: Expert; onClose: () => void })
     ['Profile link', r.profile_url],
     ['Discoverable', r.discoverable ? 'Yes' : 'No'],
     ['Consent to be contacted', r.consent_contact ? `Yes, ${fmt(r.consent_at)}` : 'No'],
-    ['Verification', r.verification_status.replace('_', ' ')],
+    ['Verification', STATUS_LABEL[(STATUS_ORDER as string[]).includes(r.verification_status) ? (r.verification_status as keyof typeof STATUS_LABEL) : 'pending']],
     ['Registered', fmt(r.created_at)],
   ]
 
@@ -297,7 +304,10 @@ function Detail({ expert: r, onClose }: { expert: Expert; onClose: () => void })
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-green-700">{r.expert_id}</p>
           <h2 id="detail-title" className="mt-1 text-2xl font-semibold text-green-900">{r.title} {r.full_name}</h2>
         </div>
-        <button className="btn btn-ghost !min-h-10 !px-4" onClick={() => ref.current?.close()}>Close</button>
+        <div className="flex flex-col items-end gap-2">
+          <button className="btn btn-ghost !min-h-10 !px-4" onClick={() => ref.current?.close()}>Close</button>
+          <Link to={`/admin/verification/${r.expert_id}`} className="text-sm font-bold text-green-800 underline underline-offset-4">Open review</Link>
+        </div>
       </div>
       <dl className="divide-y divide-line px-5">
         {rows.map(([k, v]) => (

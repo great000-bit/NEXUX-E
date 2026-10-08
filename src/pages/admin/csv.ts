@@ -1,3 +1,7 @@
+import { isStatus, STATUS_LABEL } from '../../lib/verification'
+
+const statusLabel = (s: string) => (isStatus(s) ? STATUS_LABEL[s] : s)
+
 export type Expert = {
   id: string
   expert_id: string
@@ -22,6 +26,11 @@ export type Expert = {
   consent_contact: boolean
   consent_at: string
   verification_status: string
+  submitted_at: string | null
+  reviewed_at: string | null
+  reviewed_by: string | null
+  verified_at: string | null
+  review_message: string | null
   created_at: string
 }
 
@@ -48,7 +57,11 @@ const COLUMNS: { header: string; get: (e: Expert) => string }[] = [
   { header: 'Discoverable', get: (e) => (e.discoverable ? 'Yes' : 'No') },
   { header: 'Consent to be contacted', get: (e) => (e.consent_contact ? 'Yes' : 'No') },
   { header: 'Consent recorded at', get: (e) => e.consent_at },
-  { header: 'Verification status', get: (e) => e.verification_status },
+  { header: 'Verification status', get: (e) => statusLabel(e.verification_status) },
+  { header: 'Evidence submitted at', get: (e) => e.submitted_at ?? '' },
+  { header: 'Reviewed at', get: (e) => e.reviewed_at ?? '' },
+  { header: 'Reviewed by', get: (e) => e.reviewed_by ?? '' },
+  { header: 'Verified at', get: (e) => e.verified_at ?? '' },
 ]
 
 /** Quote a cell, and defuse spreadsheet formulas (=, +, -, @) typed into the public form. */

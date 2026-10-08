@@ -3,7 +3,7 @@ import type { Session } from '@supabase/supabase-js'
 import { isConfigured, supabase } from '../../lib/supabase'
 import { Notice, Spinner } from '../../components/ui'
 import { TextField } from '../../components/fields'
-import Dashboard from './Dashboard'
+import AdminArea from './AdminArea'
 
 export default function Admin() {
   // undefined = still checking, null = signed out
@@ -61,7 +61,7 @@ export default function Admin() {
       </div>
     )
   }
-  return <Dashboard email={session?.user.email ?? ''} onSignOut={() => supabase.auth.signOut()} />
+  return <AdminArea email={session?.user.email ?? ''} onSignOut={() => supabase.auth.signOut()} />
 }
 
 function Login() {
