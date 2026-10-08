@@ -62,6 +62,16 @@ test('the QR PNG is 2000 px with a real alpha channel (transparent background)',
   assert.equal(png[25], 6, 'colour type 6 means RGBA')
 })
 
+test('the directory pages are lazy loaded, so the registration bundle does not grow with the database client', () => {
+  const app = read('src/App.tsx')
+  assert.doesNotMatch(app, /^import (Directory|ExpertProfile) from/m)
+  assert.match(app, /lazy\(\(\) => import\('\.\/pages\/Directory'\)\)/)
+  assert.match(app, /lazy\(\(\) => import\('\.\/pages\/ExpertProfile'\)\)/)
+  for (const f of ['src/pages/Register.tsx', 'src/pages/Registered.tsx', 'src/pages/Home.tsx']) {
+    assert.doesNotMatch(read(f), /lib\/directory|lib\/supabase/, f)
+  }
+})
+
 // Regression tests for the admin screens at phone width (360 px) and the detail drawer.
 
 test('the registration detail drawer clears its own state on close, so it can be opened again', () => {
