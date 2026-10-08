@@ -322,6 +322,19 @@ select length(decrypted_secret) from vault.decrypted_secrets where name = 'resen
 - **Cloudflare Turnstile:** `src/components/Turnstile.tsx` is the slot for the widget. The place to verify the token is marked in the second migration.
 - **QR code:** generated in `public/qr` by `npm run qr`.
 
+## Design (design-refresh)
+
+The whole product uses a dark-green glass look. Visuals and copy only; registration, verification, directory and admin logic are unchanged.
+
+- **Full reference:** `docs/design-system.md` (tokens, glass spec, components, motion rules, accessibility, performance, how to extend).
+- **Fonts:** Sora (headings, weight 600) and Manrope (text), self-hosted in `public/fonts/` with long cache headers in `vercel.json`.
+- **Components:** `src/components/ds/` (Button, GlassCard, Chip, Section, Badge, Toast) plus Navbar, Footer, inputs and the error summary.
+- **Home page:** `src/pages/home/`. The hero is its own chunk; the scroll sections (with AOS) load after idle or first scroll. The hero falls back to a still poster for reduced motion, save-data, 4 or fewer cores, 2 GB or less memory, or a hidden tab.
+- **Brand files:** `npm run brand` regenerates the favicon, apple touch icon, light logo mark and share image from `scripts/generate-brand.mjs`.
+- **Layout audit:** paste `scripts/layout-audit.js` into the browser console at 360, 390, 768 and 1280 px to check sideways scroll, 44 px tap targets and heading order. It reads the page only.
+- **Footer contact address:** set `VITE_CONTACT_EMAIL` in Vercel (see `.env.example`). Until then the footer shows a fallback line.
+- **Tests:** `src/design.test.ts` (contrast audit) and `src/home.test.ts` (motion rules, copy, structure).
+
 ## Design tokens
 
 Colours were sampled from the conference flier (`docs/flier.jpg`) and live in `src/index.css` under `@theme`. The emblem is rebuilt as vector in `src/components/Logo.tsx` and `public/logo-mark.svg`.
