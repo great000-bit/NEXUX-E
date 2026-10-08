@@ -61,6 +61,9 @@ test('only listed experts are offered to search engines, and everything else say
   const robots = read('public/robots.txt')
   assert.match(robots, /Disallow: \/admin/)
   assert.match(robots, /Disallow: \/verify/)
+  assert.match(read('src/pages/admin/Admin.tsx'), /noindex, nofollow/, 'every admin route carries noindex, nofollow')
+  const sitemap = path.join(root, 'public/sitemap.xml')
+  if (fs.existsSync(sitemap)) assert.doesNotMatch(fs.readFileSync(sitemap, 'utf8'), /\/admin/, 'no sitemap lists /admin')
   assert.doesNotMatch(robots, /Disallow: \/experts/)
 })
 

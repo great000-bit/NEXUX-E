@@ -12,10 +12,27 @@ export default function Admin() {
 
   useEffect(() => {
     document.title = 'Admin | NEXUS-E'
-    if (!isConfigured) return
+    // Every admin route is served by this component, so search engines are told here never to list or follow it.
+    let robots = document.head.querySelector<HTMLMetaElement>('meta[name="robots"]')
+    const created = !robots
+    const before = robots?.getAttribute('content') ?? null
+    if (!robots) {
+      robots = document.createElement('meta')
+      robots.name = 'robots'
+      document.head.appendChild(robots)
+    }
+    robots.content = 'noindex, nofollow'
+    const restoreRobots = () => {
+      if (created) robots?.remove()
+      else if (before !== null) robots?.setAttribute('content', before)
+    }
+    if (!isConfigured) return restoreRobots
     supabase.auth.getSession().then(({ data }) => setSession(data.session))
     const { data } = supabase.auth.onAuthStateChange((_e, s) => setSession(s))
-    return () => data.subscription.unsubscribe()
+    return () => {
+      data.subscription.unsubscribe()
+      restoreRobots()
+    }
   }, [])
 
   const uid = session?.user.id
