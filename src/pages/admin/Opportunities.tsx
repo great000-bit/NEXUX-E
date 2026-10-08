@@ -104,7 +104,7 @@ export default function Opportunities() {
                     <p className="mt-0.5 break-words text-sm text-ink-700">{o.opp_type} · {o.location}</p>
                     <p className="text-sm text-ink-500">
                       Deadline {formatDay(o.deadline)}
-                      {o.status === 'open' ? ` (${deadlineNote(o.deadline, now)})` : ''}
+                      {o.status === 'open' ? ` (${o.expired ? 'deadline passed' : deadlineNote(o.deadline, now).toLowerCase()})` : ''}
                     </p>
                   </div>
                   <div className="flex items-center gap-3 text-sm">

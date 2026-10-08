@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { CheckList, RadioList, SelectField, TextAreaField, TextField } from '../../components/fields'
 import { OppBadge } from '../../components/OppBadge'
 import { StatusBadge } from '../../components/StatusBadge'
@@ -33,7 +33,8 @@ export default function OpportunityEdit() {
   const navigate = useNavigate()
   const [loaded, setLoaded] = useState<Loaded | null>(null)
   const [reload, setReload] = useState(0)
-  const [flash, setFlash] = useState<string | null>(null)
+  const location = useLocation()
+  const [flash, setFlash] = useState<string | null>(() => (location.state as { flash?: string } | null)?.flash ?? null)
 
   useEffect(() => {
     document.title = `${id ? 'Opportunity' : 'New opportunity'} | Admin | NEXUS-E`
@@ -67,8 +68,7 @@ export default function OpportunityEdit() {
           key="new"
           initial={null}
           onSaved={(newId) => {
-            setFlash('Saved. You can now see who is interested here.')
-            navigate(`/admin/opportunities/${newId}`, { replace: true })
+            navigate(`/admin/opportunities/${newId}`, { replace: true, state: { flash: 'Saved. It will show here who is interested once experts respond.' } })
           }}
         />
       </div>
@@ -183,7 +183,10 @@ function Editor({
     const first = FIELD_ORDER.find((k) => found[k])
     if (first) {
       // Let the summary render, then take the person to it.
-      requestAnimationFrame(() => summaryRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }))
+      requestAnimationFrame(() => {
+        summaryRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' })
+        summaryRef.current?.focus({ preventScroll: true })
+      })
       return
     }
     setSaving(true)
@@ -210,7 +213,7 @@ function Editor({
 
   return (
     <form onSubmit={save} noValidate className="card space-y-5 p-5 sm:p-7" aria-label={initial ? 'Edit opportunity' : 'New opportunity'}>
-      <div ref={summaryRef}>
+      <div ref={summaryRef} tabIndex={-1} className="outline-none">
         <ErrorSummary items={items} onJump={jump} />
       </div>
       {serverError && <Notice>{serverError}</Notice>}
@@ -359,7 +362,7 @@ function InterestPanel({ opp, rows }: { opp: AdminOpportunity; rows: InterestedE
         </ul>
       )}
       <p className="mt-4 text-xs text-ink-500">
-        {opp.status === 'open' && !opp.expired ? `Open for ${deadlineNote(opp.deadline)}, until ${formatDay(opp.deadline)}.` : `Deadline ${formatDay(opp.deadline)}.`}
+        {opp.status === 'open' && !opp.expired ? `Deadline ${formatDay(opp.deadline)} (${deadlineNote(opp.deadline).toLowerCase()}).` : `Deadline ${formatDay(opp.deadline)}.`}
       </p>
     </section>
   )
