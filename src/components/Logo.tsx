@@ -76,7 +76,7 @@ export function Logo({ variant = 'full', className = '', onDark = false }: Props
           <sup className={`ml-0.5 align-top text-[0.5rem] font-bold ${onDark ? 'text-white/70' : 'text-green-800'}`}>TM</sup>
         </div>
         <div className={`mt-1 hidden text-[0.58rem] font-semibold uppercase tracking-[0.14em] sm:block ${onDark ? 'text-white/70' : 'text-ink-500'}`}>
-          Nigerian Environmental
+          African Environmental
           <br />
           Expertise Exchange
         </div>

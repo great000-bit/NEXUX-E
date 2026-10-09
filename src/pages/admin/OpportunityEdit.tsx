@@ -260,7 +260,7 @@ function Editor({
         value={form.deadline}
         onChange={(v) => set('deadline', v)}
         error={errors.deadline}
-        hint="The last day experts can express interest. It stays open through the whole of that day, Nigerian time."
+        hint="The last day experts can express interest. It stays open through the whole of that day, West Africa Time (UTC+1)."
       />
       <RadioList
         fieldKey="status"

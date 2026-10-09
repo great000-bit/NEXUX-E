@@ -10,7 +10,7 @@ const HomeSections = lazy(() => import('./home/HomeSections'))
 export default function Home() {
   const [below, setBelow] = useState(false)
   // The canonical address is the bare home page, so a link with a tracking parameter (the QR code) counts as the same page.
-  usePageInfo({ title: 'NEXUS-E | Verified Registry of Environmental Experts', canonicalPath: '/' })
+  usePageInfo({ title: 'NEXUS-E | African Environmental Expertise Exchange', canonicalPath: '/' })
 
   // FAQPage structured data for the questions further down the page. Added now, so a crawler does not have to scroll.
   useEffect(() => {

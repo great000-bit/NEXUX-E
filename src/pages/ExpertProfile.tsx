@@ -45,7 +45,7 @@ export default function ExpertProfile() {
     profile
       ? {
           title: `${displayName(profile.title, profile.full_name)}, ${profile.primary_expertise} | NEXUS-E`,
-          description: `${displayName(profile.title, profile.full_name)} is a Verified Expert in ${profile.primary_expertise} (${profile.state}) on NEXUS-E, the verified registry of environmental experts.`,
+          description: `${displayName(profile.title, profile.full_name)} is a Verified Expert in ${profile.primary_expertise} (${profile.state}) on NEXUS-E, the African Environmental Expertise Exchange.`,
           robots: 'index, follow',
           path: `/experts/${profile.expert_id}`,
         }

@@ -62,7 +62,7 @@ const og = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width
   <rect x="24" y="24" width="1152" height="582" rx="34" fill="none" stroke="#ffffff" stroke-opacity=".1"/>
   <g transform="translate(76 66) scale(0.27)">${emblem('o')}</g>
   <text x="152" y="108" font-family="Segoe UI" font-weight="700" font-size="46" fill="#ffffff" letter-spacing="-1.5">NEXUS<tspan fill="#c5dc3f">-E</tspan></text>
-  <text x="153" y="134" font-family="Segoe UI" font-weight="600" font-size="15" fill="#ffffff" fill-opacity=".72" letter-spacing="2.4">NIGERIAN ENVIRONMENTAL EXPERTISE EXCHANGE</text>
+  <text x="153" y="134" font-family="Segoe UI" font-weight="600" font-size="15" fill="#ffffff" fill-opacity=".72" letter-spacing="2.4">AFRICAN ENVIRONMENTAL EXPERTISE EXCHANGE</text>
   <text x="76" y="318" font-family="Segoe UI" font-weight="600" font-size="86" fill="#ffffff" letter-spacing="-3.2">Don't just be qualified.</text>
   <text x="76" y="418" font-family="Segoe UI" font-weight="600" font-size="86" fill="url(#gt)" letter-spacing="-3.2">Be found.</text>
   <text x="78" y="486" font-family="Segoe UI" font-size="26" fill="#ffffff" fill-opacity=".84">Register once and be discovered for projects, research and development finance.</text>
