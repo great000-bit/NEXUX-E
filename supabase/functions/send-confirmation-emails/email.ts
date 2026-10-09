@@ -44,11 +44,11 @@ export function buildEmail(job: ConfirmationJob, opts: { siteUrl: string }): Bui
   const text = [
     `Dear ${name},`,
     '',
-    'You are registered. Welcome to NEXUS-E, the Nigerian Environmental Expertise Exchange.',
+    'You are registered. Welcome to NEXUS-E, the African Environmental Expertise Exchange.',
     '',
     `YOUR EXPERT ID: ${job.expert_id}`,
     '',
-    'You are now a founding expert of the Nigerian Environmental Expertise Exchange. Please keep this ID safe, because you will need it when you verify your profile.',
+    'You are now a founding expert of the African Environmental Expertise Exchange. Please keep this ID safe, because you will need it when you verify your profile.',
     '',
     'What happens next',
     'After the conference we will contact you with the steps to complete your verification. Verification confirms your membership, licence and credentials, and it is how you earn Verified Expert status. There is nothing more you need to do today.',
@@ -59,7 +59,7 @@ export function buildEmail(job: ConfirmationJob, opts: { siteUrl: string }): Bui
     '',
     'With thanks,',
     'The NEXUS-E team',
-    'Nigerian Environmental Expertise Exchange',
+    'African Environmental Expertise Exchange',
     '',
   ].join('\n')
 
@@ -80,14 +80,14 @@ export function buildEmail(job: ConfirmationJob, opts: { siteUrl: string }): Bui
         <tr>
           <td style="background:${GREEN_900};padding:28px 32px;">
             <div style="font-family:Arial,Helvetica,sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#ffffff;">NEXUS<span style="color:${LIME};">-E</span></div>
-            <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#cfe3bf;margin-top:6px;">Nigerian Environmental Expertise Exchange</div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#cfe3bf;margin-top:6px;">African Environmental Expertise Exchange</div>
           </td>
         </tr>
         <tr>
           <td style="padding:32px 32px 8px 32px;font-family:Arial,Helvetica,sans-serif;color:${INK};">
             <h1 style="margin:0 0 16px 0;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.2;color:${GREEN_900};">You are registered</h1>
             <p style="margin:0 0 16px 0;font-size:16px;line-height:1.6;color:${INK};">Dear ${escapeHtml(name)},</p>
-            <p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;color:${INK_SOFT};">Welcome to NEXUS-E. You are now a founding expert of the Nigerian Environmental Expertise Exchange.</p>
+            <p style="margin:0 0 24px 0;font-size:16px;line-height:1.6;color:${INK_SOFT};">Welcome to NEXUS-E. You are now a founding expert of the African Environmental Expertise Exchange.</p>
           </td>
         </tr>
         <tr>
