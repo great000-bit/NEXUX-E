@@ -37,7 +37,7 @@ function preloadRouteChunks(): Plugin {
           const code =
             `if(${route.test}){${JSON.stringify(files)}.forEach(function(x){var l=document.createElement('link');` +
             `l.rel=x.css?'stylesheet':'modulepreload';l.href=x.f;document.head.appendChild(l)})}`
-          tags.push({ tag: 'script', children: code, injectTo: 'head' as const })
+          tags.push({ tag: 'script', children: code, injectTo: 'head-prepend' as const })
         }
         return tags
       },
@@ -82,7 +82,7 @@ function preconnectDatabase(): Plugin {
           `var q=new URLSearchParams({apikey:${JSON.stringify(key)}});a.forEach(function(x){q.set(x[0],x[1])});` +
           `var u=${JSON.stringify(base)}+'/rest/v1/rpc/'+n+'?'+q.toString();` +
           'try{window.__early={url:u,response:fetch(u)}}catch(e){}})()'
-        tags.push({ tag: 'script', children: code, injectTo: 'head' })
+        tags.push({ tag: 'script', children: code, injectTo: 'head-prepend' })
       }
       return tags
     },
