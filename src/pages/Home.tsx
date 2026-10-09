@@ -1,11 +1,23 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
+import { faqJsonLdText } from '../lib/faqSchema'
 import Hero from './home/Hero'
+import { FAQ } from './home/content'
 
 // Everything below the first screen loads after the hero has painted, so the headline is never held up.
 const HomeSections = lazy(() => import('./home/HomeSections'))
 
 export default function Home() {
   const [below, setBelow] = useState(false)
+
+  // FAQPage structured data for the questions further down the page. Added now, so a crawler does not have to scroll.
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.type = 'application/ld+json'
+    script.id = 'faq-jsonld'
+    script.text = faqJsonLdText(FAQ.items)
+    document.head.appendChild(script)
+    return () => script.remove()
+  }, [])
 
   useEffect(() => {
     document.title = 'NEXUS-E | Nigerian Environmental Expertise Exchange'
