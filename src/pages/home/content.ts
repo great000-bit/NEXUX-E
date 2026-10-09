@@ -3,11 +3,11 @@
 import type { IconName } from '../../components/icons'
 
 export const HERO = {
-  eyebrow: 'Join the founding experts, Benin 2026',
+  eyebrow: 'Join the founding experts',
   headlineA: "Don't just be qualified.",
   headlineB: 'Be found.',
   subline:
-    'Register once as a Nigerian environmental professional and be discovered for projects, research and development finance.',
+    'Register once as an environmental professional and be discovered for projects, research and development finance.',
   small: '90 seconds. One professional profile. More opportunities.',
 }
 
@@ -127,7 +127,38 @@ export const DIRECTORY = {
 }
 
 export const CTA = {
-  eyebrow: 'Benin 2026',
   title: 'Join the founding experts',
   text: '90 seconds. One professional profile. More opportunities.',
 }
+
+export const FAQ = {
+  eyebrow: 'FAQ',
+  title: 'Frequently asked questions',
+  intro: 'Answers about registering, verification and how your profile is found.',
+  items: [
+    {
+      q: 'What is NEXUS-E?',
+      a: 'NEXUS-E is a verified registry of environmental professionals. You register once, build one professional profile, and get verified, so organisations looking for expertise can find you.',
+    },
+    {
+      q: 'What are the benefits of registering?',
+      a: 'You get one verified professional profile that shows your expertise, experience and the areas you can work in. Verified experts can be found by people searching for the right specialist, and can express interest in project opportunities posted on the platform for projects, research and development finance.',
+    },
+    {
+      q: 'How do I get found?',
+      a: 'Once your profile is verified and you have chosen to be listed, it appears in the searchable expert directory. People can search and filter by expertise and location. Keep your profile complete and up to date so the right opportunities match you.',
+    },
+    {
+      q: 'Is my profile secure?',
+      a: 'Yes. Your phone number and email address are never shown publicly. Documents you upload for verification are kept in private storage and are used only to verify you. You sign in with a one-time code sent to your email, and you choose whether your profile is listed in the directory.',
+    },
+    {
+      q: 'How does verification work?',
+      a: 'After you register, you upload supporting evidence of your qualifications and experience. Our team reviews it and your profile moves from Pending to Under review and then to Verified. If we need more evidence, we will tell you what to add.',
+    },
+    {
+      q: 'Does NEXUS-E replace professional licensing?',
+      a: 'No. NEXUS-E does not replace statutory or professional licensing. It confirms your expertise on the registry and helps you be found.',
+    },
+  ],
+} as const

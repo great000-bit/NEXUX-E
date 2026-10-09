@@ -9,6 +9,7 @@ import { displayName } from '../../lib/directoryFilters'
 import { fetchListedPreview, type ListedPreview } from '../../lib/publicApi'
 import { prefersReducedMotion } from '../../lib/scroll'
 import { fadeIn, fadeUp, initAos, refreshAos, softZoom } from './aos'
+import { Faq } from './Faq'
 import { ABOUT, AUDIENCE, CTA, DIRECTORY, EXPERTISE_SECTION, HOW, PRIVACY, STEPS, WHY } from './content'
 
 /** True once the element has come within 250 px of the screen. Used to load data just before it is needed. */
@@ -84,6 +85,7 @@ export default function HomeSections() {
       <WhoFindsYou />
       <Privacy />
       <DirectoryTeaser />
+      <Faq />
       <FinalCta />
     </>
   )
@@ -272,8 +274,7 @@ function FinalCta() {
         <span aria-hidden="true" className="cta-glow -right-24 -top-32" />
         <span aria-hidden="true" className="cta-glow -bottom-40 -left-24 opacity-60" />
         <div className="relative">
-          <p className="eyebrow">{CTA.eyebrow}</p>
-          <h2 id="cta-title" className="t-h2 mx-auto mt-3 max-w-2xl !text-white">{CTA.title}</h2>
+          <h2 id="cta-title" className="t-h2 mx-auto max-w-2xl !text-white">{CTA.title}</h2>
           <p className="mx-auto mt-4 max-w-md text-ink-700">{CTA.text}</p>
           <div className="mt-8 flex justify-center">
             <Button to="/register" variant="accent" icon="arrow-right" className="min-w-52">Register now</Button>

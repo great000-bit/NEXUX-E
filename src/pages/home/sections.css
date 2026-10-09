@@ -26,3 +26,53 @@
 /* A soft glow behind the closing call to action. */
 .cta-glow { position: absolute; inset: auto; width: 34rem; height: 34rem; border-radius: 50%; pointer-events: none;
   background: radial-gradient(closest-side, rgb(197 220 63 / 0.2), transparent 70%); }
+
+/* ---------- Frequently asked questions ---------- */
+.faq-item {
+  position: relative; border-radius: var(--radius-lg); overflow: hidden;
+  background: rgb(255 255 255 / 0.06); border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08);
+  transition: border-color var(--dur-2) var(--ease), background-color var(--dur-2) var(--ease), box-shadow var(--dur-3) var(--ease);
+}
+/* The thin lime accent line on the left. It grows from the top when the item opens. */
+.faq-item::before {
+  content: ''; position: absolute; left: 0; top: 0.9rem; bottom: 0.9rem; width: 3px; border-radius: 3px;
+  background: linear-gradient(180deg, #c5dc3f, #62aa2a); transform: scaleY(0.28); transform-origin: top; opacity: 0.55;
+  transition: transform var(--dur-3) var(--ease), opacity var(--dur-2) var(--ease);
+}
+.faq-item:hover { border-color: rgb(197 220 63 / 0.4); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 14px 44px -20px rgb(197 220 63 / 0.35); }
+.faq-item[data-open='true'] { background: rgb(255 255 255 / 0.09); border-color: rgb(197 220 63 / 0.45); box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12), 0 18px 56px -22px rgb(197 220 63 / 0.4); }
+.faq-item[data-open='true']::before { transform: scaleY(1); opacity: 1; }
+
+.faq-q {
+  display: flex; align-items: center; gap: 1rem; width: 100%; min-height: 3.75rem; padding: 0.9rem 1.1rem 0.9rem 1.35rem;
+  background: none; border: 0; cursor: pointer; color: #f1f8e6; text-align: left; border-radius: var(--radius-lg);
+}
+.faq-q:focus-visible { outline: 2px solid #e1ee8a; outline-offset: -3px; box-shadow: none; }
+.faq-num { flex: none; font-family: var(--font-display); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; color: var(--color-lime-500); opacity: 0.85; }
+.faq-text { flex: 1; min-width: 0; font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; line-height: 1.3; color: #fff; }
+@media (min-width: 640px) { .faq-text { font-size: 1.15rem; } }
+.faq-icon {
+  display: grid; place-items: center; flex: none; width: 2.25rem; height: 2.25rem; border-radius: 999px;
+  color: var(--color-lime-500); background: rgb(197 220 63 / 0.1); border: 1px solid rgb(197 220 63 / 0.25);
+  transition: transform var(--dur-3) var(--ease), background-color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
+}
+/* The plus turns 135 degrees, so it lands as a close (cross) icon. */
+.faq-item[data-open='true'] .faq-icon { transform: rotate(135deg); background: rgb(197 220 63 / 0.2); border-color: rgb(197 220 63 / 0.55); }
+
+/* Open and close: grid rows go from 0fr to 1fr (no height measuring), with opacity and a small rise on the text. */
+.faq-panel { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden;
+  transition: grid-template-rows var(--dur-3) var(--ease), opacity var(--dur-2) var(--ease), visibility 0s linear var(--dur-3); }
+.faq-panel[data-open='true'] { grid-template-rows: 1fr; opacity: 1; visibility: visible; transition-delay: 0s; }
+.faq-panel-clip { min-height: 0; overflow: hidden; }
+.faq-answer { margin: 0; padding: 0 1.35rem 1.35rem 3.6rem; font-size: 0.97rem; line-height: 1.7; color: var(--color-ink-700);
+  transform: translateY(-6px); transition: transform var(--dur-3) var(--ease); }
+.faq-panel[data-open='true'] .faq-answer { transform: translateY(0); }
+@media (max-width: 480px) { .faq-answer { padding-left: 1.35rem; } }
+
+.faq-intro { position: relative; }
+@media (min-width: 1024px) { .faq-intro { position: sticky; top: 7rem; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item, .faq-item::before, .faq-icon, .faq-panel, .faq-answer { transition: none !important; }
+}
