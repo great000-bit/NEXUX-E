@@ -142,11 +142,11 @@ export default function Directory() {
               {t.clear}
             </button>
           )}
-          <div className="ms-auto flex items-center gap-2">
+          <div className="ms-auto flex min-w-0 max-w-full items-center gap-2">
             <label htmlFor="directory-sort" className="text-sm font-bold text-ink-700">{t.sort}</label>
             <select
               id="directory-sort"
-              className="input !w-auto !py-2"
+              className="input min-w-0 !w-auto max-w-[13rem] !py-2 sm:max-w-none"
               value={filters.sort}
               onChange={(e) => apply({ sort: e.target.value as Sort })}
             >
