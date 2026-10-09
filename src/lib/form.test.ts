@@ -22,8 +22,8 @@ const valid: FormData = {
   consent_contact: true,
 }
 
-test('the PRD lists are intact: 15 expertise areas, 13 assignment options, 37 states plus outside Nigeria', () => {
-  assert.equal(EXPERTISE.length, 15)
+test('the lists are intact: 18 expertise areas (15 from the PRD plus three added by the client), 13 assignment options, 37 states plus outside Nigeria', () => {
+  assert.equal(EXPERTISE.length, 18)
   assert.equal(ASSIGNMENTS.length, 13)
   assert.equal(STATES.length, 38)
 })

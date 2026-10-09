@@ -67,7 +67,7 @@ export const ABOUT = {
 
 export const EXPERTISE_SECTION = {
   eyebrow: 'Key areas of expertise',
-  title: 'Fifteen areas, one registry',
+  title: 'Eighteen areas, one registry',
   lead: 'Choose your main area and up to three more when you register.',
 }
 

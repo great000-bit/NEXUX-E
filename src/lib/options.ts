@@ -26,6 +26,9 @@ export const EXPERTISE = [
   'ESG and Sustainability',
   'Occupational and Community Health',
   'Other Specialised Expertise',
+  'Environmental Educator',
+  'Environmental IT',
+  'Environmental Media',
 ] as const
 
 export const MAX_SECONDARY = 3

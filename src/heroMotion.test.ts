@@ -72,7 +72,7 @@ test('the hook lines and the expertise pool are the supplied copy, with no repea
   assert.equal(HERO_HOOKS.length, 8)
   assert.equal(new Set(HERO_HOOKS).size, 8)
   assert.ok(HERO_HOOKS.includes('Ready for World Bank, AfDB and DFI projects.'))
-  assert.equal(EXPERTISE.length, 15)
+  assert.equal(EXPERTISE.length, 18)
   for (const n of HERO_NODES) assert.ok((EXPERTISE as readonly string[]).includes(n.label), n.label)
   assert.doesNotMatch(JSON.stringify(HERO_HOOKS), /—|–/)
 })
