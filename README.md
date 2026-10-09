@@ -337,6 +337,15 @@ The whole product uses a dark-green glass look. Visuals and copy only; registrat
 - **No public email address:** the site shows no email address to visitors (the footer has no Contact column). Replies to emails go to the Reply-To address kept in the database settings (see "Settings you can change").
 - **Tests:** `src/design.test.ts` (contrast audit) and `src/home.test.ts` (motion rules, copy, structure).
 
+## Safe deploys and speed (health pass)
+
+- **A deploy never leaves a tab blank.** If a script file has vanished after a deploy, the page reloads once on its own (guarded by `src/lib/chunkReload.ts`, so it cannot loop and does nothing while offline). Anything else that fails to render shows a message with a Reload button (`src/components/ErrorBoundary.tsx`). The registration form keeps its progress in `sessionStorage`.
+- **Public pages use plain fetch.** The directory, profiles and the registration submit call the public database functions through `src/lib/rest.ts`, not the 55 KB Supabase client (only the admin area loads that). A dropped connection can be retried with "Try again".
+- **Early hints.** `vite.config.ts` starts the home, directory and profile chunks from the HTML and opens the database connection early (`preconnect`, taken from the build's own environment).
+- **Field limits.** The form stops typing at 120 to 300 characters per field (`FIELD_LIMITS` in `src/lib/form.ts`); the database has wider check constraints (migration `20261014000001_field_length_limits.sql`).
+- **Headers.** `vercel.json` adds nosniff, frame denial, a referrer policy and a permissions policy to every response. A full Content-Security-Policy is deliberately not set yet: it needs testing against the admin file viewer.
+- **Checks.** `scripts/hero-audit.js` and `scripts/layout-audit.js` are read-only browser audits. Test writes only on staging.
+
 ## Design tokens
 
 Colours were sampled from the conference flier (`docs/flier.jpg`) and live in `src/index.css` under `@theme`. The emblem is rebuilt as vector in `src/components/Logo.tsx` and `public/logo-mark.svg`.
