@@ -15,7 +15,7 @@ test('the public directory and profile talk to the database with plain fetch, no
   assert.match(dir, /publicRpc\('directory_profile'/)
   const rest = read('src/lib/rest.ts')
   assert.match(rest, /AbortController/)
-  assert.match(rest, /catch \{\n\s+return \{ ok: false \}/, 'a failure is a result, never a thrown error')
+  assert.match(rest, /catch \(e\) \{\n\s+return \{ ok: false, status: 0/, 'a failure is a result, never a thrown error')
   // Only the admin area still loads the full client.
   for (const f of ['src/pages/Directory.tsx', 'src/pages/ExpertProfile.tsx', 'src/pages/home/HomeSections.tsx', 'src/pages/home/Hero.tsx', 'src/pages/Register.tsx', 'src/pages/Verify.tsx']) {
     assert.doesNotMatch(read(f), /lib\/supabase'/, f)
@@ -54,4 +54,16 @@ test('page titles follow the page, private flows say noindex, and the home and r
   assert.match(read('src/pages/Register.tsx'), /title: 'Register as an expert \| NEXUS-E'/)
   // The hero's corner labels are links, so they are 44 px tall.
   assert.match(read('src/pages/home/home.css'), /\.reel-node \{ --reel-h: 2\.75rem; \}/)
+})
+
+test('every response carries the basic security headers, and the long cache stays on assets and fonts only', () => {
+  const v = JSON.parse(read('vercel.json')) as { headers: { source: string; headers: { key: string; value: string }[] }[] }
+  const all = v.headers.find((h) => h.source === '/(.*)')
+  assert.ok(all, 'a rule for every path')
+  const keys = Object.fromEntries(all.headers.map((h) => [h.key, h.value]))
+  assert.equal(keys['X-Content-Type-Options'], 'nosniff')
+  assert.equal(keys['X-Frame-Options'], 'DENY')
+  assert.equal(keys['Referrer-Policy'], 'strict-origin-when-cross-origin')
+  assert.match(keys['Permissions-Policy'], /camera=\(\)/)
+  assert.ok(!all.headers.some((h) => /immutable/.test(h.value)), 'nothing long-lived on the page itself')
 })
