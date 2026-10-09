@@ -1,3 +1,4 @@
+import '../i18n/enSite'
 import { usePageInfo } from '../lib/pageInfo'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -11,19 +12,20 @@ import {
   call, clearSession, getSession, uploadToSignedUrl,
   type EvidenceFile, type MeResponse,
 } from '../lib/portal'
-import {
-  BODIES, isStatus, KIND_INFO, MAX_FILE_BYTES, MAX_FILES, STATUS_HELP, STATUS_LABEL,
-  type EvidenceKind,
-} from '../lib/verification'
+import { BODIES, isStatus, MAX_FILE_BYTES, MAX_FILES, type EvidenceKind } from '../lib/verification'
+import { fmt, messages } from '../i18n'
+import { useMessages } from '../i18n/I18nProvider'
 
 type Transfer = { key: string; kind: EvidenceKind; name: string; progress: number; phase: 'preparing' | 'sending' | 'checking' }
 
 const KINDS: EvidenceKind[] = ['membership', 'licence', 'qualification', 'cv']
 
 const when = (iso: string | null) =>
-  iso ? new Date(iso).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+  iso ? new Date(iso).toLocaleDateString(messages().meta.dateLocale, { day: 'numeric', month: 'long', year: 'numeric' }) : ''
 
 export default function VerifyDashboard() {
+  const m = useMessages()
+  const t = m.dashboard
   const navigate = useNavigate()
   const [me, setMe] = useState<MeResponse | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -46,13 +48,13 @@ export default function VerifyDashboard() {
     [navigate],
   )
 
-  const sessionEnded = useCallback(() => endSession('Your session has ended, so please sign in again.'), [endSession])
+  const sessionEnded = useCallback(() => endSession(messages().dashboard.sessionEnded), [endSession])
 
   const refresh = useCallback(async () => {
-    if (!token) return endSession('Please sign in to see your verification.')
+    if (!token) return endSession(messages().dashboard.signInFirst)
     const res = await call<MeResponse>('me', {}, token)
     if (!res.ok) {
-      if (res.error === 'session_expired') return endSession('Your session has ended, so please sign in again.')
+      if (res.error === 'session_expired') return endSession(messages().dashboard.sessionEnded)
       setLoadError(res.message)
       return
     }
@@ -60,7 +62,7 @@ export default function VerifyDashboard() {
     setMe(res)
   }, [token, endSession])
 
-  usePageInfo({ title: 'Your verification | NEXUS-E', noindex: true })
+  usePageInfo({ title: t.pageTitle, noindex: true })
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -72,13 +74,13 @@ export default function VerifyDashboard() {
   if (loadError && !me) {
     return (
       <div className="mx-auto max-w-lg space-y-4">
-        <Notice title="We could not load your page">{loadError}</Notice>
-        <button className="btn btn-primary" onClick={() => void refresh()}>Try again</button>
+        <Notice title={t.loadFailedTitle}>{loadError}</Notice>
+        <button className="btn btn-primary" onClick={() => void refresh()}>{m.common.tryAgain}</button>
       </div>
     )
   }
   if (!me) {
-    return <div className="grid place-items-center py-24 text-green-800"><Spinner label="Loading your verification" className="h-8 w-8" /></div>
+    return <div className="grid place-items-center py-24 text-green-800"><Spinner label={t.loading} className="h-8 w-8" /></div>
   }
 
   const { expert, files, editable, consented } = me
@@ -91,7 +93,7 @@ export default function VerifyDashboard() {
 
   const giveConsent = async () => {
     if (!agree) {
-      setAgreeError('Please tick the box to confirm you have read this and agree.')
+      setAgreeError(t.agreeError)
       document.getElementById('agree-privacy')?.focus()
       return
     }
@@ -106,7 +108,7 @@ export default function VerifyDashboard() {
     setSlotError(kind, undefined)
     setSubmitError(null)
     if (evidenceCount >= MAX_FILES) {
-      return setSlotError(kind, `You can keep up to ${MAX_FILES} files. Please delete one before adding another.`)
+      return setSlotError(kind, fmt(t.fileLimit, { max: MAX_FILES }))
     }
     const key = crypto.randomUUID()
     const patch = (p: Partial<Transfer>) => setTransfers((t) => t.map((x) => (x.key === key ? { ...x, ...p } : x)))
@@ -122,9 +124,7 @@ export default function VerifyDashboard() {
       const stillBig = prepared.resized && file.size > MAX_FILE_BYTES
       return setSlotError(
         kind,
-        stillBig
-          ? `We shrank this photo as far as we sensibly can, and it is still over 5 MB. Please retake it at a lower quality setting, or send a PDF.`
-          : check.message,
+        stillBig ? t.stillTooBig : check.message,
       )
     }
     patch({ name: file.name, phase: 'sending' })
@@ -136,7 +136,7 @@ export default function VerifyDashboard() {
     )
     if (!slot.ok) {
       drop()
-      if (slot.error === 'session_expired') return endSession('Your session has ended, so please sign in again.')
+      if (slot.error === 'session_expired') return endSession(t.sessionEnded)
       return setSlotError(kind, slot.message)
     }
     const sent = await uploadToSignedUrl(slot.upload_url, file, check.mime, (f) => patch({ progress: f }))
@@ -181,7 +181,7 @@ export default function VerifyDashboard() {
     const res = await call('submit', {}, token)
     setSubmitting(false)
     if (!res.ok) {
-      if (res.error === 'session_expired') return endSession('Your session has ended, so please sign in again.')
+      if (res.error === 'session_expired') return endSession(t.sessionEnded)
       return setSubmitError(res.message)
     }
     await refresh()
@@ -192,7 +192,7 @@ export default function VerifyDashboard() {
   const signOut = async () => {
     await call('sign_out', {}, token)
     clearSession()
-    navigate('/verify', { replace: true, state: { message: 'You have signed out.' } })
+    navigate('/verify', { replace: true, state: { message: t.signedOut } })
   }
 
   return (
@@ -201,7 +201,7 @@ export default function VerifyDashboard() {
       <section className="card p-5 sm:p-7" aria-labelledby="verify-title">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-green-700">Your Expert ID</p>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-green-700">{t.idLabel}</p>
             <h1 id="verify-title" ref={headingRef} tabIndex={-1} className="mt-1 font-display text-4xl font-semibold text-green-900 outline-none"
               style={{ fontVariantNumeric: 'lining-nums tabular-nums' }}>
               {expert.expert_id}
@@ -213,15 +213,15 @@ export default function VerifyDashboard() {
           </div>
         </div>
         <p className="mt-4 text-[0.95rem] text-ink-700" role="status">
-          <span className="font-bold text-green-900">{STATUS_LABEL[status]}. </span>
-          {STATUS_HELP[status]}
-          {status === 'under_review' && expert.submitted_at ? ` You submitted on ${when(expert.submitted_at)}.` : ''}
-          {status === 'verified' && expert.verified_at ? ` Verified on ${when(expert.verified_at)}.` : ''}
+          <span className="font-bold text-green-900">{t.status[status]}. </span>
+          {t.statusHelp[status]}
+          {status === 'under_review' && expert.submitted_at ? fmt(t.submittedOn, { date: when(expert.submitted_at) }) : ''}
+          {status === 'verified' && expert.verified_at ? fmt(t.verifiedOn, { date: when(expert.verified_at) }) : ''}
         </p>
         {(status === 'more_evidence' || status === 'not_verified') && expert.review_message && (
-          <blockquote className="mt-4 rounded-[var(--radius-md)] border-l-4 border-green-700 bg-green-100 p-4 text-[0.95rem] text-ink-900">
+          <blockquote className="mt-4 rounded-[var(--radius-md)] border-s-4 border-green-700 bg-green-100 p-4 text-[0.95rem] text-ink-900">
             <p className="text-xs font-bold uppercase tracking-wider text-green-800">
-              {status === 'more_evidence' ? 'Message from our reviewer' : 'Reason'}
+              {status === 'more_evidence' ? t.reviewerMessage : t.reason}
             </p>
             <p className="mt-1 whitespace-pre-wrap">{expert.review_message}</p>
           </blockquote>
@@ -239,21 +239,17 @@ export default function VerifyDashboard() {
       {/* Evidence */}
       <section aria-labelledby="evidence-title" className="space-y-4">
         <div>
-          <h2 id="evidence-title" className="text-2xl font-semibold text-green-900">Your evidence</h2>
-          <p className="mt-1 text-[0.95rem] text-ink-700">
-            PDF, JPG or PNG only, up to 5 MB each, and up to {MAX_FILES} files. {evidenceCount} of {MAX_FILES} used.
-          </p>
+          <h2 id="evidence-title" className="text-2xl font-semibold text-green-900">{t.evidenceTitle}</h2>
+          <p className="mt-1 text-[0.95rem] text-ink-700">{fmt(t.evidenceRules, { max: MAX_FILES, used: evidenceCount })}</p>
         </div>
 
         {editable && !consented && (
           <div className="card p-5 sm:p-6">
-            <h3 className="text-lg font-semibold text-green-900">Before you upload: how we use your documents</h3>
-            <ul className="mt-3 list-disc space-y-2 pl-5 text-[0.95rem] text-ink-700">
-              <li><strong>What we collect.</strong> Only the documents you choose to upload, such as a membership card, a licence or a certificate. They may contain personal details.</li>
-              <li><strong>Who can see them.</strong> You, and the small team of NEXUS-E administrators who review verification. Nobody else. They are never shown in any directory or shared with organisations.</li>
-              <li><strong>Why.</strong> To check your membership, licence and qualification so we can give you Verified Expert status.</li>
-              <li><strong>How long.</strong> Files are kept while we review them. If we cannot verify you, they are deleted after a short retention period. You can delete a file yourself until you submit, and you can ask us to delete or send you your data at any time.</li>
-              <li><strong>How they are protected.</strong> Files are stored privately and are opened only through short lived links.</li>
+            <h3 className="text-lg font-semibold text-green-900">{t.privacyTitle}</h3>
+            <ul className="mt-3 list-disc space-y-2 ps-5 text-[0.95rem] text-ink-700">
+              {t.privacyPoints.map((p) => (
+                <li key={p.lead}><strong>{p.lead}</strong> {p.text}</li>
+              ))}
             </ul>
             <label className="choice mt-4" data-checked={agree} data-error={agreeError ? true : undefined}>
               <input
@@ -269,11 +265,11 @@ export default function VerifyDashboard() {
                 }}
               />
               <span className="choice-mark choice-check" aria-hidden="true" />
-              <span className="flex-1 text-[0.95rem] leading-snug">I have read this and I agree to NEXUS-E processing my documents for verification.</span>
+              <span className="flex-1 text-[0.95rem] leading-snug">{t.agree}</span>
             </label>
             {agreeError && <p id="agree-privacy-err" className="field-error">{agreeError}</p>}
             <button className="btn btn-primary mt-5 w-full sm:w-auto" onClick={giveConsent} disabled={savingConsent}>
-              {savingConsent ? (<><Spinner label="Saving" /> Saving</>) : 'Continue to upload'}
+              {savingConsent ? (<><Spinner label={t.saving} /> {t.saving}</>) : t.continueUpload}
             </button>
           </div>
         )}
@@ -301,20 +297,18 @@ export default function VerifyDashboard() {
       {/* Submit */}
       {editable && consented && (
         <section className="card p-5 sm:p-6" aria-labelledby="submit-title">
-          <h2 id="submit-title" className="text-xl font-semibold text-green-900">Ready to submit?</h2>
-          <p className="mt-1 text-[0.95rem] text-ink-700">
-            Add at least one membership, licence or qualification document. After you submit, your files are locked while we review them.
-          </p>
+          <h2 id="submit-title" className="text-xl font-semibold text-green-900">{t.submitTitle}</h2>
+          <p className="mt-1 text-[0.95rem] text-ink-700">{t.submitText}</p>
           {submitError && <div className="mt-3"><Notice>{submitError}</Notice></div>}
           <button
             className="btn btn-primary mt-4 w-full sm:w-auto sm:px-10"
             onClick={submit}
             disabled={submitting || !hasEvidence || transfers.length > 0}
           >
-            {submitting ? (<><Spinner label="Submitting" /> Submitting</>) : 'Submit for review'}
+            {submitting ? (<><Spinner label={t.submitting} /> {t.submitting}</>) : t.submit}
           </button>
           {!hasEvidence && (
-            <p className="mt-2 text-sm text-ink-500">The button turns on once you have added a membership, licence or qualification document.</p>
+            <p className="mt-2 text-sm text-ink-500">{t.submitHint}</p>
           )}
         </section>
       )}
@@ -328,33 +322,34 @@ export default function VerifyDashboard() {
 
       {/* Registered details */}
       <section className="card p-5 sm:p-6" aria-labelledby="details-title">
-        <h2 id="details-title" className="text-xl font-semibold text-green-900">Details you registered with</h2>
+        <h2 id="details-title" className="text-xl font-semibold text-green-900">{t.detailsTitle}</h2>
         <dl className="mt-3 divide-y divide-line text-sm">
           {([
-            ['Organisation', expert.organisation],
-            ['Position', expert.position],
-            ['State', expert.state],
-            ['Email', expert.email],
-            ['Phone', expert.phone ? `+${expert.phone}` : null],
-            ['Primary expertise', expert.primary_expertise],
-            ['Years of experience', expert.years_experience],
-            ['Highest qualification', expert.qualification],
-            ['Memberships', expert.memberships.length ? expert.memberships.join(', ') : null],
-            ['Availability', expert.availability],
-            ['Listed in the directory', expert.discoverable ? 'Yes' : 'No'],
-            ['Registered', when(expert.created_at)],
+            [t.details.organisation, expert.organisation],
+            [t.details.position, expert.position],
+            [t.details.country, expert.country ? ((m.options.countries as Record<string, string>)[expert.country] ?? expert.country) : null],
+            [t.details.state, expert.state],
+            [t.details.email, expert.email],
+            [t.details.phone, expert.phone ? `+${expert.phone}` : null],
+            [t.details.primaryExpertise, (m.options.expertise as Record<string, string>)[expert.primary_expertise] ?? expert.primary_expertise],
+            [t.details.years, (m.options.years as Record<string, string>)[expert.years_experience] ?? expert.years_experience],
+            [t.details.qualification, (m.options.qualifications as Record<string, string>)[expert.qualification] ?? expert.qualification],
+            [t.details.memberships, expert.memberships.length ? expert.memberships.join(', ') : null],
+            [t.details.availability, (m.options.availability as Record<string, string>)[expert.availability] ?? expert.availability],
+            [t.details.listed, expert.discoverable ? m.common.yes : m.common.no],
+            [t.details.registered, when(expert.created_at)],
           ] as [string, string | null][]).map(([k, v]) => (
             <div key={k} className="grid grid-cols-[9.5rem_1fr] gap-3 py-2.5">
               <dt className="font-bold text-ink-500">{k}</dt>
-              <dd className="min-w-0 break-words text-ink-900">{v ?? <span className="text-ink-300">Not provided</span>}</dd>
+              <dd className="min-w-0 break-words text-ink-900">{v ?? <span className="text-ink-300">{m.common.notProvided}</span>}</dd>
             </div>
           ))}
         </dl>
-        <p className="mt-3 text-xs text-ink-500">To change these details, please contact the NEXUS-E team.</p>
+        <p className="mt-3 text-xs text-ink-500">{t.detailsNote}</p>
       </section>
 
       <div className="flex justify-center">
-        <button className="btn btn-ghost" onClick={signOut}>Sign out</button>
+        <button className="btn btn-ghost" onClick={signOut}>{t.signOut}</button>
       </div>
     </div>
   )
@@ -373,7 +368,9 @@ function Slot({
   onRemove: (f: EvidenceFile) => void
   onView: (f: EvidenceFile) => void
 }) {
-  const info = KIND_INFO[kind]
+  const m = useMessages()
+  const t = m.dashboard
+  const info = t.kinds[kind]
   const [label, setLabel] = useState('')
   const [labelError, setLabelError] = useState<string | null>(null)
   const [confirming, setConfirming] = useState<string | null>(null)
@@ -382,7 +379,7 @@ function Slot({
 
   const choose = () => {
     if (kind === 'membership' && !label) {
-      setLabelError('Choose which professional body this document is from, then add the file.')
+      setLabelError(t.slot.chooseBody)
       document.getElementById(`${idBase}-body`)?.focus()
       return
     }
@@ -409,45 +406,45 @@ function Slot({
               </div>
               <div className="flex items-center gap-1">
                 <button className="rounded-full inline-flex min-h-11 items-center px-3.5 text-sm font-bold text-green-800 hover:bg-green-100" onClick={() => onView(f)}>
-                  View<span className="sr-only"> {f.original_name}</span>
+                  {t.slot.view}<span className="sr-only"> {f.original_name}</span>
                 </button>
                 {editable &&
                   (confirming === f.id ? (
                     <>
                       <button className="rounded-full bg-danger-600 inline-flex min-h-11 items-center px-3.5 text-sm font-bold text-white" onClick={() => { setConfirming(null); onRemove(f) }}>
-                        Yes, delete
+                        {t.slot.yesDelete}
                       </button>
                       <button className="rounded-full inline-flex min-h-11 items-center px-3.5 text-sm font-bold text-ink-700 hover:bg-line" onClick={() => setConfirming(null)}>
-                        Keep
+                        {t.slot.keep}
                       </button>
                     </>
                   ) : (
                     <button className="rounded-full inline-flex min-h-11 items-center px-3.5 text-sm font-bold text-danger-600 hover:bg-danger-100" onClick={() => setConfirming(f.id)}>
-                      Delete<span className="sr-only"> {f.original_name}</span>
+                      {t.slot.delete}<span className="sr-only"> {f.original_name}</span>
                     </button>
                   ))}
               </div>
             </li>
           ))}
-          {transfers.map((t) => (
-            <li key={t.key} className="rounded-[var(--radius-md)] bg-green-50 px-3 py-2.5">
+          {transfers.map((x) => (
+            <li key={x.key} className="rounded-[var(--radius-md)] bg-green-50 px-3 py-2.5">
               <div className="flex items-center justify-between gap-2 text-sm">
-                <p className="truncate font-semibold text-ink-900">{t.name}</p>
+                <p className="truncate font-semibold text-ink-900">{x.name}</p>
                 <p className="flex-none text-xs font-bold text-green-800" role="status">
-                  {t.phase === 'preparing' ? 'Preparing the photo' : t.phase === 'checking' ? 'Checking the file' : `${Math.round(t.progress * 100)}%`}
+                  {x.phase === 'preparing' ? m.dashboard.slot.preparing : x.phase === 'checking' ? m.dashboard.slot.checking : `${Math.round(x.progress * 100)}%`}
                 </p>
               </div>
               <div
                 className="mt-2 h-2 overflow-hidden rounded-full bg-green-100"
                 role="progressbar"
-                aria-label={`Uploading ${t.name}`}
+                aria-label={fmt(m.dashboard.slot.uploading, { name: x.name })}
                 aria-valuemin={0}
                 aria-valuemax={100}
-                aria-valuenow={Math.round(t.progress * 100)}
+                aria-valuenow={Math.round(x.progress * 100)}
               >
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-green-700 to-green-500"
-                  style={{ width: `${Math.round(t.progress * 100)}%`, transition: 'width 200ms var(--ease)' }}
+                  style={{ width: `${Math.round(x.progress * 100)}%`, transition: 'width 200ms var(--ease)' }}
                 />
               </div>
             </li>
@@ -461,7 +458,7 @@ function Slot({
         <div className="mt-4 flex flex-wrap items-end gap-3">
           {kind === 'membership' && (
             <div className="min-w-[10rem] flex-1">
-              <label htmlFor={`${idBase}-body`} className="field-label">Professional body</label>
+              <label htmlFor={`${idBase}-body`} className="field-label">{t.slot.body}</label>
               <select
                 id={`${idBase}-body`}
                 className="input"
@@ -470,8 +467,8 @@ function Slot({
                 aria-describedby={labelError ? `${idBase}-body-err` : undefined}
                 onChange={(e) => { setLabel(e.target.value); setLabelError(null) }}
               >
-                <option value="">Select</option>
-                {BODIES.map((b) => <option key={b} value={b}>{b === 'Other' ? 'Other body' : b}</option>)}
+                <option value="">{m.common.select}</option>
+                {BODIES.map((b) => <option key={b} value={b}>{(m.options.bodies as Record<string, string>)[b] ?? b}</option>)}
               </select>
               {labelError && <p id={`${idBase}-body-err`} className="field-error">{labelError}</p>}
             </div>
@@ -482,7 +479,7 @@ function Slot({
             className="sr-only"
             tabIndex={-1}
             accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-            aria-label={`Choose a file for ${info.title}`}
+            aria-label={fmt(t.slot.chooseFileFor, { title: info.title })}
             onChange={(e) => {
               const f = e.target.files?.[0]
               e.target.value = ''
@@ -490,7 +487,7 @@ function Slot({
             }}
           />
           <button className="btn btn-ghost" onClick={choose} disabled={full}>
-            {files.length + transfers.length > 0 ? 'Add another file' : 'Add a file'}
+            {files.length + transfers.length > 0 ? t.slot.addAnother : t.slot.add}
           </button>
         </div>
       )}

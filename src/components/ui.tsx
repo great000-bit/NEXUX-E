@@ -1,13 +1,16 @@
 import type { ReactNode } from 'react'
+import { useMessages } from '../i18n/I18nProvider'
+import { fmt } from '../i18n'
 
-export function Spinner({ label = 'Loading', className = 'h-5 w-5' }: { label?: string; className?: string }) {
+export function Spinner({ label, className = 'h-5 w-5' }: { label?: string; className?: string }) {
+  const m = useMessages()
   return (
     <span role="status" className="inline-flex items-center">
       <svg className={`spin ${className}`} viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <circle cx="12" cy="12" r="9" stroke="currentColor" strokeOpacity=".25" strokeWidth="3" />
         <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
       </svg>
-      <span className="sr-only">{label}</span>
+      <span className="sr-only">{label ?? m.common.loading}</span>
     </span>
   )
 }
@@ -39,11 +42,12 @@ export function Notice({
 
 /** A refined step indicator for the dark shell: one lime segment per step, the current step named above. */
 export function ProgressBar({ step, total, labels }: { step: number; total: number; labels: string[] }) {
+  const m = useMessages().register
   return (
     <div>
       <div className="flex items-baseline justify-between gap-3 text-sm">
         <span className="font-display font-semibold text-green-900">
-          Step {step + 1} of {total}
+          {fmt(m.progressStep, { n: step + 1, total })}
         </span>
         <span className="text-right font-medium text-ink-500">{labels[step]}</span>
       </div>
@@ -54,7 +58,7 @@ export function ProgressBar({ step, total, labels }: { step: number; total: numb
         aria-valuemin={1}
         aria-valuemax={total}
         aria-valuenow={step + 1}
-        aria-label="Registration progress"
+        aria-label={m.progressLabel}
       >
         {Array.from({ length: total }, (_, i) => (
           <span key={i} className="h-1.5 overflow-hidden rounded-full bg-white/15">
@@ -92,6 +96,7 @@ export function ErrorSummary({
   note?: string | null
   onJump: (anchor: string) => void
 }) {
+  const m = useMessages().register
   if (items.length === 0) return null
   const n = items.length
   return (
@@ -104,7 +109,7 @@ export function ErrorSummary({
         <AlertIcon className="mt-0.5 h-5 w-5 flex-none text-danger-600" />
         <div className="min-w-0">
           <p className="font-bold text-danger-600">
-            Please fix {n} {n === 1 ? 'thing' : 'things'} below to continue
+            {fmt(m.summaryFix, { n, things: n === 1 ? m.thing : m.things })}
           </p>
           {note && <p className="mt-1 text-sm font-medium text-ink-900">{note}</p>}
           <ul className="mt-2 space-y-1 text-[0.95rem]">

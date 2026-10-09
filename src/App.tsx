@@ -4,14 +4,15 @@ import { Layout } from './components/Layout'
 import Register from './pages/Register'
 import Registered from './pages/Registered'
 import NotFound from './pages/NotFound'
-import Verify from './pages/Verify'
-import VerifyDashboard from './pages/VerifyDashboard'
 import { Spinner } from './components/ui'
 
 // The home page and the admin area are separate chunks, so the registration route stays light.
 // The home chunk is preloaded only when the address is "/" (see vite.config.ts), so a QR visitor does not wait for it.
 const Home = lazy(() => import('./pages/Home'))
 const Admin = lazy(() => import('./pages/admin/Admin'))
+// The verification pages are not on the way to registering, so they load when someone goes there.
+const Verify = lazy(() => import('./pages/Verify'))
+const VerifyDashboard = lazy(() => import('./pages/VerifyDashboard'))
 
 // The directory loads the database client, which registration does not need. Keeping it out of the main
 // bundle keeps the registration page as light as it was on a weak connection.
@@ -34,8 +35,8 @@ export default function App() {
         <Route index element={<Suspense fallback={heroPlaceholder}><Home /></Suspense>} />
         <Route path="register" element={<Register />} />
         <Route path="registered" element={<Registered />} />
-        <Route path="verify" element={<Verify />} />
-        <Route path="verify/dashboard" element={<VerifyDashboard />} />
+        <Route path="verify" element={<Suspense fallback={loading}><Verify /></Suspense>} />
+        <Route path="verify/dashboard" element={<Suspense fallback={loading}><VerifyDashboard /></Suspense>} />
         <Route path="experts" element={<Suspense fallback={loading}><Directory /></Suspense>} />
         <Route path="experts/:expertId" element={<Suspense fallback={loading}><ExpertProfile /></Suspense>} />
         <Route

@@ -1,10 +1,13 @@
 import { usePageInfo } from '../lib/pageInfo'
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  emptyForm, errorList, EXPERT_ID_KEY, FIELD_INFO, firstInvalidStep, STEP_NAMES, STORAGE_KEY, validateStep,
+  emptyForm, errorList, EXPERT_ID_KEY, FIELD_INFO, firstInvalidStep, STORAGE_KEY, validateStep,
   type ErrorKey, type Errors, type FormData, type StepIndex,
 } from '../lib/form'
+import { AFRICAN_COUNTRIES, hasStateList, OTHER_COUNTRY } from '../lib/countries'
+import { fmt, messages } from '../i18n'
+import { useMessages } from '../i18n/I18nProvider'
 import {
   ASSIGNMENTS, AVAILABILITY, EXPERTISE, MAX_SECONDARY, MEMBERSHIPS,
   QUALIFICATIONS, STATES, TITLES, YEARS,
@@ -14,15 +17,10 @@ import { CheckList, ConsentBox, fieldId, RadioList, SelectField, TextField } fro
 import { ErrorSummary, Notice, ProgressBar, Spinner } from '../components/ui'
 import { Turnstile } from '../components/Turnstile'
 
-const STEP_TITLES = ['Tell us who you are', 'Your expertise', 'Your opportunity profile']
-const STEP_INTROS = [
-  'We use these details to create your record and to reach you.',
-  'Choose the areas where you are strongest. You can add up to three secondary areas.',
-  'Tell organisations how you can help, and confirm your consent.',
-]
-
-const sentBackNote = (step: StepIndex) =>
-  `We took you back to screen ${step + 1} (${STEP_NAMES[step]}) because something there needs your attention.`
+const sentBackNote = (step: StepIndex) => {
+  const r = messages().register
+  return fmt(r.sentBack, { n: step + 1, name: r.stepNames[step] })
+}
 
 type Start = { form: FormData; step: StepIndex; errors: Errors; note: string | null }
 
@@ -63,7 +61,18 @@ function focusField(anchor: string) {
 
 export default function Register() {
   const navigate = useNavigate()
-  usePageInfo({ title: 'Register as an expert | NEXUS-E', canonicalPath: '/register' })
+  const m = useMessages()
+  const r = m.register
+  const f = r.fields
+  usePageInfo({ title: r.pageTitle, canonicalPath: '/register' })
+  const countryLabel = (c: string) => (m.options.countries as Record<string, string>)[c] ?? c
+  const optionLabel = (group: keyof typeof m.options) => (v: string) => (m.options[group] as Record<string, string>)[v] ?? v
+  // African countries in the order of the language now shown, then "Other".
+  const countries = useMemo(
+    () => [...[...AFRICAN_COUNTRIES].sort((a, b) => countryLabel(a).localeCompare(countryLabel(b), m.meta.code)), OTHER_COUNTRY],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [m],
+  )
   const [initial] = useState(load)
   const [form, setForm] = useState<FormData>(initial.form)
   const [step, setStep] = useState<StepIndex>(initial.step)
@@ -116,8 +125,8 @@ export default function Register() {
     setStep(screen)
   }
 
-  const set = <K extends keyof FormData>(k: K, v: FormData[K]) => {
-    const nextForm = { ...form, [k]: v }
+  const update = (patch: Partial<FormData>) => {
+    const nextForm = { ...form, ...patch }
     setForm(nextForm)
     setService(null)
     if (Object.keys(errors).length === 0) return
@@ -126,7 +135,7 @@ export default function Register() {
     const kept: Errors = {}
     for (const key of Object.keys(errors) as ErrorKey[]) {
       if (serverKeys.current.has(key)) {
-        if (key === k) serverKeys.current.delete(key)
+        if (key in patch) serverKeys.current.delete(key)
         else kept[key] = errors[key]
       } else if (fresh[key]) {
         kept[key] = fresh[key]
@@ -135,6 +144,22 @@ export default function Register() {
     setErrors(kept)
     if (Object.keys(kept).length === 0) setNote(null)
   }
+  const set = <K extends keyof FormData>(k: K, v: FormData[K]) => update({ [k]: v } as Partial<FormData>)
+
+  // Choosing another country: Nigeria has a list of states, every other country a free text one, so the old answer is cleared when the kind changes.
+  const setCountry = (country: string) =>
+    update(hasStateList(country) === hasStateList(form.country) ? { country } : { country, state: '' })
+
+  // If the language changes while problems are showing, say them again in the new language.
+  const lastLocale = useRef(m.meta.code)
+  useEffect(() => {
+    if (lastLocale.current === m.meta.code) return
+    lastLocale.current = m.meta.code
+    serverKeys.current.clear()
+    setErrors((e) => (Object.keys(e).length ? validateStep(step, form) : e))
+    setNote(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [m.meta.code])
 
   const next = () => {
     serverKeys.current.clear()
@@ -186,9 +211,7 @@ export default function Register() {
       return
     }
     setService(
-      res.kind === 'service'
-        ? res.message
-        : 'We could not save your registration just now. Please try again in a moment. Your answers are saved.',
+      res.kind === 'service' ? res.message : m.apiErrors.unavailable,
     )
   }
 
@@ -196,7 +219,7 @@ export default function Register() {
 
   return (
     <div>
-      <ProgressBar step={step} total={3} labels={[...STEP_NAMES]} />
+      <ProgressBar step={step} total={3} labels={r.stepNames} />
 
       <form onSubmit={submit} noValidate className="mt-6">
         <div className="card p-5 sm:p-8">
@@ -205,9 +228,9 @@ export default function Register() {
             tabIndex={-1}
             className="text-2xl font-semibold text-green-900 outline-none sm:text-3xl"
           >
-            {STEP_TITLES[step]}
+            {r.stepTitles[step]}
           </h1>
-          <p className="mt-2 text-[0.95rem] text-ink-700">{STEP_INTROS[step]}</p>
+          <p className="mt-2 text-[0.95rem] text-ink-700">{r.stepIntros[step]}</p>
 
           {items.length > 0 && (
             <div className="mt-5">
@@ -216,9 +239,9 @@ export default function Register() {
           )}
 
           {/* Honeypot. Invisible to people and to assistive tech, tempting to bots. */}
-          <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+          <div aria-hidden="true" style={{ position: 'absolute', insetInlineStart: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
             <label>
-              Website
+              {r.honeypot}
               <input
                 type="text"
                 name="website"
@@ -234,38 +257,51 @@ export default function Register() {
             {step === 0 && (
               <div className="page-enter space-y-5">
                 <TextField
-                  fieldKey="full_name" label="Full name" required autoComplete="name"
+                  fieldKey="full_name" label={f.fullName} required autoComplete="name"
                   value={form.full_name} onChange={(v) => set('full_name', v)} error={errors.full_name}
                 />
                 <SelectField
-                  fieldKey="title" label="Professional title" required autoComplete="honorific-prefix"
-                  options={TITLES} value={form.title} onChange={(v) => set('title', v)} error={errors.title}
+                  fieldKey="title" label={f.title} required autoComplete="honorific-prefix"
+                  options={TITLES} labelFor={optionLabel('titles')} value={form.title} onChange={(v) => set('title', v)} error={errors.title}
                 />
                 <TextField
-                  fieldKey="organisation" label="Current organisation or institution" required autoComplete="organization"
+                  fieldKey="organisation" label={f.organisation} required autoComplete="organization"
                   value={form.organisation} onChange={(v) => set('organisation', v)} error={errors.organisation}
                 />
                 <TextField
-                  fieldKey="position" label="Current position" required autoComplete="organization-title"
+                  fieldKey="position" label={f.position} required autoComplete="organization-title"
                   value={form.position} onChange={(v) => set('position', v)} error={errors.position}
                 />
                 <SelectField
-                  fieldKey="state" label="State of residence or practice" required placeholder="Select your state"
-                  options={STATES} value={form.state} onChange={(v) => set('state', v)} error={errors.state}
+                  fieldKey="country" label={f.country} required placeholder={f.countryPlaceholder} autoComplete="country-name"
+                  options={countries} labelFor={countryLabel}
+                  value={form.country} onChange={setCountry} error={errors.country}
                 />
+                {hasStateList(form.country) ? (
+                  <SelectField
+                    fieldKey="state" label={f.state} required placeholder={f.statePlaceholder}
+                    options={STATES} value={form.state} onChange={(v) => set('state', v)} error={errors.state}
+                  />
+                ) : (
+                  <TextField
+                    fieldKey="state" label={f.region} required autoComplete="address-level1" hint={f.regionHint}
+                    value={form.state} onChange={(v) => set('state', v)} error={errors.state}
+                  />
+                )}
                 <fieldset className="rounded-[var(--radius-lg)] bg-green-50 p-4">
-                  <legend className="px-1 text-sm font-bold text-green-900">How can we reach you?</legend>
-                  <p className="mb-4 text-sm text-ink-700">Your email is required. Your phone number is optional.</p>
+                  <legend className="px-1 text-sm font-bold text-green-900">{f.reach}</legend>
+                  <p className="mb-4 text-sm text-ink-700">{f.reachHint}</p>
                   <div className="space-y-5">
                     <TextField
-                      fieldKey="email" label="Email" required type="email" inputMode="email" autoComplete="email"
-                      placeholder="you@example.com"
-                      hint="We send your Expert ID here, and you use it to sign in and verify your profile."
+                      fieldKey="email" label={f.email} required type="email" inputMode="email" autoComplete="email"
+                      placeholder={f.emailPlaceholder}
+                      hint={f.emailHint}
                       value={form.email} onChange={(v) => set('email', v)} error={errors.email}
                     />
                     <TextField
-                      fieldKey="phone" label="Phone or WhatsApp" type="tel" inputMode="tel" autoComplete="tel"
-                      placeholder="0803 123 4567"
+                      fieldKey="phone" label={f.phone} type="tel" inputMode="tel" autoComplete="tel"
+                      placeholder={hasStateList(form.country) ? f.phonePlaceholderNigeria : f.phonePlaceholderIntl}
+                      hint={hasStateList(form.country) ? undefined : f.phoneHintIntl}
                       value={form.phone} onChange={(v) => set('phone', v)} error={errors.phone}
                     />
                   </div>
@@ -276,8 +312,8 @@ export default function Register() {
             {step === 1 && (
               <div className="page-enter space-y-7">
                 <SelectField
-                  fieldKey="primary_expertise" label="Primary expertise" required placeholder="Select your main area"
-                  options={EXPERTISE} value={form.primary_expertise}
+                  fieldKey="primary_expertise" label={f.primaryExpertise} required placeholder={f.primaryExpertisePlaceholder}
+                  options={EXPERTISE} labelFor={optionLabel('expertise')} value={form.primary_expertise}
                   onChange={(v) => {
                     set('primary_expertise', v)
                     // Keep the secondary list clean if the same area was already chosen there.
@@ -288,46 +324,46 @@ export default function Register() {
                   error={errors.primary_expertise}
                 />
                 <CheckList
-                  fieldKey="secondary_expertise" legend="Secondary expertise"
-                  hint="Choose up to three."
+                  fieldKey="secondary_expertise" legend={f.secondaryExpertise}
+                  hint={f.secondaryHint}
                   max={MAX_SECONDARY}
                   options={EXPERTISE.filter((x) => x !== form.primary_expertise)}
+                  labelFor={optionLabel('expertise')}
                   values={form.secondary_expertise}
                   onChange={(v) => set('secondary_expertise', v)}
                   error={errors.secondary_expertise}
                   columns={2}
                 />
                 <RadioList
-                  fieldKey="years_experience" legend="Years of professional experience" required
-                  options={YEARS} value={form.years_experience}
+                  fieldKey="years_experience" legend={f.years} required
+                  options={YEARS} labelFor={optionLabel('years')} value={form.years_experience}
                   onChange={(v) => set('years_experience', v)} error={errors.years_experience} columns={2}
                 />
                 <SelectField
-                  fieldKey="qualification" label="Highest qualification" required placeholder="Select your qualification"
-                  options={QUALIFICATIONS} value={form.qualification}
+                  fieldKey="qualification" label={f.qualification} required placeholder={f.qualificationPlaceholder}
+                  options={QUALIFICATIONS} labelFor={optionLabel('qualifications')} value={form.qualification}
                   onChange={(v) => set('qualification', v)} error={errors.qualification}
                 />
                 <CheckList
-                  fieldKey="memberships" legend="Professional memberships"
-                  hint="These are checked later during verification."
-                  options={MEMBERSHIPS} values={form.memberships}
+                  fieldKey="memberships" legend={f.memberships}
+                  hint={f.membershipsHint}
+                  options={MEMBERSHIPS} labelFor={optionLabel('memberships')} values={form.memberships}
                   onChange={(v) => set('memberships', v)} columns={2}
                 />
                 {form.memberships.includes('NES') && (
                   <TextField
-                    fieldKey="nes_number" label="NES membership number"
+                    fieldKey="nes_number" label={f.nesNumber}
                     value={form.nes_number} onChange={(v) => set('nes_number', v)}
                   />
                 )}
                 {form.memberships.includes('IEPN') && (
                   <TextField
-                    fieldKey="iepn_status" label="IEPN licence or status"
+                    fieldKey="iepn_status" label={f.iepnStatus}
                     value={form.iepn_status} onChange={(v) => set('iepn_status', v)}
                   />
                 )}
                 <p className="rounded-[var(--radius-md)] bg-blue-100 px-4 py-3 text-sm text-blue-700">
-                  Membership and licence details are collected as future verification signals. The registry does not
-                  replace statutory or professional licensing.
+                  {f.membershipNote}
                 </p>
               </div>
             )}
@@ -335,27 +371,27 @@ export default function Register() {
             {step === 2 && (
               <div className="page-enter space-y-7">
                 <CheckList
-                  fieldKey="assignments" legend="Assignments you are available for"
-                  hint="Choose all that apply."
-                  options={ASSIGNMENTS} values={form.assignments}
+                  fieldKey="assignments" legend={f.assignments}
+                  hint={f.assignmentsHint}
+                  options={ASSIGNMENTS} labelFor={optionLabel('assignments')} values={form.assignments}
                   onChange={(v) => set('assignments', v)} columns={2}
                 />
                 <RadioList
-                  fieldKey="availability" legend="Geographic availability" required
-                  options={AVAILABILITY} value={form.availability}
+                  fieldKey="availability" legend={f.availability} required
+                  options={AVAILABILITY} labelFor={optionLabel('availability')} value={form.availability}
                   onChange={(v) => set('availability', v)} error={errors.availability} columns={2}
                 />
                 <TextField
-                  fieldKey="profile_url" label="LinkedIn or profile link" type="url" inputMode="url" autoComplete="url"
-                  placeholder="linkedin.com/in/yourname"
+                  fieldKey="profile_url" label={f.profileUrl} type="url" inputMode="url" autoComplete="url"
+                  placeholder={f.profileUrlPlaceholder}
                   value={form.profile_url} onChange={(v) => set('profile_url', v)} error={errors.profile_url}
                 />
                 <RadioList
-                  fieldKey="discoverable" legend="May organisations discover you?" required
-                  hint="Only experts who say Yes can appear in the searchable directory."
+                  fieldKey="discoverable" legend={f.discoverable} required
+                  hint={f.discoverableHint}
                   options={[
-                    { value: 'yes', label: 'Yes, list me', sub: 'Organisations can find and contact me.' },
-                    { value: 'no', label: 'No, keep me private', sub: 'I stay on the registry but am not listed.' },
+                    { value: 'yes', label: f.discoverableYes, sub: f.discoverableYesSub },
+                    { value: 'no', label: f.discoverableNo, sub: f.discoverableNoSub },
                   ]}
                   value={form.discoverable}
                   onChange={(v) => set('discoverable', v as FormData['discoverable'])}
@@ -367,8 +403,7 @@ export default function Register() {
                   onChange={(v) => set('consent_contact', v)}
                   error={errors.consent_contact}
                 >
-                  I agree to be contacted about opportunities, and I consent to NEXUS-E storing my details for this
-                  purpose. <span className="text-danger-600" aria-hidden="true">*</span>
+                  {f.consent} <span className="text-danger-600" aria-hidden="true">*</span>
                 </ConsentBox>
                 <Turnstile onToken={() => undefined} />
               </div>
@@ -378,27 +413,27 @@ export default function Register() {
 
         {service && (
           <div ref={serviceRef} className="mt-5">
-            <Notice title="We could not finish your registration">{service}</Notice>
+            <Notice title={r.serviceTitle}>{service}</Notice>
           </div>
         )}
 
         <div className="mt-5 flex items-center gap-3">
           {step > 0 && (
             <button type="button" className="btn btn-ghost" onClick={back} disabled={submitting}>
-              Back
+              {m.common.back}
             </button>
           )}
           {step < 2 ? (
             <button type="button" className="btn btn-primary ml-auto flex-1 sm:flex-none sm:px-10" onClick={next}>
-              Continue
+              {r.continue}
             </button>
           ) : (
             <button type="submit" className="btn btn-primary ml-auto flex-1 sm:flex-none sm:px-10" disabled={submitting}>
-              {submitting ? (<><Spinner label="Submitting" /> Submitting</>) : service ? 'Try again' : 'Submit registration'}
+              {submitting ? (<><Spinner label={r.submitting} /> {r.submitting}</>) : service ? m.common.tryAgain : r.submit}
             </button>
           )}
         </div>
-        <p className="mt-4 text-center text-xs text-ink-500">Your answers are saved on this device until you finish.</p>
+        <p className="mt-4 text-center text-xs text-ink-500">{r.saved}</p>
       </form>
     </div>
   )

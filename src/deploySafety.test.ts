@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { en } from './i18n/en.ts'
 import path from 'node:path'
 import { claimReload, isChunkLoadError, RELOAD_WINDOW_MS } from './lib/chunkReload.ts'
 
@@ -56,16 +57,20 @@ test('the error boundary shows a message with a Reload action, and retries a fai
   const eb = read('src/components/ErrorBoundary.tsx')
   assert.match(eb, /getDerivedStateFromError/)
   assert.match(eb, /role="alert"/)
-  assert.match(eb, />Reload</)
+  assert.match(eb, /\{t\.reload\}/)
+  assert.equal(en.errorBoundary.reload, 'Reload')
   assert.match(eb, /window\.location\.reload\(\)/)
   assert.match(eb, /isChunkLoadError\(error\)\) reloadOnce\(\)/)
-  assert.match(eb, /Anything you typed into the registration form is kept/)
+  assert.match(eb, /\{t\.kept\}/)
+  assert.equal(en.errorBoundary.kept, 'Anything you typed into the registration form is kept.')
 })
 
 test('the registration form keeps its progress in sessionStorage, inside try/catch, and shows a retry on server errors', () => {
   const reg = read('src/pages/Register.tsx')
   assert.match(reg, /sessionStorage\.setItem\(STORAGE_KEY/)
   assert.match(reg, /try \{\n\s+sessionStorage\.setItem\(STORAGE_KEY/)
-  assert.match(reg, /We could not finish your registration/)
-  assert.match(reg, /service \? 'Try again'/)
+  assert.match(reg, /r\.serviceTitle/)
+  assert.equal(en.register.serviceTitle, 'We could not finish your registration')
+  assert.match(reg, /service \? m\.common\.tryAgain/)
+  assert.equal(en.common.tryAgain, 'Try again')
 })

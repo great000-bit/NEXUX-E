@@ -10,6 +10,7 @@ type Row = {
   full_name: string
   title: string
   organisation: string
+  country?: string
   state: string
   primary_expertise: string
   verification_status: string
@@ -20,7 +21,7 @@ type Row = {
 }
 
 const COLUMNS =
-  'expert_id, full_name, title, organisation, state, primary_expertise, verification_status, submitted_at, reviewed_at, reviewed_by, created_at'
+  'expert_id, full_name, title, organisation, country, state, primary_expertise, verification_status, submitted_at, reviewed_at, reviewed_by, created_at'
 
 const date = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' }) : ''
@@ -149,7 +150,7 @@ export default function Verification() {
                       {r.title} {r.full_name}
                       <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-800">{r.expert_id}</span>
                     </p>
-                    <p className="mt-0.5 truncate text-sm text-ink-700">{r.organisation} · {r.state}</p>
+                    <p className="mt-0.5 truncate text-sm text-ink-700">{r.organisation} · {r.state}, {r.country ?? 'Nigeria'}</p>
                     <p className="text-sm text-ink-500">{r.primary_expertise}</p>
                   </div>
                   <div className="text-right text-sm">

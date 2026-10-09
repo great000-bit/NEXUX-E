@@ -1,4 +1,6 @@
-import { MAX_SECONDARY } from './options'
+import { DEFAULT_COUNTRY, hasStateList } from './countries'
+import { fmt, messages } from '../i18n'
+import { MAX_SECONDARY, STATES } from './options'
 
 export type FormData = {
   // Screen 1
@@ -6,6 +8,7 @@ export type FormData = {
   title: string
   organisation: string
   position: string
+  country: string
   state: string
   phone: string
   email: string
@@ -32,6 +35,7 @@ export const emptyForm: FormData = {
   title: '',
   organisation: '',
   position: '',
+  country: DEFAULT_COUNTRY,
   state: '',
   phone: '',
   email: '',
@@ -62,6 +66,7 @@ export const FIELD_INFO: Partial<Record<ErrorKey, { label: string; step: StepInd
   title: { label: 'Title', step: 0, anchor: 'title' },
   organisation: { label: 'Organisation', step: 0, anchor: 'organisation' },
   position: { label: 'Position', step: 0, anchor: 'position' },
+  country: { label: 'Country', step: 0, anchor: 'country' },
   state: { label: 'State', step: 0, anchor: 'state' },
   email: { label: 'Email address', step: 0, anchor: 'email' },
   phone: { label: 'Phone number', step: 0, anchor: 'phone' },
@@ -79,9 +84,10 @@ const FIELD_ORDER = Object.keys(FIELD_INFO) as ErrorKey[]
 
 /** Errors as an ordered list, in the order they appear on the page. */
 export function errorList(errors: Errors): { key: ErrorKey; label: string; message: string; anchor: string }[] {
+  const labels = messages().register.summaryLabels as Record<string, string>
   return FIELD_ORDER.filter((k) => errors[k]).map((k) => ({
     key: k,
-    label: FIELD_INFO[k]!.label,
+    label: labels[k] ?? FIELD_INFO[k]!.label,
     message: errors[k]!,
     anchor: FIELD_INFO[k]!.anchor,
   }))
@@ -89,16 +95,25 @@ export function errorList(errors: Errors): { key: ErrorKey; label: string; messa
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 
-/** Mirrors normalise_phone() in the database so the form and the duplicate check agree. */
-export function normalisePhone(raw: string): string {
+const INTERNATIONAL = /^\s*(\+|00)/
+
+/** Mirrors normalise_phone(raw, country) in the database so the form and the duplicate check agree. */
+export function normalisePhone(raw: string, country: string = DEFAULT_COUNTRY): string {
+  const international = INTERNATIONAL.test(raw)
   let d = raw.replace(/\D/g, '')
   if (d.startsWith('00')) d = d.slice(2)
-  if (d.startsWith('0') && d.length === 11) d = '234' + d.slice(1)
+  // A local number in Nigeria (0803 123 4567) becomes 234803...; a local zero means something else in every other country.
+  if (country === 'Nigeria' && !international && d.startsWith('0') && d.length === 11) d = '234' + d.slice(1)
   return d
 }
 
-export function isValidPhone(raw: string): boolean {
-  const d = normalisePhone(raw)
+/**
+ * Numbers in Nigeria may be written locally (0803 123 4567) or with the country code. Everywhere else the number must
+ * start with + or 00 and the country code (E.164: 10 to 15 digits), because a local number is ambiguous.
+ */
+export function isValidPhone(raw: string, country: string = DEFAULT_COUNTRY): boolean {
+  if (country !== 'Nigeria' && !INTERNATIONAL.test(raw)) return false
+  const d = normalisePhone(raw, country)
   return d.length >= 10 && d.length <= 15
 }
 
@@ -118,6 +133,7 @@ export const FIELD_LIMITS: Record<string, number> = {
   position: 120,
   email: 254,
   phone: 30,
+  state: 120,
   profile_url: 300,
   nes_number: 60,
   iepn_status: 120,
@@ -125,51 +141,59 @@ export const FIELD_LIMITS: Record<string, number> = {
 
 export function validateStep(step: StepIndex, f: FormData): Errors {
   const e: Errors = {}
+  const v = messages().validation
   // Too-long text (for example pasted, or restored from an older saved draft) is named, not silently cut.
   const tooLong = (k: keyof FormData) => {
     const limit = FIELD_LIMITS[k]
-    const v = f[k]
-    if (limit && typeof v === 'string' && v.trim().length > limit) e[k] = `Please use ${limit} characters or fewer.`
+    const value = f[k]
+    if (limit && typeof value === 'string' && value.trim().length > limit) e[k] = fmt(v.tooLong, { limit })
   }
   const req = (k: keyof FormData, msg: string) => {
-    const v = f[k]
-    if (typeof v === 'string' && !v.trim()) e[k] = msg
+    const value = f[k]
+    if (typeof value === 'string' && !value.trim()) e[k] = msg
   }
 
   if (step === 0) {
-    req('full_name', 'Enter your full name, like Ada Obi.')
-    req('title', 'Choose your title from the list.')
-    req('organisation', 'Enter the organisation or institution where you work.')
-    req('position', 'Enter your current position, like Senior Lecturer.')
-    req('state', 'Choose your state from the list.')
+    req('full_name', v.fullName)
+    req('title', v.title)
+    req('organisation', v.organisation)
+    req('position', v.position)
+    req('country', v.country)
+    // Nigeria has a list of states; every other country types its own state, province or region.
+    if (hasStateList(f.country)) {
+      if (!(STATES as readonly string[]).includes(f.state)) e.state = v.state
+    } else {
+      req('state', v.region)
+      if (!e.state) tooLong('state')
+    }
     // Email is required: it is where the Expert ID is sent and how an expert signs in to verify. Phone is optional.
     if (f.email.trim() === '') {
-      e.email = 'Enter your email address, like name@example.com. We send your Expert ID there, and you use it to sign in and verify your profile.'
+      e.email = v.emailRequired
     } else if (!EMAIL_RE.test(f.email.trim())) {
-      e.email = 'Enter a valid email address, like name@example.com.'
+      e.email = v.emailInvalid
     }
-    if (f.phone.trim() !== '' && !isValidPhone(f.phone)) {
-      e.phone = 'Enter a valid phone number, like 0803 123 4567, or leave it empty.'
+    if (f.phone.trim() !== '' && !isValidPhone(f.phone, f.country)) {
+      e.phone = f.country === 'Nigeria' ? v.phoneNigeria : v.phoneIntl
     }
     for (const k of ['full_name', 'organisation', 'position', 'email', 'phone'] as const) if (!e[k]) tooLong(k)
   }
 
   if (step === 1) {
-    req('primary_expertise', 'Choose your main area of expertise.')
-    req('years_experience', 'Choose how many years you have worked professionally.')
-    req('qualification', 'Choose your highest qualification from the list.')
+    req('primary_expertise', v.primaryExpertise)
+    req('years_experience', v.years)
+    req('qualification', v.qualification)
     for (const k of ['nes_number', 'iepn_status'] as const) tooLong(k)
     if (f.secondary_expertise.length > MAX_SECONDARY) {
-      e.secondary_expertise = `You can choose up to ${MAX_SECONDARY} secondary areas. Please untick some.`
+      e.secondary_expertise = fmt(v.secondaryMax, { max: MAX_SECONDARY })
     }
   }
 
   if (step === 2) {
-    req('availability', 'Choose where you are available to work.')
-    if (f.discoverable === '') e.discoverable = 'Choose Yes or No to tell us whether organisations may find you.'
-    if (!f.consent_contact) e.consent_contact = 'Please tick this box. We need your consent to contact you before we can register you.'
+    req('availability', v.availability)
+    if (f.discoverable === '') e.discoverable = v.discoverable
+    if (!f.consent_contact) e.consent_contact = v.consent
     if (f.profile_url.trim() && !isValidUrl(f.profile_url.trim())) {
-      e.profile_url = 'Enter a valid link, like linkedin.com/in/yourname, or leave it empty.'
+      e.profile_url = v.profileUrl
     } else {
       tooLong('profile_url')
     }
@@ -195,7 +219,8 @@ export function toPayload(f: FormData) {
     title: f.title,
     organisation: f.organisation.trim().slice(0, FIELD_LIMITS.organisation),
     position: f.position.trim().slice(0, FIELD_LIMITS.position),
-    state: f.state,
+    country: f.country,
+    state: hasStateList(f.country) ? f.state : f.state.trim().slice(0, FIELD_LIMITS.state),
     phone: f.phone.trim().slice(0, FIELD_LIMITS.phone),
     email: f.email.trim().toLowerCase().slice(0, FIELD_LIMITS.email),
     primary_expertise: f.primary_expertise,

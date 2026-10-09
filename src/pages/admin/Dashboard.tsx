@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { supabase } from '../../lib/supabase'
 import { Link } from 'react-router-dom'
-import { EXPERTISE, MEMBERSHIPS, STATES } from '../../lib/options'
+import { EXPERTISE, MEMBERSHIPS } from '../../lib/options'
+import { COUNTRIES } from '../../lib/countries'
 import { STATUS_LABEL, STATUS_ORDER } from '../../lib/verification'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Notice, Spinner } from '../../components/ui'
@@ -32,6 +33,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string | null>(null)
   const [q, setQ] = useState('')
   const [expertise, setExpertise] = useState('')
+  const [country, setCountry] = useState('')
   const [state, setState] = useState('')
   const [membership, setMembership] = useState('')
   const [discoverable, setDiscoverable] = useState('')
@@ -64,6 +66,7 @@ export default function Dashboard() {
     const digits = needle.replace(/\D/g, '')
     return rows.filter((r) => {
       if (expertise && r.primary_expertise !== expertise && !r.secondary_expertise.includes(expertise)) return false
+      if (country && (r.country ?? 'Nigeria') !== country) return false
       if (state && r.state !== state) return false
       if (membership === 'none' ? r.memberships.length > 0 : membership && !r.memberships.includes(membership)) return false
       if (discoverable && (discoverable === 'yes') !== r.discoverable) return false
@@ -72,11 +75,17 @@ export default function Dashboard() {
       const hay = [r.full_name, r.email ?? '', r.organisation, r.position, r.expert_id].join(' ').toLowerCase()
       return hay.includes(needle) || (digits.length >= 3 && (r.phone ?? '').includes(digits))
     })
-  }, [rows, q, expertise, state, membership, discoverable, vstatus])
+  }, [rows, q, expertise, country, state, membership, discoverable, vstatus])
 
-  const filtersOn = Boolean(q || expertise || state || membership || discoverable || vstatus)
+  // Outside Nigeria the state is typed freely, so the state filter offers whatever has actually been registered.
+  const stateOptions = useMemo(
+    () => [...new Set((rows ?? []).filter((r) => !country || (r.country ?? 'Nigeria') === country).map((r) => r.state).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
+    [rows, country],
+  )
+
+  const filtersOn = Boolean(q || expertise || country || state || membership || discoverable || vstatus)
   const clear = () => {
-    setQ(''); setExpertise(''); setState(''); setMembership(''); setDiscoverable(''); setVstatus('')
+    setQ(''); setExpertise(''); setCountry(''); setState(''); setMembership(''); setDiscoverable(''); setVstatus('')
   }
 
   const stats = useMemo(() => {
@@ -114,9 +123,10 @@ export default function Dashboard() {
             placeholder="Search name, email, phone, organisation or Expert ID"
           />
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
           <Filter label="Expertise" value={expertise} onChange={setExpertise} options={EXPERTISE} all="All expertise" />
-          <Filter label="State" value={state} onChange={setState} options={STATES} all="All states" />
+          <Filter label="Country" value={country} onChange={(v) => { setCountry(v); setState('') }} options={COUNTRIES} all="All countries" />
+          <Filter label="State" value={state} onChange={setState} options={stateOptions} all="All states" />
           <Filter
             label="Membership" value={membership} onChange={setMembership}
             options={[...MEMBERSHIPS, 'none']} labels={{ none: 'No memberships' }} all="Any membership"
@@ -185,7 +195,7 @@ export default function Dashboard() {
                       <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-bold text-green-800">{r.expert_id}</span>
                     </div>
                     <p className="mt-0.5 text-sm text-ink-700">{r.organisation}</p>
-                    <p className="mt-2 text-sm text-ink-500">{r.primary_expertise} · {r.state}</p>
+                    <p className="mt-2 text-sm text-ink-500">{r.primary_expertise} · {r.state}, {r.country ?? 'Nigeria'}</p>
                     <div className="mt-2"><StatusBadge status={r.verification_status} /></div>
                   </button>
                 </li>
@@ -195,7 +205,7 @@ export default function Dashboard() {
               <table className="w-full text-left text-sm">
                 <thead className="bg-green-50 text-xs uppercase tracking-wider text-ink-500">
                   <tr>
-                    {['Expert ID', 'Name', 'Organisation', 'Primary expertise', 'State', 'Discoverable', 'Verification', 'Registered'].map((h) => (
+                    {['Expert ID', 'Name', 'Organisation', 'Primary expertise', 'Country', 'State', 'Discoverable', 'Verification', 'Registered'].map((h) => (
                       <th key={h} scope="col" className="px-4 py-3 font-bold">{h}</th>
                     ))}
                   </tr>
@@ -209,6 +219,7 @@ export default function Dashboard() {
                       <td className="px-4 py-3 font-semibold">{r.title} {r.full_name}</td>
                       <td className="px-4 py-3 text-ink-700">{r.organisation}</td>
                       <td className="px-4 py-3 text-ink-700">{r.primary_expertise}</td>
+                      <td className="whitespace-nowrap px-4 py-3 text-ink-700">{r.country ?? 'Nigeria'}</td>
                       <td className="whitespace-nowrap px-4 py-3 text-ink-700">{r.state}</td>
                       <td className="px-4 py-3">
                         <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${r.discoverable ? 'bg-green-100 text-green-800' : 'bg-line text-ink-700'}`}>
@@ -348,6 +359,7 @@ function Detail({ expert: r, onClose, onEmailAdded }: { expert: Expert; onClose:
   const rows: [string, string | null][] = [
     ['Organisation', r.organisation],
     ['Position', r.position],
+    ['Country', r.country ?? 'Nigeria'],
     ['State', r.state],
     ['Phone', r.phone ? `+${r.phone}` : null],
     ['Email', r.email],

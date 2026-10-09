@@ -1,5 +1,7 @@
 import { useId, type ReactNode } from 'react'
 import { FIELD_LIMITS } from '../lib/form'
+import { useMessages } from '../i18n/I18nProvider'
+import { fmt } from '../i18n'
 
 /** The DOM id of a field. The error summary links to it, and focus moves to it. */
 export const fieldId = (key: string) => `field-${key}`
@@ -26,14 +28,15 @@ function Wrap({
   tag,
   children,
 }: Pick<BaseProps, 'label' | 'required' | 'hint' | 'error' | 'tag'> & { id: string; children: ReactNode }) {
+  const m = useMessages()
   return (
     <div>
       <label htmlFor={id} className="field-label">
         {label}
         {required ? (
-          <span className="ml-1 text-danger-600" aria-hidden="true">*</span>
+          <span className="ms-1 text-danger-600" aria-hidden="true">*</span>
         ) : (
-          <span className="ml-2 text-xs font-medium text-ink-500">{tag ?? 'Optional'}</span>
+          <span className="ms-2 text-xs font-medium text-ink-500">{tag ?? m.common.optional}</span>
         )}
       </label>
       {children}
@@ -116,11 +119,14 @@ export function SelectField(
     value: string
     onChange: (v: string) => void
     options: readonly string[]
+    /** Shows a friendlier word for a stored value, for example a country in the language now shown. */
+    labelFor?: (value: string) => string
     placeholder?: string
     autoComplete?: string
   },
 ) {
-  const { fieldKey, value, onChange, options, placeholder = 'Select', autoComplete, invalid, ...rest } = props
+  const m = useMessages()
+  const { fieldKey, value, onChange, options, labelFor, placeholder = m.common.select, autoComplete, invalid, ...rest } = props
   const id = fieldId(fieldKey)
   const bad = Boolean(rest.error) || Boolean(invalid)
   return (
@@ -129,7 +135,7 @@ export function SelectField(
         <select
           id={id}
           name={fieldKey}
-          className="input appearance-none pr-10"
+          className="input appearance-none pe-10"
           value={value}
           autoComplete={autoComplete}
           aria-required={rest.required || undefined}
@@ -140,11 +146,11 @@ export function SelectField(
         >
           <option value="" disabled>{placeholder}</option>
           {options.map((o) => (
-            <option key={o} value={o} style={{ color: 'var(--color-ink-900)' }}>{o}</option>
+            <option key={o} value={o} style={{ color: 'var(--color-ink-900)' }}>{labelFor ? labelFor(o) : o}</option>
           ))}
         </select>
         <svg
-          className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-500"
+          className="pointer-events-none absolute end-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-500"
           viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"
         >
           <path d="m5 8 5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
@@ -156,7 +162,7 @@ export function SelectField(
 
 /** Single-choice list shown as accessible radio cards. */
 export function RadioList({
-  fieldKey, legend, required, hint, error, options, value, onChange, columns = 1,
+  fieldKey, legend, required, hint, error, options, labelFor, value, onChange, columns = 1,
 }: {
   fieldKey: string
   legend: string
@@ -164,13 +170,14 @@ export function RadioList({
   hint?: string
   error?: string
   options: readonly string[] | readonly { value: string; label: string; sub?: string }[]
+  labelFor?: (value: string) => string
   value: string
   onChange: (v: string) => void
   columns?: 1 | 2
 }) {
   const name = useId()
   const id = fieldId(fieldKey)
-  const opts = options.map((o) => (typeof o === 'string' ? { value: o, label: o, sub: undefined } : { sub: undefined, ...o }))
+  const opts = options.map((o) => (typeof o === 'string' ? { value: o, label: labelFor ? labelFor(o) : o, sub: undefined } : { sub: undefined, ...o }))
   return (
     <fieldset
       id={id}
@@ -181,7 +188,7 @@ export function RadioList({
     >
       <legend className="field-label">
         {legend}
-        {required ? <span className="ml-1 text-danger-600" aria-hidden="true">*</span> : null}
+        {required ? <span className="ms-1 text-danger-600" aria-hidden="true">*</span> : null}
       </legend>
       {hint && <p className="field-hint -mt-1 mb-2">{hint}</p>}
       <div className={`grid gap-2 ${columns === 2 ? 'sm:grid-cols-2' : ''}`}>
@@ -210,7 +217,7 @@ export function RadioList({
 
 /** Multi-choice list with an optional maximum. */
 export function CheckList({
-  fieldKey, legend, required, hint, error, options, values, onChange, max, columns = 1,
+  fieldKey, legend, required, hint, error, options, labelFor, values, onChange, max, columns = 1,
 }: {
   fieldKey: string
   legend: string
@@ -218,11 +225,13 @@ export function CheckList({
   hint?: string
   error?: string
   options: readonly string[]
+  labelFor?: (value: string) => string
   values: string[]
   onChange: (v: string[]) => void
   max?: number
   columns?: 1 | 2
 }) {
+  const m = useMessages()
   const id = fieldId(fieldKey)
   const atMax = max !== undefined && values.length >= max
   const toggle = (o: string) =>
@@ -238,15 +247,15 @@ export function CheckList({
       <legend className="field-label">
         {legend}
         {required ? (
-          <span className="ml-1 text-danger-600" aria-hidden="true">*</span>
+          <span className="ms-1 text-danger-600" aria-hidden="true">*</span>
         ) : (
-          <span className="ml-2 text-xs font-medium text-ink-500">Optional</span>
+          <span className="ms-2 text-xs font-medium text-ink-500">{m.common.optional}</span>
         )}
       </legend>
       {(hint || max) && (
         <p className="field-hint -mt-1 mb-2" aria-live="polite">
           {hint}
-          {max ? ` ${values.length} of ${max} selected.` : ''}
+          {max ? ` ${fmt(m.register.fields.selectedOf, { n: values.length, max })}` : ''}
         </p>
       )}
       <div className={`grid gap-2 ${columns === 2 ? 'sm:grid-cols-2' : ''}`}>
@@ -263,7 +272,7 @@ export function CheckList({
                 onChange={() => toggle(o)}
               />
               <span className="choice-mark choice-check" aria-hidden="true" />
-              <span className="flex-1 text-[0.95rem] font-semibold leading-snug">{o}</span>
+              <span className="flex-1 text-[0.95rem] font-semibold leading-snug">{labelFor ? labelFor(o) : o}</span>
             </label>
           )
         })}

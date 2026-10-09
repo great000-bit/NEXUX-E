@@ -232,6 +232,7 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
   const detail: [string, string | null][] = [
     ['Organisation', expert.organisation],
     ['Position', expert.position],
+    ['Country', (expert as { country?: string }).country ?? 'Nigeria'],
     ['State', expert.state],
     ['Email', expert.email],
     ['Phone', expert.phone ? `+${expert.phone}` : null],

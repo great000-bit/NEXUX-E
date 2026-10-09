@@ -1,3 +1,4 @@
+import '../i18n/enSite'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { VerifiedBadge } from '../components/VerifiedBadge'
@@ -8,20 +9,28 @@ import {
   MAX_QUERY_LENGTH, pageCount, paramsFromFilters, PAGE_SIZE, SORTS, type FilterKey, type Filters, type Sort,
 } from '../lib/directoryFilters'
 import { usePageMeta } from '../lib/meta'
+import { fmt } from '../i18n'
+import { useMessages } from '../i18n/I18nProvider'
 
-const FILTER_LABEL: Record<FilterKey, string> = {
-  expertise: 'Expertise',
-  state: 'State',
-  qualification: 'Highest qualification',
-  years: 'Years of experience',
-  membership: 'Professional membership',
-  assignment: 'Open to assignments in',
-  availability: 'Geographic availability',
+/** Which group of translated labels each filter's stored values belong to. */
+const FILTER_GROUP: Record<FilterKey, string | null> = {
+  expertise: 'expertise',
+  country: 'countries',
+  state: null,
+  qualification: 'qualifications',
+  years: 'years',
+  membership: 'memberships',
+  assignment: 'assignments',
+  availability: 'availability',
 }
 
 type Loaded = { key: string; ok: true; total: number; items: Listing[] } | { key: string; ok: false; message: string }
 
 export default function Directory() {
+  const m = useMessages()
+  const t = m.directory
+  const label = (group: string | null, value: string) =>
+    group ? ((m.options as Record<string, Record<string, string>>)[group]?.[value] ?? value) : value
   const [params, setParams] = useSearchParams()
   const filters = filtersFromParams(params)
   // The address bar is the single source of truth, so the Back button and shared links just work.
@@ -34,9 +43,8 @@ export default function Directory() {
 
   const plain = !hasAnyFilter(filters) && filters.page === 1 && filters.sort === 'name'
   usePageMeta({
-    title: 'Find a Verified Expert | NEXUS-E',
-    description:
-      'Search verified environmental professionals across Africa by expertise, state, qualification and availability. Every expert listed here has been verified and has chosen to be listed.',
+    title: t.pageTitle,
+    description: t.pageDescription,
     robots: plain ? 'index, follow' : 'noindex, follow',
     path: '/experts',
   })
@@ -91,18 +99,16 @@ export default function Directory() {
   return (
     <div>
       <header>
-        <p className="text-xs font-bold uppercase tracking-[0.22em] text-green-700">NEXUS-E directory</p>
+        <p className="text-xs font-bold uppercase tracking-[0.22em] text-green-700">{t.eyebrow}</p>
         <h1 ref={headingRef} tabIndex={-1} className="mt-1 text-3xl font-semibold text-green-900 outline-none sm:text-4xl">
-          Find a Verified Expert
+          {t.title}
         </h1>
-        <p className="mt-2 max-w-xl text-ink-700">
-          Every expert here has had their credentials checked and has chosen to be listed. Phone numbers, email addresses and documents are never shown.
-        </p>
+        <p className="mt-2 max-w-xl text-ink-700">{t.intro}</p>
       </header>
 
-      <form role="search" onSubmit={submit} className="mt-6 space-y-3" aria-label="Search the directory">
+      <form role="search" onSubmit={submit} className="mt-6 space-y-3" aria-label={t.searchAria}>
         <div>
-          <label htmlFor="directory-q" className="field-label">Search by name, organisation or expertise</label>
+          <label htmlFor="directory-q" className="field-label">{t.searchLabel}</label>
           <div className="flex gap-2">
             <input
               key={filters.q}
@@ -114,9 +120,9 @@ export default function Directory() {
               maxLength={MAX_QUERY_LENGTH}
               autoComplete="off"
               enterKeyHint="search"
-              placeholder="For example: Ada, wetlands, Lagos"
+              placeholder={t.placeholder}
             />
-            <button type="submit" className="btn btn-primary flex-none !px-5">Search</button>
+            <button type="submit" className="btn btn-primary flex-none !px-5">{t.search}</button>
           </div>
         </div>
 
@@ -128,40 +134,41 @@ export default function Directory() {
             aria-controls="directory-filters"
             onClick={() => setShowFilters((v) => !v)}
           >
-            {showFilters ? 'Hide filters' : 'Filters'}
-            {n > 0 && <span className="ml-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-800">{n}</span>}
+            {showFilters ? t.hideFilters : t.filters}
+            {n > 0 && <span className="ms-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-800">{n}</span>}
           </button>
           {hasAnyFilter(filters) && (
             <button type="button" className="min-h-11 rounded-full px-4 text-sm font-bold text-green-800 underline underline-offset-4" onClick={clearAll}>
-              Clear everything
+              {t.clear}
             </button>
           )}
-          <div className="ml-auto flex items-center gap-2">
-            <label htmlFor="directory-sort" className="text-sm font-bold text-ink-700">Sort</label>
+          <div className="ms-auto flex items-center gap-2">
+            <label htmlFor="directory-sort" className="text-sm font-bold text-ink-700">{t.sort}</label>
             <select
               id="directory-sort"
               className="input !w-auto !py-2"
               value={filters.sort}
               onChange={(e) => apply({ sort: e.target.value as Sort })}
             >
-              {SORTS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+              {SORTS.map((s) => <option key={s.value} value={s.value}>{t.sorts[s.value]}</option>)}
             </select>
           </div>
         </div>
 
         {showFilters && (
           <div id="directory-filters" className="glass-flat grid gap-4 rounded-[var(--radius-lg)] p-4 sm:grid-cols-2 sm:p-5">
-            {FILTER_KEYS.map((k) => (
+            {/* The list of states only makes sense for Nigeria: with another country chosen the filter is hidden. */}
+            {FILTER_KEYS.filter((k) => k !== 'state' || filters.country === '' || filters.country === 'Nigeria').map((k) => (
               <div key={k}>
-                <label htmlFor={`directory-${k}`} className="field-label">{FILTER_LABEL[k]}</label>
+                <label htmlFor={`directory-${k}`} className="field-label">{t.filterLabels[k]}</label>
                 <select
                   id={`directory-${k}`}
                   className="input"
                   value={filters[k]}
-                  onChange={(e) => apply({ [k]: e.target.value })}
+                  onChange={(e) => apply(k === 'country' && e.target.value !== 'Nigeria' && e.target.value !== '' ? { country: e.target.value, state: '' } : { [k]: e.target.value })}
                 >
-                  <option value="">Any</option>
-                  {FILTER_OPTIONS[k].map((o) => <option key={o} value={o}>{o}</option>)}
+                  <option value="">{m.common.any}</option>
+                  {FILTER_OPTIONS[k].map((o) => <option key={o} value={o}>{label(FILTER_GROUP[k], o)}</option>)}
                 </select>
               </div>
             ))}
@@ -171,35 +178,31 @@ export default function Directory() {
 
       {/* The minimum height holds the space the results will fill, so the footer does not jump when they arrive. */}
       <section className="mt-6 min-h-[26rem]" aria-labelledby="results-title" aria-busy={!current}>
-        <h2 id="results-title" className="sr-only">Results</h2>
+        <h2 id="results-title" className="sr-only">{t.results}</h2>
         <p className="text-sm font-semibold text-ink-700" role="status" aria-live="polite">
-          {!current && 'Searching...'}
-          {current?.ok && (total === 0 ? 'No experts found.' : `Showing ${from} to ${to} of ${total} ${total === 1 ? 'expert' : 'experts'}`)}
+          {!current && t.searching}
+          {current?.ok && (total === 0 ? t.none : fmt(t.showing, { from, to, total, experts: total === 1 ? t.expert : t.experts }))}
         </p>
 
         {!current && (
-          <div className="grid place-items-center py-14 text-green-800"><Spinner label="Searching the directory" className="h-8 w-8" /></div>
+          <div className="grid place-items-center py-14 text-green-800"><Spinner label={t.searchingSr} className="h-8 w-8" /></div>
         )}
 
         {current && !current.ok && (
           <div className="mt-3 space-y-3">
-            <Notice title="The directory did not load">{current.message}</Notice>
-            <button className="btn btn-primary" onClick={() => setRetry((r) => r + 1)}>Try again</button>
+            <Notice title={t.loadFailedTitle}>{current.message}</Notice>
+            <button className="btn btn-primary" onClick={() => setRetry((r) => r + 1)}>{m.common.tryAgain}</button>
           </div>
         )}
 
         {current?.ok && total === 0 && (
           <div className="glass-flat mt-3 rounded-[var(--radius-xl)] p-8 text-center">
             <h3 className="text-xl font-semibold text-green-900">
-              {hasAnyFilter(filters) ? 'Nobody matches those choices' : 'No experts are listed yet'}
+              {hasAnyFilter(filters) ? t.noMatchTitle : t.noneYetTitle}
             </h3>
-            <p className="mt-2 text-ink-700">
-              {hasAnyFilter(filters)
-                ? 'Try fewer filters, or a shorter search word.'
-                : 'Experts appear here once they are verified and have chosen to be listed. Please check back soon.'}
-            </p>
+            <p className="mt-2 text-ink-700">{hasAnyFilter(filters) ? t.noMatchText : t.noneYetText}</p>
             {hasAnyFilter(filters) && (
-              <button className="btn btn-ghost mt-4" onClick={clearAll}>Clear everything</button>
+              <button className="btn btn-ghost mt-4" onClick={clearAll}>{t.clear}</button>
             )}
           </div>
         )}
@@ -217,9 +220,9 @@ export default function Directory() {
                     <VerifiedBadge />
                   </div>
                   <p className="mt-0.5 break-words text-sm text-ink-700">{e.position}, {e.organisation}</p>
-                  <p className="mt-2 text-sm font-semibold text-ink-900">{e.primary_expertise}</p>
+                  <p className="mt-2 text-sm font-semibold text-ink-900">{label('expertise', e.primary_expertise)}</p>
                   <p className="mt-0.5 text-sm text-ink-500">
-                    {e.state} · {e.years_experience} years · {e.qualification}
+                    {[e.state, e.country ? label('countries', e.country) : null].filter(Boolean).join(', ')} · {fmt(t.yearsShort, { years: label('years', e.years_experience) })} · {label('qualifications', e.qualification)}
                   </p>
                 </Link>
               </li>
@@ -228,21 +231,21 @@ export default function Directory() {
         )}
 
         {current?.ok && pages > 1 && (
-          <nav aria-label="Pages of results" className="mt-6 flex items-center justify-between gap-3">
+          <nav aria-label={t.pages} className="mt-6 flex items-center justify-between gap-3">
             <button
               className="btn btn-ghost !min-h-11"
               disabled={filters.page <= 1}
               onClick={() => apply({ page: filters.page - 1 }, false)}
             >
-              Previous<span className="sr-only"> page</span>
+              {t.previous}<span className="sr-only">{t.page}</span>
             </button>
-            <p className="text-sm font-semibold text-ink-700">Page {filters.page} of {pages}</p>
+            <p className="text-sm font-semibold text-ink-700">{fmt(t.pageOf, { page: filters.page, pages })}</p>
             <button
               className="btn btn-ghost !min-h-11"
               disabled={filters.page >= pages}
               onClick={() => apply({ page: filters.page + 1 }, false)}
             >
-              Next<span className="sr-only"> page</span>
+              {t.next}<span className="sr-only">{t.page}</span>
             </button>
           </nav>
         )}

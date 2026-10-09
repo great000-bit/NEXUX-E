@@ -3,7 +3,7 @@
 // does not have to download the whole Supabase client just to show three cards.
 import { SUPABASE_ANON_KEY, SUPABASE_URL, isConfigured } from './config'
 
-export type ListedPreview = { expert_id: string; title: string; full_name: string; position: string; organisation: string; state: string; primary_expertise: string }
+export type ListedPreview = { expert_id: string; title: string; full_name: string; position: string; organisation: string; country?: string; state: string; primary_expertise: string }
 
 export async function fetchListedPreview(limit = 3, timeoutMs = 7000): Promise<{ ok: true; total: number; items: ListedPreview[] } | { ok: false }> {
   if (!isConfigured) return { ok: false }

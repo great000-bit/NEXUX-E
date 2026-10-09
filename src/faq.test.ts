@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { en } from './i18n/en.ts'
 import path from 'node:path'
 import { FAQ, HERO } from './pages/home/content.ts'
 import { faqJsonLd, faqJsonLdText } from './lib/faqSchema.ts'
@@ -42,7 +43,8 @@ test('the FAQPage structured data matches the visible text, and cannot close its
   // It is added by the home page itself, straight away, from the same data the section renders.
   const home = read('src/pages/Home.tsx')
   assert.match(home, /application\/ld\+json/)
-  assert.match(home, /faqJsonLdText\(FAQ\.items\)/)
+  assert.match(home, /faqJsonLdText\(m\.home\.faq\.items\)/)
+  assert.deepEqual(en.home.faq.items, FAQ.items.map(({ q, a }) => ({ q, a })), 'the English dictionary is the same text')
   assert.match(home, /script\.remove\(\)/, 'removed when leaving the home page')
 })
 

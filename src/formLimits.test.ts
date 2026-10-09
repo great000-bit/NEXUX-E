@@ -16,14 +16,17 @@ const base: FormData = {
 }
 
 test('every limit is positive and the database backstop is wider than the form limit', () => {
-  const db: Record<string, number> = { full_name: 200, organisation: 300, position: 200, email: 320, phone: 40, profile_url: 600, nes_number: 100, iepn_status: 200 }
+  const db: Record<string, number> = { full_name: 200, organisation: 300, position: 200, email: 320, phone: 40, state: 200, profile_url: 600, nes_number: 100, iepn_status: 200 }
   for (const [k, limit] of Object.entries(FIELD_LIMITS)) {
     assert.ok(limit > 0, k)
     assert.ok(db[k] > limit, `${k}: database limit ${db[k]} must be wider than the form limit ${limit}`)
   }
-  const sql = read('supabase/migrations/20261014000001_field_length_limits.sql')
-  for (const [k, v] of Object.entries(db)) assert.match(sql, new RegExp(`experts_len_${k} check \\(.*<= ${v}\\)`), k)
-  assert.doesNotMatch(sql, /\b(delete|truncate|update)\b/i, 'no data is touched')
+  const limits = read('supabase/migrations/20261014000001_field_length_limits.sql')
+  const country = read('supabase/migrations/20261015000001_country.sql')
+  for (const [k, v] of Object.entries(db)) assert.match(limits + country, new RegExp(`experts_len_${k} check \\(.*<= ${v}\\)`), k)
+  assert.doesNotMatch(limits, /\b(delete|truncate|update)\b/i, 'no data is touched')
+  // The country migration only adds: no expert row is changed or removed, and no table or column is dropped.
+  assert.doesNotMatch(country, /\b(delete from public\.experts|update public\.experts|truncate|drop table|drop column)\b/i)
 })
 
 test('a value over the limit is named on its screen, and a value at the limit is fine', () => {
