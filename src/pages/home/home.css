@@ -214,7 +214,7 @@
 .reel-ghost { filter: blur(1.6px); opacity: 0.7; }
 .reel-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
-.reel-node { --reel-h: 2.25rem; }
+.reel-node { --reel-h: 2.75rem; } /* 44 px: the label is the link people tap */
 .reel-hook { --reel-h: 2.5rem; --reel-fs: 0.875rem; width: 25rem; max-width: calc(100vw - 3rem); }
 .reel-hook .reel-item { padding: 0 1.1rem; }
 .reel-chip { --reel-h: 3.5rem; --reel-fs: 0.75rem; width: 100%; border-radius: 1rem; }
