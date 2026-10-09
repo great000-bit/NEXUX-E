@@ -1,4 +1,5 @@
 import { isConfigured } from './config'
+import { rpcCall } from './rest'
 import { toPayload, type ErrorKey, type FormData } from './form'
 
 /**
@@ -48,16 +49,10 @@ function fromCode(code: string): RegisterResult {
 
 export async function registerExpert(form: FormData): Promise<RegisterResult> {
   if (!isConfigured) return fromCode('not_configured')
-  try {
-    // Loaded on demand so the public pages stay light on weak mobile data.
-    const { supabase } = await import('./supabase')
-    const { data, error } = await supabase.rpc('register_expert', { payload: toPayload(form) })
-    if (error) return failure(error)
-    const res = data as { ok: boolean; expert_id?: string; error?: string }
-    if (res?.ok && res.expert_id) return { ok: true, expertId: res.expert_id }
-    return fromCode(res?.error ?? 'invalid')
-  } catch (e) {
-    console.error('register_expert threw', e)
-    return fromCode('network')
-  }
+  // Plain fetch, not the Supabase client: it needs no extra script, and "Try again" works after a dropped connection.
+  const res = await rpcCall('register_expert', { payload: toPayload(form) }, 20000)
+  if (!res.ok) return failure(res)
+  const data = res.data as { ok: boolean; expert_id?: string; error?: string }
+  if (data?.ok && data.expert_id) return { ok: true, expertId: data.expert_id }
+  return fromCode(data?.error ?? 'invalid')
 }

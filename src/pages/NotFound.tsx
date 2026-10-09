@@ -1,10 +1,8 @@
-import { useEffect } from 'react'
 import { Button } from '../components/ds'
+import { usePageInfo } from '../lib/pageInfo'
 
 export default function NotFound() {
-  useEffect(() => {
-    document.title = 'Page not found | NEXUS-E'
-  }, [])
+  usePageInfo({ title: 'Page not found | NEXUS-E', noindex: true })
   return (
     <div className="py-16 text-center">
       <p className="font-display text-7xl font-semibold tracking-tight text-lime-500 sm:text-8xl">404</p>

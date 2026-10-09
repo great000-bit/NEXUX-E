@@ -36,7 +36,7 @@ export default function Directory() {
   usePageMeta({
     title: 'Find a Verified Expert | NEXUS-E',
     description:
-      'Search verified Nigerian environmental professionals by expertise, state, qualification and availability. Every expert listed here has been verified and has chosen to be listed.',
+      'Search verified environmental professionals by expertise, state, qualification and availability. Every expert listed here has been verified and has chosen to be listed.',
     robots: plain ? 'index, follow' : 'noindex, follow',
     path: '/experts',
   })

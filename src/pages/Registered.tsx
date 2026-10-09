@@ -1,3 +1,4 @@
+import { usePageInfo } from '../lib/pageInfo'
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { EXPERT_ID_KEY } from '../lib/form'
@@ -15,6 +16,7 @@ function readId(state: unknown): string | null {
 
 export default function Registered() {
   const { state } = useLocation()
+  usePageInfo({ title: 'You are registered | NEXUS-E', noindex: true })
   const [expertId] = useState(() => readId(state))
   const [copied, setCopied] = useState<'idle' | 'copied' | 'failed'>('idle')
 

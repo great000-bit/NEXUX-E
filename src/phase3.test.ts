@@ -38,7 +38,7 @@ test('public pages reach the data only through the two directory functions, neve
     assert.doesNotMatch(src, /service_role|SERVICE_ROLE/i, f)
   }
   const api = read('src/lib/directory.ts')
-  const calls = [...api.matchAll(/\.rpc\('([a-z_]+)'/g)].map((m) => m[1]).sort()
+  const calls = [...api.matchAll(/publicRpc\('([a-z_]+)'/g)].map((m) => m[1]).sort()
   assert.deepEqual(calls, ['directory_profile', 'directory_search'])
 })
 

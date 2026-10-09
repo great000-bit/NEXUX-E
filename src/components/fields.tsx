@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from 'react'
+import { FIELD_LIMITS } from '../lib/form'
 
 /** The DOM id of a field. The error summary links to it, and focus moves to it. */
 export const fieldId = (key: string) => `field-${key}`
@@ -69,6 +70,7 @@ export function TextField(
         autoComplete={autoComplete}
         inputMode={inputMode}
         placeholder={placeholder}
+        maxLength={FIELD_LIMITS[fieldKey]}
         aria-required={rest.required || undefined}
         aria-invalid={bad ? true : undefined}
         aria-describedby={describe(id, rest.hint, rest.error)}

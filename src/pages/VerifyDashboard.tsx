@@ -1,3 +1,4 @@
+import { usePageInfo } from '../lib/pageInfo'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ListingCard } from '../components/ListingCard'
@@ -59,8 +60,9 @@ export default function VerifyDashboard() {
     setMe(res)
   }, [token, endSession])
 
+  usePageInfo({ title: 'Your verification | NEXUS-E', noindex: true })
+
   useEffect(() => {
-    document.title = 'Your verification | NEXUS-E'
     // eslint-disable-next-line react-hooks/set-state-in-effect
     void refresh()
   }, [refresh])

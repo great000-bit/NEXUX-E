@@ -111,8 +111,26 @@ export function isValidUrl(raw: string): boolean {
   }
 }
 
+/** The most characters each text field accepts. The form stops typing at the limit, and the database has a wider backstop. */
+export const FIELD_LIMITS: Record<string, number> = {
+  full_name: 120,
+  organisation: 200,
+  position: 120,
+  email: 254,
+  phone: 30,
+  profile_url: 300,
+  nes_number: 60,
+  iepn_status: 120,
+}
+
 export function validateStep(step: StepIndex, f: FormData): Errors {
   const e: Errors = {}
+  // Too-long text (for example pasted, or restored from an older saved draft) is named, not silently cut.
+  const tooLong = (k: keyof FormData) => {
+    const limit = FIELD_LIMITS[k]
+    const v = f[k]
+    if (limit && typeof v === 'string' && v.trim().length > limit) e[k] = `Please use ${limit} characters or fewer.`
+  }
   const req = (k: keyof FormData, msg: string) => {
     const v = f[k]
     if (typeof v === 'string' && !v.trim()) e[k] = msg
@@ -133,12 +151,14 @@ export function validateStep(step: StepIndex, f: FormData): Errors {
     if (f.phone.trim() !== '' && !isValidPhone(f.phone)) {
       e.phone = 'Enter a valid phone number, like 0803 123 4567, or leave it empty.'
     }
+    for (const k of ['full_name', 'organisation', 'position', 'email', 'phone'] as const) if (!e[k]) tooLong(k)
   }
 
   if (step === 1) {
     req('primary_expertise', 'Choose your main area of expertise.')
     req('years_experience', 'Choose how many years you have worked professionally.')
     req('qualification', 'Choose your highest qualification from the list.')
+    for (const k of ['nes_number', 'iepn_status'] as const) tooLong(k)
     if (f.secondary_expertise.length > MAX_SECONDARY) {
       e.secondary_expertise = `You can choose up to ${MAX_SECONDARY} secondary areas. Please untick some.`
     }
@@ -150,6 +170,8 @@ export function validateStep(step: StepIndex, f: FormData): Errors {
     if (!f.consent_contact) e.consent_contact = 'Please tick this box. We need your consent to contact you before we can register you.'
     if (f.profile_url.trim() && !isValidUrl(f.profile_url.trim())) {
       e.profile_url = 'Enter a valid link, like linkedin.com/in/yourname, or leave it empty.'
+    } else {
+      tooLong('profile_url')
     }
   }
 
@@ -169,24 +191,24 @@ export function firstInvalidStep(f: FormData, upTo: StepIndex = 2): { step: Step
 export function toPayload(f: FormData) {
   const url = f.profile_url.trim()
   return {
-    full_name: f.full_name.trim(),
+    full_name: f.full_name.trim().slice(0, FIELD_LIMITS.full_name),
     title: f.title,
-    organisation: f.organisation.trim(),
-    position: f.position.trim(),
+    organisation: f.organisation.trim().slice(0, FIELD_LIMITS.organisation),
+    position: f.position.trim().slice(0, FIELD_LIMITS.position),
     state: f.state,
-    phone: f.phone.trim(),
-    email: f.email.trim().toLowerCase(),
+    phone: f.phone.trim().slice(0, FIELD_LIMITS.phone),
+    email: f.email.trim().toLowerCase().slice(0, FIELD_LIMITS.email),
     primary_expertise: f.primary_expertise,
     // A person's secondary choice cannot repeat their primary one.
     secondary_expertise: f.secondary_expertise.filter((x) => x !== f.primary_expertise),
     years_experience: f.years_experience,
     qualification: f.qualification,
     memberships: f.memberships,
-    nes_number: f.memberships.includes('NES') ? f.nes_number.trim() : '',
-    iepn_status: f.memberships.includes('IEPN') ? f.iepn_status.trim() : '',
+    nes_number: f.memberships.includes('NES') ? f.nes_number.trim().slice(0, FIELD_LIMITS.nes_number) : '',
+    iepn_status: f.memberships.includes('IEPN') ? f.iepn_status.trim().slice(0, FIELD_LIMITS.iepn_status) : '',
     assignments: f.assignments,
     availability: f.availability,
-    profile_url: url && !/^https?:\/\//i.test(url) ? `https://${url}` : url,
+    profile_url: (url && !/^https?:\/\//i.test(url) ? `https://${url}` : url).slice(0, FIELD_LIMITS.profile_url),
     discoverable: f.discoverable === 'yes',
     consent_contact: f.consent_contact,
     website: f.website,

@@ -1,3 +1,4 @@
+import { usePageInfo } from '../lib/pageInfo'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -62,6 +63,7 @@ function focusField(anchor: string) {
 
 export default function Register() {
   const navigate = useNavigate()
+  usePageInfo({ title: 'Register as an expert | NEXUS-E', canonicalPath: '/register' })
   const [initial] = useState(load)
   const [form, setForm] = useState<FormData>(initial.form)
   const [step, setStep] = useState<StepIndex>(initial.step)

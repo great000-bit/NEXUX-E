@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { faqJsonLdText } from '../lib/faqSchema'
+import { usePageInfo } from '../lib/pageInfo'
 import Hero from './home/Hero'
 import { FAQ } from './home/content'
 
@@ -8,6 +9,8 @@ const HomeSections = lazy(() => import('./home/HomeSections'))
 
 export default function Home() {
   const [below, setBelow] = useState(false)
+  // The canonical address is the bare home page, so a link with a tracking parameter (the QR code) counts as the same page.
+  usePageInfo({ title: 'NEXUS-E | Verified Registry of Environmental Experts', canonicalPath: '/' })
 
   // FAQPage structured data for the questions further down the page. Added now, so a crawler does not have to scroll.
   useEffect(() => {
@@ -20,7 +23,6 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    document.title = 'NEXUS-E | Nigerian Environmental Expertise Exchange'
     // After the first paint, or sooner if the person starts to scroll or follow a link to a section.
     const start = () => setBelow(true)
     // Older browsers have no requestIdleCallback, so fall back to a short timer.
