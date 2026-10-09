@@ -25,7 +25,7 @@ export const HERO_HOOKS = [
   'Discovered by the people who fund the work.',
   'One profile. Many opportunities.',
   'Be found. Be verified. Be engaged.',
-  'Where Nigerian environmental expertise gets noticed.',
+  'Where environmental expertise gets noticed.',
   'Built for ESIA, safeguards and research.',
   'Ready for World Bank, AfDB and DFI projects.',
   'Your credentials, in one trusted profile.',
@@ -44,13 +44,13 @@ export const MEMBERSHIP_STRIP = {
 
 export const ABOUT = {
   eyebrow: 'What is NEXUS-E?',
-  title: "Nigeria's Verified Environmental Experts Registry",
-  lead: 'NEXUS-E connects qualified Nigerian environmental professionals with opportunities in projects, consultancies, research, government programmes and development finance.',
+  title: 'The Verified Environmental Experts Registry',
+  lead: 'NEXUS-E connects qualified environmental professionals with opportunities in projects, consultancies, research, government programmes and development finance.',
   cards: [
     {
       icon: 'people',
       title: 'Experts bring expertise.',
-      text: 'Qualified Nigerian environmental professionals register once and build a verified profile.',
+      text: 'Qualified environmental professionals register once and build a verified profile.',
     },
     {
       icon: 'link',
@@ -81,7 +81,7 @@ export const STEPS: { icon: IconName; title: string; text: string }[] = [
 export const HOW = {
   eyebrow: 'How it works',
   title: 'Four steps from the flier to the directory',
-  quote: 'Building a discoverable, evidence-based network of Nigerian environmental expertise.',
+  quote: 'Building a discoverable, evidence-based network of environmental expertise.',
 }
 
 export const WHY = {
@@ -90,7 +90,7 @@ export const WHY = {
   items: [
     'Showcase your expertise',
     'Get discovered for opportunities',
-    'Be part of a credible, verified network of Nigerian professionals',
+    'Be part of a credible, verified network of environmental professionals',
   ],
 }
 

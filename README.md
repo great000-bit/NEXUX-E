@@ -1,6 +1,6 @@
 # NEXUS-E
 
-Nigerian Environmental Expertise Exchange. Registration site for the Benin 2026 conference (PRD Phase 1).
+Nigerian Environmental Expertise Exchange. Registration site for the platform (PRD Phase 1).
 
 Stack: React, TypeScript, Vite, Tailwind CSS v4, Supabase (Postgres, Auth, Row Level Security).
 

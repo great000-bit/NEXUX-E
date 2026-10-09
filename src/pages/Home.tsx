@@ -20,7 +20,7 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    document.title = 'NEXUS-E | Nigerian Environmental Expertise Exchange'
+    document.title = 'NEXUS-E | Verified Registry of Environmental Experts'
     // After the first paint, or sooner if the person starts to scroll or follow a link to a section.
     const start = () => setBelow(true)
     // Older browsers have no requestIdleCallback, so fall back to a short timer.

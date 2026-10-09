@@ -15,7 +15,7 @@ export function Footer() {
           <Logo onDark />
           <p className="mt-5 font-display text-lg font-semibold text-white">Be Found. Be Verified. Be Engaged.</p>
           <p className="mt-2 max-w-sm text-sm text-white/70">
-            NEXUS-E is Nigeria&rsquo;s Verified Environmental Experts Registry. It does not replace statutory or professional licensing.
+            NEXUS-E is the Verified Environmental Experts Registry. It does not replace statutory or professional licensing.
           </p>
         </div>
 
@@ -30,8 +30,8 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-2 px-5 py-5 text-xs text-white/60 sm:flex-row sm:items-center sm:px-8">
-          <p>&copy; 2026 NEXUS-E. A stronger environment. A brighter Nigeria.</p>
-          <p className="uppercase tracking-[0.2em] text-lime-500/90">People · Planet · Solutions · Nigeria</p>
+          <p>&copy; 2026 NEXUS-E. A stronger environment. A brighter future.</p>
+          <p className="uppercase tracking-[0.2em] text-lime-500/90">People · Planet · Solutions</p>
         </div>
       </div>
       <div className="border-t border-white/10">
