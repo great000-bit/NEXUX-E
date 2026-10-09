@@ -1,9 +1,14 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { isConfigured, supabase } from '../../lib/supabase'
 import { Notice, Spinner } from '../../components/ui'
 import { TextField } from '../../components/fields'
 import AdminArea from './AdminArea'
+
+/** Checking, signing in and "no access" all fill the same height, so the footer does not jump between them. */
+function Gate({ children }: { children: ReactNode }) {
+  return <div className="min-h-[70svh]">{children}</div>
+}
 
 export default function Admin() {
   // undefined = still checking, null = signed out
@@ -55,19 +60,22 @@ export default function Admin() {
 
   if (!isConfigured) {
     return (
-      <div className="mx-auto max-w-md">
-        <Notice tone="info" title="Supabase is not configured">
-          Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your environment, then reload. See .env.example.
-        </Notice>
-      </div>
+      <Gate>
+        <div className="mx-auto max-w-md">
+          <Notice tone="info" title="Supabase is not configured">
+            Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to your environment, then reload. See .env.example.
+          </Notice>
+        </div>
+      </Gate>
     )
   }
   if (gate === 'loading') {
-    return <div className="grid place-items-center py-24 text-green-800"><Spinner label="Checking sign-in" className="h-8 w-8" /></div>
+    return <Gate><div className="grid place-items-center py-24 text-green-800"><Spinner label="Checking sign-in" className="h-8 w-8" /></div></Gate>
   }
-  if (gate === 'signed-out') return <Login />
+  if (gate === 'signed-out') return <Gate><Login /></Gate>
   if (gate === 'denied') {
     return (
+      <Gate>
       <div className="mx-auto max-w-md text-center">
         <h1 className="text-2xl font-semibold text-green-900">No admin access</h1>
         <p className="mt-2 text-ink-700">
@@ -76,6 +84,7 @@ export default function Admin() {
         </p>
         <button className="btn btn-ghost mt-6" onClick={() => supabase.auth.signOut()}>Sign out</button>
       </div>
+      </Gate>
     )
   }
   return <AdminArea email={session?.user.email ?? ''} onSignOut={() => supabase.auth.signOut()} />
