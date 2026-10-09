@@ -4,7 +4,7 @@
 (() => {
   const POOLS = {
     expertise: ['ESIA and Safeguards', 'Biodiversity and Ecosystems', 'Water and Hydrogeology', 'Geology and Earth Sciences', 'Climate Change and Carbon', 'Social and Economic Studies', 'Gender and Inclusion', 'Pollution and Environmental Quality', 'GIS and Remote Sensing', 'Marine and Blue Economy', 'Environmental Engineering', 'Policy, Governance and Regulation', 'ESG and Sustainability', 'Occupational and Community Health', 'Other Specialised Expertise', 'Environmental Educator', 'Environmental IT', 'Environmental Media'],
-    hooks: ['Your expertise, verified.', 'Discovered by the people who fund the work.', 'One profile. Many opportunities.', 'Be found. Be verified. Be engaged.', 'Where Nigerian environmental expertise gets noticed.', 'Built for ESIA, safeguards and research.', 'Ready for World Bank, AfDB and DFI projects.', 'Your credentials, in one trusted profile.'],
+    hooks: ['Your expertise, verified.', 'Discovered by the people who fund the work.', 'One profile. Many opportunities.', 'Be found. Be verified. Be engaged.', 'Where African environmental expertise gets noticed.', 'Built for ESIA, safeguards and research.', 'Ready for World Bank, AfDB and DFI projects.', 'Your credentials, in one trusted profile.'],
   }
   const rect = (el) => el.getBoundingClientRect()
   const hit = (a, b, pad = 0) => a.left < b.right + pad && a.right > b.left - pad && a.top < b.bottom + pad && a.bottom > b.top - pad

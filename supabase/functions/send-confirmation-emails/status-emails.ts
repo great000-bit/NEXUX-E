@@ -108,7 +108,7 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
         heading: 'You are a Verified Expert',
         paragraphs: [
           'Congratulations. We have reviewed your documents and verified your profile.',
-          `Your Expert ID is ${job.expert_id}. You now hold Verified Expert status in the Nigerian Environmental Expertise Exchange, and organisations will be able to see that your credentials have been checked.`,
+          `Your Expert ID is ${job.expert_id}. You now hold Verified Expert status in the African Environmental Expertise Exchange, and organisations will be able to see that your credentials have been checked.`,
           'Thank you for taking the time to complete verification.',
         ],
         button: { label: 'View your profile', href: verifyUrl },
@@ -142,7 +142,7 @@ function render(c: Content, name: string): { html: string; text: string } {
     ...(c.button ? [`${c.button.label}: ${c.button.href}`, ''] : []),
     'With thanks,',
     'The NEXUS-E team',
-    'Nigerian Environmental Expertise Exchange',
+    'African Environmental Expertise Exchange',
     '',
   ].join('\n')
 
@@ -163,7 +163,7 @@ function render(c: Content, name: string): { html: string; text: string } {
     <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border-radius:18px;overflow:hidden;">
       <tr><td style="background:${GREEN_900};padding:28px 32px;">
         <div style="font-family:Arial,Helvetica,sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.5px;color:#ffffff;">NEXUS<span style="color:${LIME};">-E</span></div>
-        <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#cfe3bf;margin-top:6px;">Nigerian Environmental Expertise Exchange</div>
+        <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#cfe3bf;margin-top:6px;">African Environmental Expertise Exchange</div>
       </td></tr>
       <tr><td style="padding:32px 32px 8px 32px;font-family:Arial,Helvetica,sans-serif;color:${INK};">
         <h1 style="margin:0 0 16px 0;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.2;color:${GREEN_900};">${escapeHtml(c.heading)}</h1>

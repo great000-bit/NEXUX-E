@@ -1,6 +1,6 @@
 # NEXUS-E
 
-Nigerian Environmental Expertise Exchange. Registration site for the platform (PRD Phase 1).
+African Environmental Expertise Exchange. Registration site for the platform (PRD Phase 1).
 
 Stack: React, TypeScript, Vite, Tailwind CSS v4, Supabase (Postgres, Auth, Row Level Security).
 
@@ -198,7 +198,7 @@ Two things were added, and nothing about registration or verification changed.
 ### Opportunities
 
 - **Admin, Opportunities tab.** Create, edit, publish (Open), close and delete. Fields: title, description, type (the same assignment options as registration), expertise needed, location, deadline, status (Draft, Open, Closed).
-- **Deadlines.** An opportunity stays open through the whole of its deadline day, Nigerian time, then stops showing to experts and stops accepting interest. It is shown to the admin as "Open, past deadline" until they close it.
+- **Deadlines.** An opportunity stays open through the whole of its deadline day (West Africa Time, UTC+1), then stops showing to experts and stops accepting interest. It is shown to the admin as "Open, past deadline" until they close it.
 - **What experts see.** Open opportunities on their dashboard. Ones whose expertise needed includes the expert's primary or secondary expertise, or whose type is an assignment the expert chose at registration, come first with a "Matches your profile" label. That is a plain comparison and nothing more.
 - **Express interest.** Only Verified Experts, only on an open opportunity before its deadline. They can withdraw at any time. Closed, draft and expired opportunities refuse interest in the database.
 - **What the admin sees.** For each opportunity, the experts who currently have their hand up, with the details they registered, and an Export CSV button.
