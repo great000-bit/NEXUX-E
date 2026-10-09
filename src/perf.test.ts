@@ -68,20 +68,17 @@ test('every response carries the basic security headers, and the long cache stay
   assert.ok(!all.headers.some((h) => /immutable/.test(h.value)), 'nothing long-lived on the page itself')
 })
 
-test('the directory and profile data is requested from the HTML, in parallel with the script, and picked up once', () => {
-  const cfg = read('vite.config.ts')
-  assert.match(cfg, /window\.__early=\{url:u,response:fetch\(u\)\}/)
-  assert.match(cfg, /directory_profile/)
-  assert.match(cfg, /\['p_sort','name'\],\['p_limit','12'\],\['p_offset','0'\]/)
-  assert.match(cfg, /!location\.search/, 'only the plain directory is requested early, never a filtered one')
-  assert.match(cfg, /config\.env\.VITE_SUPABASE_ANON_KEY/, 'the public key comes from the build environment')
+test('the two directory functions are read with a plain GET (no preflight), and starting the request early was tried and dropped', () => {
   const rest = read('src/lib/rest.ts')
-  assert.match(rest, /early\.url === url/, 'only an identical request is reused')
-  assert.match(rest, /w\.__early = undefined/, 'used once')
-  assert.match(rest, /if \(!res\) res = await fetch\(url/, 'falls back to a normal request if the early one failed')
-  // The two directory functions are read-only, so a GET without a preflight is allowed for them (stable in the database).
   assert.match(rest, /method: 'GET'/)
+  assert.match(rest, /export function rpcGetUrl/)
+  assert.doesNotMatch(rest, /__early/, 'measured on the live site: an early request made the pages slower, so it is not used')
+  assert.doesNotMatch(read('vite.config.ts'), /__early/)
   assert.doesNotMatch(read('src/lib/api.ts'), /rpcGet/, 'registration writes, so it stays a POST')
+  // The chunk preload scripts and the connection hint sit at the very top of the head, ahead of the stylesheet.
+  const cfg = read('vite.config.ts')
+  assert.equal((cfg.match(/injectTo: 'head-prepend'/g) ?? []).length, 2)
+  assert.doesNotMatch(cfg, /injectTo: 'head'[^-]/)
 })
 
 test('the admin sign-in states all hold one height, so the footer does not jump', () => {
