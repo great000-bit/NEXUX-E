@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { VerifiedBadge } from '../components/VerifiedBadge'
 import { Notice, Spinner } from '../components/ui'
@@ -10,6 +10,11 @@ type Loaded = { id: string; state: 'found'; profile: PublicProfile } | { id: str
 
 const monthYear = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString('en-NG', { month: 'long', year: 'numeric' }) : null
+
+/** Every state of the page (loading, error, not found, found) fills at least most of a screen, so nothing below it jumps when the answer arrives. */
+function Frame({ children }: { children: ReactNode }) {
+  return <div className="min-h-[85svh]">{children}</div>
+}
 
 export default function ExpertProfile() {
   const { expertId = '' } = useParams()
@@ -53,11 +58,12 @@ export default function ExpertProfile() {
   )
 
   if (!current) {
-    return <div className="grid place-items-center py-24 text-green-800"><Spinner label="Loading the profile" className="h-8 w-8" /></div>
+    return <Frame><div className="grid place-items-center py-24 text-green-800"><Spinner label="Loading the profile" className="h-8 w-8" /></div></Frame>
   }
 
   if (current.state === 'error') {
     return (
+      <Frame>
       <div className="mx-auto max-w-lg space-y-4">
         <Notice title="We could not load this profile">{current.message}</Notice>
         <div className="flex flex-wrap gap-3">
@@ -65,11 +71,13 @@ export default function ExpertProfile() {
           <Link to="/experts" className="btn btn-ghost">Back to the directory</Link>
         </div>
       </div>
+      </Frame>
     )
   }
 
   if (current.state === 'missing' || !profile) {
     return (
+      <Frame>
       <div className="mx-auto max-w-lg text-center">
         <h1 className="text-3xl font-semibold text-green-900">This profile is not available</h1>
         <p className="mt-3 text-ink-700">
@@ -77,6 +85,7 @@ export default function ExpertProfile() {
         </p>
         <Link to="/experts" className="btn btn-primary mt-6">Search the directory</Link>
       </div>
+      </Frame>
     )
   }
 
@@ -93,6 +102,7 @@ export default function ExpertProfile() {
   ]
 
   return (
+    <Frame>
     <article aria-labelledby="profile-name" className="space-y-6">
       <nav aria-label="Breadcrumb" className="text-sm">
         <Link to="/experts" className="font-bold text-green-800 underline underline-offset-4">All experts</Link>
@@ -136,5 +146,6 @@ export default function ExpertProfile() {
         This expert has been verified by NEXUS-E and has chosen to be listed. Phone numbers, email addresses and documents are never shown here.
       </p>
     </article>
+    </Frame>
   )
 }
