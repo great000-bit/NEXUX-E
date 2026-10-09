@@ -115,10 +115,10 @@ test('no invented numbers: the only figures on the page are 90 (seconds) and 202
   assert.doesNotMatch(allCopy, /testimonial|\bstars?\b|\d+\s*(\+|%|k\b)/i)
 })
 
-test('the fifteen areas of expertise each have an icon, and the page says fifteen', () => {
-  assert.equal(EXPERTISE.length, 15)
+test('the eighteen areas of expertise each have an icon, and the page says eighteen', () => {
+  assert.equal(EXPERTISE.length, 18)
   for (const name of EXPERTISE) assert.ok(EXPERTISE_ICON[name], `${name} has no icon`)
-  assert.equal(new Set(Object.values(EXPERTISE_ICON)).size, 15, 'each icon is different')
+  assert.equal(new Set(Object.values(EXPERTISE_ICON)).size, 18, 'each icon is different')
 })
 
 test('the four steps and the who-finds-you list are the ones on the flier', () => {
@@ -226,7 +226,7 @@ test('glass has a solid fallback, blur is kept off grids, and the registration f
   assert.match(css, /backdrop-filter: blur\(18px\)/)
   assert.match(css, /\.glass-flat/)
   const sections = read('src/pages/home/HomeSections.tsx')
-  // The fifteen expertise cards and the audience tiles never blur.
+  // The eighteen expertise cards and the audience tiles never blur.
   assert.match(sections, /<GlassCard as="div" flat hover className="expertise-card/)
   assert.match(sections, /<GlassCard flat hover className="flex h-full items-center/)
   // Inputs and the registration panel are solid, not glass.

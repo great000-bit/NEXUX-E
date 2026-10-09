@@ -108,10 +108,10 @@ function About() {
 function Expertise() {
   return (
     <Section id="expertise" eyebrow={EXPERTISE_SECTION.eyebrow} title={EXPERTISE_SECTION.title} lead={EXPERTISE_SECTION.lead}>
-      {/* Flat glass (no blur): fifteen cards at once would be heavy on a mid-range phone. */}
-      <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+      {/* Flat glass (no blur): eighteen cards at once would be heavy on a mid-range phone. */}
+      <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
         {EXPERTISE.map((name, i) => (
-          <li key={name} {...fadeUp(i % 5)}>
+          <li key={name} {...fadeUp(i % 6)}>
             <GlassCard as="div" flat hover className="expertise-card h-full">
               <span className="icon-tile"><Icon name={EXPERTISE_ICON[name]} className="h-6 w-6" /></span>
               <span className="font-display text-[0.95rem] font-semibold leading-snug text-white">{name}</span>

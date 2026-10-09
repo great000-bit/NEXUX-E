@@ -3,7 +3,7 @@
 // and any floating item (reels, node labels, tagline, scroll cue) that overlaps the headline, subline, buttons or small print.
 (() => {
   const POOLS = {
-    expertise: ['ESIA and Safeguards', 'Biodiversity and Ecosystems', 'Water and Hydrogeology', 'Geology and Earth Sciences', 'Climate Change and Carbon', 'Social and Economic Studies', 'Gender and Inclusion', 'Pollution and Environmental Quality', 'GIS and Remote Sensing', 'Marine and Blue Economy', 'Environmental Engineering', 'Policy, Governance and Regulation', 'ESG and Sustainability', 'Occupational and Community Health', 'Other Specialised Expertise'],
+    expertise: ['ESIA and Safeguards', 'Biodiversity and Ecosystems', 'Water and Hydrogeology', 'Geology and Earth Sciences', 'Climate Change and Carbon', 'Social and Economic Studies', 'Gender and Inclusion', 'Pollution and Environmental Quality', 'GIS and Remote Sensing', 'Marine and Blue Economy', 'Environmental Engineering', 'Policy, Governance and Regulation', 'ESG and Sustainability', 'Occupational and Community Health', 'Other Specialised Expertise', 'Environmental Educator', 'Environmental IT', 'Environmental Media'],
     hooks: ['Your expertise, verified.', 'Discovered by the people who fund the work.', 'One profile. Many opportunities.', 'Be found. Be verified. Be engaged.', 'Where Nigerian environmental expertise gets noticed.', 'Built for ESIA, safeguards and research.', 'Ready for World Bank, AfDB and DFI projects.', 'Your credentials, in one trusted profile.'],
   }
   const rect = (el) => el.getBoundingClientRect()

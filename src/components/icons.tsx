@@ -15,7 +15,7 @@ const PATHS = {
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
   'shield-check': <><path d="M12 3 5 6v5.5c0 4.3 3 7.7 7 9.5 4-1.8 7-5.2 7-9.5V6z" /><path d="m8.8 12 2.4 2.4 4.2-4.6" /></>,
 
-  // The fifteen areas of expertise
+  // The areas of expertise
   link: <><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></>,
   leaf: <><path d="M5 19C5 11 10 6 19 5c0 9-5 14-13 14" /><path d="M5 19 13 11" /></>,
   sprout: <><path d="M12 21V11" /><path d="M12 14c-4 0-6-2-6-6 4 0 6 2 6 6Z" /><path d="M12 11c0-4 2-6 6-6 0 4-2 6-6 6Z" /></>,
@@ -31,6 +31,9 @@ const PATHS = {
   scales: <><path d="M12 4v16" /><path d="M7 20h10" /><path d="M5 7h14" /><path d="M5 7 2.6 13a2.9 2.9 0 0 0 4.8 0z" /><path d="M19 7l-2.4 6a2.9 2.9 0 0 0 4.8 0z" /></>,
   buildings: <><path d="M4 20V6l7-2v16" /><path d="M11 20V9l9 3v8" /><path d="M3 20h18" /><path d="M7 9h1M7 13h1M14.5 14h1M14.5 17h1" /></>,
   'heart-pulse': <><path d="M12 20S4 15 4 9.2A4.4 4.4 0 0 1 12 6.6 4.4 4.4 0 0 1 20 9.2C20 15 12 20 12 20Z" /><path d="M6.5 12h3l1.4-2.6 2.4 5 1.4-2.4h2.8" /></>,
+  'book-open': <><path d="M12 6.5C10 5 7 4.6 4 5v13c3-.4 6 .1 8 1.6 2-1.5 5-2 8-1.6V5c-3-.4-6 0-8 1.5Z" /><path d="M12 6.5v13" /></>,
+  cpu: <><rect x="7" y="7" width="10" height="10" rx="1.6" /><rect x="10" y="10" width="4" height="4" rx=".6" /><path d="M9.5 3v4M14.5 3v4M9.5 17v4M14.5 17v4M3 9.5h4M3 14.5h4M17 9.5h4M17 14.5h4" /></>,
+  broadcast: <><path d="M4 10v4a1 1 0 0 0 1 1h2l5 4V5L7 9H5a1 1 0 0 0-1 1Z" /><path d="M16 9.5a3.5 3.5 0 0 1 0 5" /><path d="M18.6 7a7 7 0 0 1 0 10" /></>,
   clipboard: <><rect x="6" y="4" width="12" height="17" rx="2" /><path d="M9.5 4V3h5v1" /><path d="m9.2 13 2.1 2.1 3.7-3.9" /></>,
 
   // How it works
@@ -95,4 +98,7 @@ export const EXPERTISE_ICON: Record<string, IconName> = {
   'ESG and Sustainability': 'buildings',
   'Occupational and Community Health': 'heart-pulse',
   'Other Specialised Expertise': 'clipboard',
+  'Environmental Educator': 'book-open',
+  'Environmental IT': 'cpu',
+  'Environmental Media': 'broadcast',
 }
