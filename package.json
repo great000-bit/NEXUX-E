@@ -13,7 +13,7 @@
     "test:email": "node --test supabase/functions/send-confirmation-emails/logic.test.ts supabase/functions/send-confirmation-emails/status.test.ts",
     "test:portal": "node --test supabase/functions/expert-portal/portal.test.ts",
     "test": "npm run test:app && npm run test:email && npm run test:portal",
-    "test:app": "node --import ./scripts/register-ts.mjs --test src/lib/form.test.ts src/lib/image.test.ts src/lib/directoryFilters.test.ts src/lib/opportunities.test.ts src/pages/admin/csv.test.ts src/app.test.ts src/phase3.test.ts src/design.test.ts src/home.test.ts src/heroMotion.test.ts src/publicSurface.test.ts",
+    "test:app": "node --import ./scripts/register-ts.mjs --test src/lib/form.test.ts src/lib/image.test.ts src/lib/directoryFilters.test.ts src/lib/opportunities.test.ts src/pages/admin/csv.test.ts src/app.test.ts src/phase3.test.ts src/design.test.ts src/home.test.ts src/heroMotion.test.ts src/publicSurface.test.ts src/sectors.test.ts",
     "brand": "node scripts/generate-brand.mjs"
   },
   "dependencies": {
