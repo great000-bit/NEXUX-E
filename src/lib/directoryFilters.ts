@@ -1,5 +1,6 @@
 // Pure helpers for the public directory: which filters exist, how they live in the address bar,
 // and how a person's name and links are shown. No network and no browser APIs, so tests can run them.
+import { COUNTRIES } from './countries'
 import { ASSIGNMENTS, AVAILABILITY, EXPERTISE, MEMBERSHIPS, QUALIFICATIONS, STATES, YEARS } from './options'
 
 export const PAGE_SIZE = 12
@@ -14,6 +15,7 @@ export type Sort = (typeof SORTS)[number]['value']
 export type Filters = {
   q: string
   expertise: string
+  country: string
   state: string
   qualification: string
   years: string
@@ -27,6 +29,7 @@ export type Filters = {
 export const EMPTY_FILTERS: Filters = {
   q: '',
   expertise: '',
+  country: '',
   state: '',
   qualification: '',
   years: '',
@@ -40,6 +43,7 @@ export const EMPTY_FILTERS: Filters = {
 /** Each filter and the list of values it may hold. Anything else in the address bar is ignored. */
 export const FILTER_OPTIONS = {
   expertise: EXPERTISE,
+  country: COUNTRIES,
   state: STATES,
   qualification: QUALIFICATIONS,
   years: YEARS,
@@ -94,6 +98,7 @@ export function searchArgs(f: Filters) {
   return {
     p_q: f.q || null,
     p_expertise: f.expertise || null,
+    p_country: f.country || null,
     p_state: f.state || null,
     p_qualification: f.qualification || null,
     p_years: f.years || null,

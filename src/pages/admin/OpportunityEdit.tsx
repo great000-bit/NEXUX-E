@@ -337,7 +337,7 @@ function InterestPanel({ opp, rows }: { opp: AdminOpportunity; rows: InterestedE
                   {r.title} {r.full_name}
                   <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-800">{r.expert_id}</span>
                 </p>
-                <p className="break-words text-sm text-ink-700">{r.position}, {r.organisation} · {r.state}</p>
+                <p className="break-words text-sm text-ink-700">{r.position}, {r.organisation} · {r.state}, {r.country ?? 'Nigeria'}</p>
                 <p className="mt-1 break-words text-sm text-ink-700">
                   {r.primary_expertise}
                   {r.secondary_expertise.length ? ` (also ${r.secondary_expertise.join(', ')})` : ''}

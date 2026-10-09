@@ -1,24 +1,34 @@
 import { Link } from 'react-router-dom'
-import { EXPERTISE_ICON } from '../../components/icons'
+import type { IconName } from '../../components/icons'
 import type { ReelMode } from '../../lib/motion'
 import type { ReelBoard } from '../../lib/reels'
-import { EXPERTISE } from '../../lib/options'
+import { useMessages } from '../../i18n/I18nProvider'
 import { HERO_NODES } from './content'
 import { Reel } from './Reel'
 
 const SIDE: Record<'tl' | 'tr' | 'bl' | 'br', 'start' | 'end'> = { tl: 'start', bl: 'start', tr: 'end', br: 'end' }
-export const iconForExpertise = (t: string) => EXPERTISE_ICON[t]
 
 /**
  * Four expertise nodes on thin lines that curve toward the centre, as in the reference composition.
  * Tablet and desktop only: phones get four chips instead. Each label is a reel that changes on its own timer.
  * Each node links to the expertise section.
  */
-export function CornerNodes({ board, mode, active, lower }: { board: ReelBoard; mode: ReelMode; active: boolean; lower: boolean }) {
+export function CornerNodes({
+  board, mode, active, lower, pool, iconFor,
+}: {
+  board: ReelBoard
+  mode: ReelMode
+  active: boolean
+  lower: boolean
+  /** The expertise names in the language now shown. */
+  pool: readonly string[]
+  iconFor: (text: string) => IconName | undefined
+}) {
+  const m = useMessages()
   // Tablets get the two upper nodes only: below the headline there is no room for the lower pair.
   const nodes = lower ? HERO_NODES : HERO_NODES.filter((x) => x.corner === 'tl' || x.corner === 'tr')
   return (
-    <div className="hero-nodes" aria-label="Areas of expertise">
+    <div className="hero-nodes" aria-label={m.hero.areasOfExpertise}>
       <svg className="hero-lines" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0 33H190C240 33 275 22 322 6" pathLength="1" />
         <path d="M1000 33H810C760 33 725 22 678 6" pathLength="1" />
@@ -34,15 +44,15 @@ export function CornerNodes({ board, mode, active, lower }: { board: ReelBoard; 
               <Reel
                 id={`node-${n.corner}`}
                 board={board}
-                pool={EXPERTISE}
-                initial={n.label}
-                iconFor={iconForExpertise}
+                pool={pool}
+                initial={m.options.expertise[n.label as keyof typeof m.options.expertise]}
+                iconFor={iconFor}
                 mode={mode}
                 active={active}
                 align={SIDE[n.corner]}
                 className="reel-node"
               />
-              <span className="hero-node-sub">Expertise area</span>
+              <span className="hero-node-sub">{m.hero.expertiseArea}</span>
             </span>
           </span>
         </Link>

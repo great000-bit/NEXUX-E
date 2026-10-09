@@ -1,9 +1,12 @@
+import '../i18n/enSite'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { TextField } from '../components/fields'
 import { Notice, Spinner } from '../components/ui'
 import { usePageInfo } from '../lib/pageInfo'
 import { call, getSession, saveSession } from '../lib/portal'
+import { fmt } from '../i18n'
+import { useMessages } from '../i18n/I18nProvider'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 const RESEND_AFTER_SECONDS = 30
@@ -11,6 +14,7 @@ const RESEND_AFTER_SECONDS = 30
 type Step = 'email' | 'code'
 
 export default function Verify() {
+  const t = useMessages().verify
   const navigate = useNavigate()
   const location = useLocation()
   const [step, setStep] = useState<Step>('email')
@@ -24,7 +28,7 @@ export default function Verify() {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const sessionMessage = (location.state as { message?: string } | null)?.message
 
-  usePageInfo({ title: 'Verify your profile | NEXUS-E', noindex: true })
+  usePageInfo({ title: t.pageTitle, noindex: true })
 
   // Someone who is already signed in goes straight to their dashboard.
   useEffect(() => {
@@ -45,7 +49,7 @@ export default function Verify() {
     e?.preventDefault()
     const clean = email.trim()
     if (!EMAIL_RE.test(clean)) {
-      setEmailError('Enter the email address you registered with, like name@example.com.')
+      setEmailError(t.emailInvalid)
       document.getElementById('field-verify_email')?.focus()
       return
     }
@@ -58,7 +62,7 @@ export default function Verify() {
       return
     }
     // The same message is shown whether or not the address is registered.
-    setNotice(res.message)
+    setNotice(t.codeSent)
     setStep('code')
     setCode('')
     setCodeError(undefined)
@@ -69,7 +73,7 @@ export default function Verify() {
     e.preventDefault()
     const digits = code.replace(/\s+/g, '')
     if (!/^\d{6}$/.test(digits)) {
-      setCodeError('Enter the 6 digit code from your email.')
+      setCodeError(t.codeInvalid)
       document.getElementById('field-verify_code')?.focus()
       return
     }
@@ -88,14 +92,12 @@ export default function Verify() {
 
   return (
     <div className="mx-auto max-w-md">
-      <p className="text-xs font-bold uppercase tracking-[0.22em] text-green-700">Verification</p>
+      <p className="text-xs font-bold uppercase tracking-[0.22em] text-green-700">{t.eyebrow}</p>
       <h1 ref={headingRef} tabIndex={-1} className="mt-2 text-3xl font-semibold text-green-900 outline-none">
-        {step === 'email' ? 'Verify your profile' : 'Check your email'}
+        {step === 'email' ? t.titleEmail : t.titleCode}
       </h1>
       <p className="mt-3 text-ink-700">
-        {step === 'email'
-          ? 'Upload your membership, licence or qualification so we can verify your profile. Enter the email address you registered with and we will send you a sign-in code.'
-          : 'Enter the 6 digit code we sent. It works once and expires in 10 minutes.'}
+        {step === 'email' ? t.introEmail : t.introCode}
       </p>
 
       {sessionMessage && step === 'email' && (
@@ -108,7 +110,7 @@ export default function Verify() {
         <form onSubmit={requestCode} noValidate className="card mt-6 space-y-5 p-5 sm:p-6">
           <TextField
             fieldKey="verify_email"
-            label="Your registered email"
+            label={t.emailLabel}
             required
             type="email"
             inputMode="email"
@@ -122,7 +124,7 @@ export default function Verify() {
             error={emailError}
           />
           <button type="submit" className="btn btn-primary w-full" disabled={busy}>
-            {busy ? (<><Spinner label="Sending" /> Sending code</>) : 'Send me a code'}
+            {busy ? (<><Spinner label={t.sending} /> {t.sendingCode}</>) : t.sendCode}
           </button>
         </form>
       ) : (
@@ -130,7 +132,7 @@ export default function Verify() {
           {notice && <Notice tone="info">{notice}</Notice>}
           <TextField
             fieldKey="verify_code"
-            label="6 digit code"
+            label={t.codeLabel}
             required
             inputMode="numeric"
             autoComplete="one-time-code"
@@ -143,7 +145,7 @@ export default function Verify() {
             error={codeError}
           />
           <button type="submit" className="btn btn-primary w-full" disabled={busy}>
-            {busy ? (<><Spinner label="Checking" /> Checking code</>) : 'Sign in'}
+            {busy ? (<><Spinner label={t.checking} /> {t.checkingCode}</>) : t.signIn}
           </button>
           <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
             <button
@@ -152,7 +154,7 @@ export default function Verify() {
               disabled={wait > 0 || busy}
               onClick={() => requestCode()}
             >
-              {wait > 0 ? `Send a new code in ${wait}s` : 'Send a new code'}
+              {wait > 0 ? fmt(t.newCodeIn, { seconds: wait }) : t.newCode}
             </button>
             <button
               type="button"
@@ -162,15 +164,14 @@ export default function Verify() {
                 setNotice(null)
               }}
             >
-              Use a different email
+              {t.differentEmail}
             </button>
           </div>
         </form>
       )}
 
       <p className="mt-6 text-sm text-ink-500">
-        Not registered yet? <Link to="/register" className="font-bold text-green-800 underline underline-offset-4">Register first</Link>. If you
-        registered with a phone number only, please contact the NEXUS-E team to add an email address to your record.
+        {t.notRegistered} <Link to="/register" className="font-bold text-green-800 underline underline-offset-4">{t.registerFirst}</Link>. {t.phoneOnly}
       </p>
     </div>
   )

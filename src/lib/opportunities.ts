@@ -38,6 +38,7 @@ export type InterestedExpert = {
   full_name: string
   organisation: string
   position: string
+  country?: string
   state: string
   email: string | null
   phone: string | null
@@ -68,8 +69,8 @@ const dayStart = (iso: string) => new Date(`${iso}T00:00:00Z`).getTime()
 /** Today's date in Nigeria (UTC+1, no daylight saving), as YYYY-MM-DD. */
 export const nigeriaToday = (now: number = Date.now()) => new Date(now + 3_600_000).toISOString().slice(0, 10)
 
-export function formatDay(iso: string): string {
-  return new Date(dayStart(iso)).toLocaleDateString('en-NG', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+export function formatDay(iso: string, dateLocale = 'en-NG'): string {
+  return new Date(dayStart(iso)).toLocaleDateString(dateLocale, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
 }
 
 /** Whole days from today until the deadline day. Zero means the deadline is today, negative means it has passed. */

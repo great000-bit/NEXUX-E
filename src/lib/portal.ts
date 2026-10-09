@@ -1,4 +1,5 @@
 import { SUPABASE_ANON_KEY, SUPABASE_URL, isConfigured } from './config'
+import { currentLocale, messages } from '../i18n'
 
 // Client for the expert-portal Edge Function. Experts have no database login: they hold a short
 // lived session token that the function checks on every call.
@@ -43,10 +44,13 @@ export function clearSession() {
   }
 }
 
-const NETWORK: PortalError = {
-  ok: false,
-  error: 'network',
-  message: 'We could not connect. Please check your internet connection and try again.',
+const network = (): PortalError => ({ ok: false, error: 'network', message: messages().portal.network })
+
+/** The server answers in English with a code. In another language the code is looked up and the sentence replaced. */
+function localised<T>(data: PortalResult<T>): PortalResult<T> {
+  if (data.ok || currentLocale() === 'en') return data
+  const known = (messages().portal.errors as Record<string, string>)[data.error]
+  return known ? { ...data, message: known } : data
 }
 
 export async function call<T = Record<string, never>>(
@@ -55,7 +59,7 @@ export async function call<T = Record<string, never>>(
   token?: string,
 ): Promise<PortalResult<T>> {
   if (!isConfigured) {
-    return { ok: false, error: 'not_configured', message: 'Verification is not open yet. Please try again later.' }
+    return { ok: false, error: 'not_configured', message: messages().portal.notConfigured }
   }
   try {
     const res = await fetch(ENDPOINT, {
@@ -64,10 +68,10 @@ export async function call<T = Record<string, never>>(
       body: JSON.stringify({ action, ...body }),
     })
     const data = (await res.json().catch(() => null)) as PortalResult<T> | null
-    if (!data) return { ok: false, error: 'server_error', message: 'Something went wrong on our side. Please try again in a moment.' }
-    return data
+    if (!data) return { ok: false, error: 'server_error', message: messages().portal.serverError }
+    return localised(data)
   } catch {
-    return NETWORK
+    return network()
   }
 }
 
@@ -90,9 +94,9 @@ export function uploadToSignedUrl(
     xhr.onload = () =>
       xhr.status >= 200 && xhr.status < 300
         ? resolve({ ok: true })
-        : resolve({ ok: false, error: 'upload_failed', message: 'The upload did not go through. Please try again.' })
-    xhr.onerror = () => resolve(NETWORK)
-    xhr.ontimeout = () => resolve(NETWORK)
+        : resolve({ ok: false, error: 'upload_failed', message: messages().portal.uploadFailed })
+    xhr.onerror = () => resolve(network())
+    xhr.ontimeout = () => resolve(network())
     xhr.timeout = 120_000
     const form = new FormData()
     form.append('cacheControl', '3600')
@@ -107,6 +111,7 @@ export type ExpertRecord = {
   title: string
   organisation: string
   position: string
+  country?: string
   state: string
   email: string | null
   phone: string | null

@@ -1,3 +1,4 @@
+import '../../i18n/enSite'
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { isConfigured, supabase } from '../../lib/supabase'

@@ -53,7 +53,7 @@ test('the original columns are still there, in their original order', () => {
 test('verification columns are added at the end and show readable status names', () => {
   const [head, line] = parse(toCsv([row]))
   const names = head.split(',').map((h) => h.replace(/"/g, ''))
-  assert.deepEqual(names.slice(-4), ['Evidence submitted at', 'Reviewed at', 'Reviewed by', 'Verified at'])
+  assert.deepEqual(names.slice(-5), ['Evidence submitted at', 'Reviewed at', 'Reviewed by', 'Verified at', 'Country'])
   assert.ok(line.includes('"Verified"'))
   assert.ok(line.includes('"admin@example.org"'))
 })

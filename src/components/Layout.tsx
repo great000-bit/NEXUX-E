@@ -3,9 +3,11 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { Navbar } from './Navbar'
 import { Footer } from './Footer'
 import { scrollToId } from '../lib/scroll'
+import { useMessages } from '../i18n/I18nProvider'
 
 export function Layout() {
   const { pathname, hash } = useLocation()
+  const m = useMessages()
 
   // New page: start at the top. A link to /#section: scroll to that section once it exists.
   useEffect(() => {
@@ -23,7 +25,7 @@ export function Layout() {
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-lime-500 focus:px-4 focus:py-2 focus:font-bold focus:text-green-950"
       >
-        Skip to content
+        {m.nav.skip}
       </a>
       <Navbar />
       {isHome ? (

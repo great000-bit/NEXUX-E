@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { en } from './i18n/en.ts'
 import path from 'node:path'
 
 // Tests for what visitors can see: no email address on the public site, and a logo-only header in the admin area.
@@ -29,7 +30,8 @@ test('no email address appears anywhere in the public site: source, public files
 test('the footer has no Contact column and no email link, and still shows the developer credit', () => {
   const footer = read('src/components/Footer.tsx')
   assert.doesNotMatch(footer, /Contact<|CONTACT_EMAIL|mailto/)
-  assert.match(footer, /Designed and built by Great Emman-Wori/)
+  assert.match(footer, /t\.designedBy/)
+  assert.equal(en.footer.designedBy, 'Designed and built by Great Emman-Wori')
   assert.match(footer, /md:grid-cols-\[1\.6fr_1fr\]/, 'two balanced columns on desktop')
   assert.doesNotMatch(read('src/lib/config.ts'), /CONTACT_EMAIL|VITE_CONTACT_EMAIL/)
   assert.doesNotMatch(read('.env.example'), /VITE_CONTACT_EMAIL/)
@@ -43,6 +45,7 @@ test('on admin routes the header is the logo alone, on the left', () => {
   assert.match(adminBranch, /justify-start/)
   assert.doesNotMatch(adminBranch, /NAV_LINKS|nav-pill|Directory|Verify my profile|shield-check|menu/, 'no pill nav, no shield, no Verify link, no menu button')
   // The public header is unchanged.
-  for (const label of ['Directory', 'Verify my profile', 'Register now']) assert.match(nav, new RegExp(label))
+  for (const key of ['directory', 'verify', 'register']) assert.match(nav, new RegExp(`n\\.${key}`))
+  assert.deepEqual([en.nav.directory, en.nav.verify, en.nav.register], ['Directory', 'Verify my profile', 'Register now'])
   assert.match(nav, /nav-pill glass hidden/)
 })

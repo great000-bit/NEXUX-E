@@ -1,4 +1,5 @@
-import { isStatus, STATUS_LABEL, type VStatus } from '../lib/verification'
+import { isStatus, type VStatus } from '../lib/verification'
+import { useMessages } from '../i18n/I18nProvider'
 
 const STYLE: Record<VStatus, string> = {
   pending: 'bg-line text-ink-700',
@@ -49,12 +50,13 @@ function Icon({ status }: { status: VStatus }) {
 
 export function StatusBadge({ status, className = '' }: { status: string; className?: string }) {
   const s: VStatus = isStatus(status) ? status : 'pending'
+  const label = useMessages().dashboard.status[s]
   return (
     <span
       className={`theme-light inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-bold ${STYLE[s]} ${className}`}
     >
       <Icon status={s} />
-      {STATUS_LABEL[s]}
+      {label}
     </span>
   )
 }

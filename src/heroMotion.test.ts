@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { en } from './i18n/en.ts'
 import path from 'node:path'
 import { reelMode, type MotionInputs } from './lib/motion.ts'
 import { planSpin, randomInterval, ReelBoard } from './lib/reels.ts'
@@ -93,7 +94,7 @@ test('the tagline moves by itself, in a loop, with nothing to click', () => {
   const tag = read('src/pages/home/Tagline.tsx')
   assert.doesNotMatch(tag, /onClick|<button|onMouse|onFocus/)
   assert.match(tag, /TICK_MS = 4000/)
-  assert.match(tag, /nextIndex\(i, TAGLINES\.length\)/)
+  assert.match(tag, /nextIndex\(i, count\)/)
   const css = read('src/pages/home/home.css')
   assert.match(css, /seg-run 4s linear/, 'the segment fills in step with the 4 second tick')
   assert.match(css, /\.hero-tagline-title \{[^}]*height: 1\.5rem/, 'fixed height')
@@ -124,12 +125,13 @@ test('the pointer glow and parallax are for a mouse only, and the glow moves by 
 
 test('the footer credits the developer with a safe external link, and no public page links to the admin', () => {
   const footer = read('src/components/Footer.tsx')
-  assert.match(footer, /Designed and built by Great Emman-Wori/)
+  assert.match(footer, /t\.designedBy/)
+  assert.equal(en.footer.designedBy, 'Designed and built by Great Emman-Wori')
   assert.match(footer, /DEVELOPER_URL = 'https:\/\/www\.greatemmanwori\.cv'/)
   assert.match(footer, /href=\{DEVELOPER_URL\}/)
   assert.match(footer, /target="_blank"/)
   assert.match(footer, /rel="noopener noreferrer"/)
-  assert.match(footer, /Contact developer/)
+  assert.equal(en.footer.contactDeveloper, 'Contact developer')
   assert.match(footer, /focus-visible:outline/)
   assert.doesNotMatch(footer, /admin/i)
 })

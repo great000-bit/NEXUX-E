@@ -22,10 +22,10 @@ const valid: FormData = {
   consent_contact: true,
 }
 
-test('the lists are intact: 18 expertise areas (15 from the PRD plus three added by the client), 13 assignment options, 37 states plus outside Nigeria', () => {
+test('the lists are intact: 18 expertise areas (15 from the PRD plus three added by the client), 13 assignment options, 37 Nigerian states', () => {
   assert.equal(EXPERTISE.length, 18)
   assert.equal(ASSIGNMENTS.length, 13)
-  assert.equal(STATES.length, 38)
+  assert.equal(STATES.length, 37)
 })
 
 test('a complete registration passes every screen', () => {
@@ -84,7 +84,7 @@ test('the registration payload is cleaned the way the server expects', () => {
   assert.deepEqual(p.secondary_expertise, ['Water and Hydrogeology'], 'the primary area is dropped from the secondary list')
   assert.equal(p.website, '', 'the honeypot is sent empty')
   assert.deepEqual(Object.keys(p).sort(), [
-    'availability', 'consent_contact', 'discoverable', 'email', 'full_name', 'iepn_status', 'memberships', 'nes_number',
+    'availability', 'consent_contact', 'country', 'discoverable', 'email', 'full_name', 'iepn_status', 'memberships', 'nes_number',
     'organisation', 'phone', 'position', 'primary_expertise', 'profile_url', 'qualification', 'secondary_expertise',
     'state', 'title', 'website', 'years_experience', 'assignments',
   ].sort())

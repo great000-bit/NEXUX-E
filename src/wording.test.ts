@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
 import { ABOUT, AUDIENCE, CTA, DIRECTORY, FAQ, HERO, HERO_HOOKS, HOW, PRIVACY, STEPS, WHY } from './pages/home/content.ts'
+import { en } from './i18n/en.ts'
 
 // The product is African: the brand name is the African Environmental Expertise Exchange, and nothing visible says Nigerian.
 // "Nigeria" stays in the registration form only where it is a real choice (a country and a list of states).
@@ -31,13 +32,13 @@ test('the logo wordmark, page title, meta and social text, footer and descriptio
   assert.match(index, /og:image:alt" content="NEXUS-E, the African Environmental Expertise Exchange\./)
   assert.match(index, /og:description" content="Register once as an environmental professional and be discovered for projects, research and development finance\."/)
   assert.doesNotMatch(index, /nigeria/i)
-  const footer = read('src/components/Footer.tsx')
-  assert.match(footer, /Africa&rsquo;s Verified Environmental Experts Registry/)
-  assert.match(footer, /A brighter Africa/)
-  assert.doesNotMatch(footer, /nigeria/i)
-  assert.match(read('src/pages/Directory.tsx'), /across Africa/)
-  assert.match(read('src/pages/ExpertProfile.tsx'), /the African Environmental Expertise Exchange/)
-  assert.match(read('src/pages/Home.tsx'), /African Environmental Expertise Exchange/)
+  assert.match(en.footer.about, /Africa\u2019s Verified Environmental Experts Registry/)
+  assert.match(en.footer.copyright, /A brighter Africa/)
+  assert.doesNotMatch(read('src/components/Footer.tsx'), /nigeria/i)
+  assert.doesNotMatch(JSON.stringify(en.footer), /nigeria/i)
+  assert.match(en.directory.pageDescription, /across Africa/)
+  assert.match(en.profile.metaDescription, /the African Environmental Expertise Exchange/)
+  assert.match(en.home.pageTitle, /African Environmental Expertise Exchange/)
 })
 
 test('every email says the African name, and none says Nigerian', () => {

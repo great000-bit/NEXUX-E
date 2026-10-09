@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { nextIndex } from '../../lib/motion'
-import { TAGLINES } from './content'
+import { useMessages } from '../../i18n/I18nProvider'
 
 const TICK_MS = 4000
 const OUT_MS = 380
@@ -11,6 +11,8 @@ const OUT_MS = 380
  * click. With motion off it shows the first message and stays still. The block has a fixed height, so nothing jumps.
  */
 export function Tagline({ animate, placement }: { animate: boolean; placement: 'corner' | 'inline' }) {
+  const TAGLINES = useMessages().hero.taglines
+  const count = TAGLINES.length
   const [index, setIndex] = useState(0)
   const [phase, setPhase] = useState<'in' | 'out'>('in')
 
@@ -18,14 +20,14 @@ export function Tagline({ animate, placement }: { animate: boolean; placement: '
     if (!animate) return
     const out = window.setTimeout(() => setPhase('out'), TICK_MS - OUT_MS)
     const next = window.setTimeout(() => {
-      setIndex((i) => nextIndex(i, TAGLINES.length))
+      setIndex((i) => nextIndex(i, count))
       setPhase('in')
     }, TICK_MS)
     return () => {
       window.clearTimeout(out)
       window.clearTimeout(next)
     }
-  }, [animate, index])
+  }, [animate, index, count])
 
   const current = TAGLINES[index]
 

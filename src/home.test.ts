@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { en } from './i18n/en.ts'
 import path from 'node:path'
 import { heroMotionAllowed, nextIndex, particleCount, type MotionInputs } from './lib/motion.ts'
 import { ABOUT, AUDIENCE, CTA, DIRECTORY, HERO, HERO_NODES, HOW, MEMBERSHIP_STRIP, PRIVACY, STEPS, TAGLINES, WHY } from './pages/home/content.ts'
@@ -99,9 +100,10 @@ test('the headline, buttons and corner nodes are exactly the ones asked for', ()
   assert.deepEqual(HERO_NODES.map((n) => n.label), ['ESIA and Safeguards', 'Climate Change and Carbon', 'Water and Hydrogeology', 'Biodiversity and Ecosystems'])
   assert.deepEqual(TAGLINES.map((t) => t.title), ['Be found.', 'Be verified.', 'Be engaged.'])
   const hero = read('src/pages/home/Hero.tsx')
-  assert.match(hero, />Register now</)
-  assert.match(hero, />Verify my profile</)
-  assert.match(hero, /See how it works/)
+  assert.match(hero, /\{h\.register\}/)
+  assert.match(hero, /\{h\.verify\}/)
+  assert.match(hero, /\{h\.cue\}/)
+  assert.deepEqual([en.hero.register, en.hero.verify, en.hero.cue], ['Register now', 'Verify my profile', 'See how it works'])
 })
 
 test('the membership strip lists bodies a person can add, and never reads as partners', () => {
@@ -154,7 +156,8 @@ test('the navigation has the right links, a Register button in the mobile sheet,
   for (const label of ['How it works', 'Expertise', 'Who finds you', 'Privacy']) assert.match(nav, new RegExp(`label: '${label}'`))
   assert.match(nav, /to="\/experts"/)
   assert.match(nav, /to="\/verify"/)
-  assert.match(nav, />Register now</)
+  assert.match(nav, /\{n\.register\}/)
+  assert.equal(en.nav.register, 'Register now')
   assert.doesNotMatch(nav, /(to|href)=["'{`]+\/admin/, 'no link to the admin (the string only detects the admin route)')
   assert.match(nav, /aria-expanded/)
   assert.match(nav, /Escape/)
@@ -280,7 +283,8 @@ test('lazy pages hold a full screen of space while they load, so the footer neve
 
 test('the logo link is named by its visible wordmark, and the emblem beside it is decorative', () => {
   assert.doesNotMatch(read('src/components/Navbar.tsx'), /aria-label="NEXUS-E home"/)
-  assert.match(read('src/components/Navbar.tsx'), /<span className="sr-only">Home page<\/span>/)
+  assert.match(read('src/components/Navbar.tsx'), /<span className="sr-only">\{n\.home\}<\/span>/)
+  assert.equal(en.nav.home, 'Home page')
   assert.match(read('src/components/Logo.tsx'), /decorative/)
 })
 

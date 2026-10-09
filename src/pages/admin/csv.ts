@@ -10,6 +10,8 @@ export type Expert = {
   title: string
   organisation: string
   position: string
+  /** Older rows and records from an older server have none: they were all registered in Nigeria. */
+  country?: string
   state: string
   phone: string | null
   email: string | null
@@ -63,6 +65,8 @@ const COLUMNS: { header: string; get: (e: Expert) => string }[] = [
   { header: 'Reviewed at', get: (e) => e.reviewed_at ?? '' },
   { header: 'Reviewed by', get: (e) => e.reviewed_by ?? '' },
   { header: 'Verified at', get: (e) => e.verified_at ?? '' },
+  // Added last, so a spreadsheet that reads the earlier columns by position keeps working.
+  { header: 'Country', get: (e) => e.country ?? 'Nigeria' },
 ]
 
 /** Quote a cell, and defuse spreadsheet formulas (=, +, -, @) typed into the public form. */
@@ -97,6 +101,7 @@ const INTEREST_COLUMNS: { header: string; get: (e: InterestedExpert) => string }
   { header: 'Availability', get: (e) => e.availability },
   { header: 'Profile URL', get: (e) => e.profile_url ?? '' },
   { header: 'Verification status', get: (e) => statusLabel(e.verification_status) },
+  { header: 'Country', get: (e) => e.country ?? 'Nigeria' },
 ]
 
 /** The experts who are interested in one opportunity, with the details they registered. */

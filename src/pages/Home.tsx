@@ -1,26 +1,28 @@
+import '../i18n/enSite'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { faqJsonLdText } from '../lib/faqSchema'
 import { usePageInfo } from '../lib/pageInfo'
 import Hero from './home/Hero'
-import { FAQ } from './home/content'
+import { useI18n } from '../i18n/I18nProvider'
 
 // Everything below the first screen loads after the hero has painted, so the headline is never held up.
 const HomeSections = lazy(() => import('./home/HomeSections'))
 
 export default function Home() {
   const [below, setBelow] = useState(false)
+  const { locale, m } = useI18n()
   // The canonical address is the bare home page, so a link with a tracking parameter (the QR code) counts as the same page.
-  usePageInfo({ title: 'NEXUS-E | African Environmental Expertise Exchange', canonicalPath: '/' })
+  usePageInfo({ title: m.home.pageTitle, canonicalPath: '/' })
 
   // FAQPage structured data for the questions further down the page. Added now, so a crawler does not have to scroll.
   useEffect(() => {
     const script = document.createElement('script')
     script.type = 'application/ld+json'
     script.id = 'faq-jsonld'
-    script.text = faqJsonLdText(FAQ.items)
+    script.text = faqJsonLdText(m.home.faq.items)
     document.head.appendChild(script)
     return () => script.remove()
-  }, [])
+  }, [m])
 
   useEffect(() => {
     // After the first paint, or sooner if the person starts to scroll or follow a link to a section.
@@ -42,7 +44,8 @@ export default function Home() {
 
   return (
     <>
-      <Hero />
+      {/* The key remounts the hero when the language changes, so its rolling lines start fresh in the new language. */}
+      <Hero key={locale} />
       {below ? (
         <Suspense fallback={<div className="min-h-[60vh]" aria-hidden="true" />}>
           <HomeSections />

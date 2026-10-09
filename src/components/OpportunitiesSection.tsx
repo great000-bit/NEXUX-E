@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Notice, Spinner } from './ui'
 import { call } from '../lib/portal'
-import { deadlineNote, formatDay, type ExpertOpportunity } from '../lib/opportunities'
+import { daysLeft, formatDay, type ExpertOpportunity } from '../lib/opportunities'
+import { fmt } from '../i18n'
+import { useMessages } from '../i18n/I18nProvider'
 
 type Loaded = { token: string; verified: boolean; items: ExpertOpportunity[] } | { token: string; error: string }
 
 /** Open opportunities for a signed-in expert. Matching ones come first, and say why. */
 export function OpportunitiesSection({ token, onSessionEnded }: { token: string; onSessionEnded: () => void }) {
+  const m = useMessages()
+  const t = m.dashboard.opportunities
+  const note = (deadline: string) => {
+    const d = daysLeft(deadline)
+    return d < 0 ? t.closed : d === 0 ? t.closesToday : d === 1 ? t.oneDayLeft : fmt(t.daysLeft, { n: d })
+  }
   const [loaded, setLoaded] = useState<Loaded | null>(null)
   const [retry, setRetry] = useState(0)
   const [busy, setBusy] = useState<string | null>(null)
@@ -45,38 +53,34 @@ export function OpportunitiesSection({ token, onSessionEnded }: { token: string;
     )
     setNotes((n) => ({
       ...n,
-      [o.id]: on ? 'Thank you. The NEXUS-E team can now see that you are interested.' : 'You have withdrawn your interest.',
+      [o.id]: on ? t.thanks : t.withdrawn,
     }))
   }
 
   return (
     <section aria-labelledby="opps-title" className="space-y-4">
       <div>
-        <h2 id="opps-title" className="text-2xl font-semibold text-green-900">Opportunities</h2>
-        <p className="mt-1 text-[0.95rem] text-ink-700">
-          Open projects from NEXUS-E. Ones that match your registered expertise or assignments come first.
-        </p>
+        <h2 id="opps-title" className="text-2xl font-semibold text-green-900">{t.title}</h2>
+        <p className="mt-1 text-[0.95rem] text-ink-700">{t.intro}</p>
       </div>
 
-      {!current && <div className="grid place-items-center py-8 text-green-800"><Spinner label="Loading opportunities" className="h-7 w-7" /></div>}
+      {!current && <div className="grid place-items-center py-8 text-green-800"><Spinner label={t.loading} className="h-7 w-7" /></div>}
 
       {current && 'error' in current && (
         <div className="space-y-3">
-          <Notice title="We could not load the opportunities">{current.error}</Notice>
-          <button className="btn btn-ghost" onClick={() => { setLoaded(null); setRetry((r) => r + 1) }}>Try again</button>
+          <Notice title={t.loadFailed}>{current.error}</Notice>
+          <button className="btn btn-ghost" onClick={() => { setLoaded(null); setRetry((r) => r + 1) }}>{m.common.tryAgain}</button>
         </div>
       )}
 
       {current && 'items' in current && !current.verified && current.items.length > 0 && (
-        <Notice tone="info" title="Only Verified Experts can express interest">
-          You can read the opportunities below now. Once your verification is approved, you can tell us you are interested.
-        </Notice>
+        <Notice tone="info" title={t.onlyVerifiedTitle}>{t.onlyVerifiedText}</Notice>
       )}
 
       {current && 'items' in current && current.items.length === 0 && (
         <div className="card p-6 text-center">
-          <h3 className="text-lg font-semibold text-green-900">No open opportunities right now</h3>
-          <p className="mt-1 text-[0.95rem] text-ink-700">When one is published, it will appear here.</p>
+          <h3 className="text-lg font-semibold text-green-900">{t.noneTitle}</h3>
+          <p className="mt-1 text-[0.95rem] text-ink-700">{t.noneText}</p>
         </div>
       )}
 
@@ -91,7 +95,7 @@ export function OpportunitiesSection({ token, onSessionEnded }: { token: string;
                     <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="m3.5 8.5 3 3 6-7" />
                     </svg>
-                    Matches your profile
+                    {t.matches}
                   </span>
                 )}
               </div>
@@ -99,12 +103,12 @@ export function OpportunitiesSection({ token, onSessionEnded }: { token: string;
                 {o.opp_type} · {o.location}
               </p>
               <p className="text-sm text-ink-500">
-                Express interest by {formatDay(o.deadline)} ({deadlineNote(o.deadline)})
+                {fmt(t.expressBy, { date: formatDay(o.deadline, m.meta.dateLocale), note: note(o.deadline) })}
               </p>
               <p className="mt-3 whitespace-pre-wrap break-words text-[0.95rem] text-ink-900">{o.description}</p>
               <p className="mt-3 text-sm text-ink-500">
-                <span className="font-bold text-ink-700">Expertise needed: </span>
-                {o.expertise_needed.join(', ')}
+                <span className="font-bold text-ink-700">{t.needed}</span>
+                {o.expertise_needed.map((x) => (m.options.expertise as Record<string, string>)[x] ?? x).join(', ')}
               </p>
 
               {errors[o.id] && <p className="field-error" role="alert">{errors[o.id]}</p>}
@@ -113,14 +117,14 @@ export function OpportunitiesSection({ token, onSessionEnded }: { token: string;
               <div className="mt-4">
                 {o.interested ? (
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="text-sm font-bold text-green-800">You have expressed interest.</span>
+                    <span className="text-sm font-bold text-green-800">{t.interested}</span>
                     <button className="btn btn-ghost !min-h-11" disabled={busy === o.id} onClick={() => void setInterest(o, false)}>
-                      {busy === o.id ? (<><Spinner label="Saving" /> Saving</>) : 'Withdraw interest'}
+                      {busy === o.id ? (<><Spinner label={m.dashboard.saving} /> {m.dashboard.saving}</>) : t.withdraw}
                     </button>
                   </div>
                 ) : current.verified ? (
                   <button className="btn btn-primary w-full sm:w-auto" disabled={busy === o.id} onClick={() => void setInterest(o, true)}>
-                    {busy === o.id ? (<><Spinner label="Saving" /> Saving</>) : 'Express interest'}
+                    {busy === o.id ? (<><Spinner label={m.dashboard.saving} /> {m.dashboard.saving}</>) : t.express}
                   </button>
                 ) : null}
               </div>

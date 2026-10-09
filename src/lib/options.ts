@@ -7,8 +7,10 @@ export const STATES = [
   'Cross River', 'Delta', 'Ebonyi', 'Edo', 'Ekiti', 'Enugu', 'Federal Capital Territory',
   'Gombe', 'Imo', 'Jigawa', 'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara',
   'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo', 'Osun', 'Oyo', 'Plateau', 'Rivers',
-  'Sokoto', 'Taraba', 'Yobe', 'Zamfara', 'Outside Nigeria',
+  'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
 ] as const
+
+// Only used when the country is Nigeria. Every other country types its own state, province or region.
 
 export const EXPERTISE = [
   'ESIA and Safeguards',

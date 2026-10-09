@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
+import { en } from './i18n/en.ts'
 import path from 'node:path'
 
 // Speed rules for the public pages: no heavy client on the directory, early chunk and connection hints, stable height.
@@ -51,7 +52,8 @@ test('page titles follow the page, private flows say noindex, and the home and r
   }
   assert.match(read('src/pages/Home.tsx'), /canonicalPath: '\/'/)
   assert.match(read('src/pages/Register.tsx'), /canonicalPath: '\/register'/)
-  assert.match(read('src/pages/Register.tsx'), /title: 'Register as an expert \| NEXUS-E'/)
+  assert.match(read('src/pages/Register.tsx'), /title: r\.pageTitle/)
+  assert.equal(en.register.pageTitle, 'Register as an expert | NEXUS-E')
   // The hero's corner labels are links, so they are 44 px tall.
   assert.match(read('src/pages/home/home.css'), /\.reel-node \{ --reel-h: 2\.75rem; \}/)
 })

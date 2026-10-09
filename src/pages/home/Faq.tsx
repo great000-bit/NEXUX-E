@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button, GlassCard, Section } from '../../components/ds'
 import { Icon } from '../../components/icons'
 import { fadeUp, softZoom } from './aos'
-import { FAQ } from './content'
+import { useMessages } from '../../i18n/I18nProvider'
 
 /**
  * Frequently asked questions: glass cards, one open at a time, the first open by default.
@@ -11,6 +11,7 @@ import { FAQ } from './content'
  * opacity, which the reduced-motion rule turns into an instant change.
  */
 export function Faq() {
+  const FAQ = useMessages().home.faq
   const [open, setOpen] = useState(0)
 
   return (
@@ -61,8 +62,8 @@ export function Faq() {
           <span className="icon-tile"><Icon name="user-search" className="h-6 w-6" /></span>
           <p className="mt-5 font-display text-xl font-semibold leading-snug text-white sm:text-2xl">{FAQ.intro}</p>
           <div className="mt-6 grid gap-3">
-            <Button to="/register" variant="accent" icon="arrow-right">Register now</Button>
-            <Button to="/verify" variant="secondary" icon="arrow-right">Verify my profile</Button>
+            <Button to="/register" variant="accent" icon="arrow-right">{FAQ.register}</Button>
+            <Button to="/verify" variant="secondary" icon="arrow-right">{FAQ.verify}</Button>
           </div>
         </GlassCard>
       </div>
