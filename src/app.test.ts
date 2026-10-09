@@ -17,7 +17,8 @@ const publicFiles = (dir: string): string[] =>
 
 // The directory keeps its search filters in the address bar. It is the only public page that does, and it
 // reads a fixed list of known keys (see the next test), so ?src=flier still changes nothing.
-const READS_ITS_OWN_FILTERS = [path.join('src', 'pages', 'Directory.tsx'), path.join('src', 'lib', 'directoryFilters.ts')]
+// rest.ts only builds the address of a database call; it never looks at the page's own query string.
+const READS_ITS_OWN_FILTERS = [path.join('src', 'pages', 'Directory.tsx'), path.join('src', 'lib', 'directoryFilters.ts'), path.join('src', 'lib', 'rest.ts')]
 
 test('no public page reads the query string, so ?src=flier changes nothing', () => {
   const offenders = publicFiles('src')

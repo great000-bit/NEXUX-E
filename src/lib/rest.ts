@@ -35,10 +35,53 @@ export async function rpcCall(name: string, args: Record<string, unknown>, timeo
   }
 }
 
+/** The address of a read-only function call. The page's early request (see vite.config.ts) builds the very same address. */
+export function rpcGetUrl(base: string, key: string, name: string, args: Record<string, string | number | null | undefined>): string {
+  const q = new URLSearchParams({ apikey: key })
+  for (const [k, v] of Object.entries(args)) if (v !== null && v !== undefined) q.set(k, String(v))
+  return `${base}/rest/v1/rpc/${name}?${q.toString()}`
+}
+
+type Early = { url: string; response: Promise<Response> }
+
+/**
+ * Calls a read-only (stable) public function with a plain GET. The public key goes in the address, and there are no custom
+ * headers, so the browser makes no CORS preflight request: one round trip instead of two. Only for the two directory
+ * functions, which are declared stable in the database; anything that writes uses rpcCall (POST).
+ *
+ * On the directory and profile addresses the HTML starts this same request before the main script has even arrived
+ * (window.__early). If it is the request being asked for now, its answer is used, once, instead of asking again.
+ */
+export async function rpcGet(name: string, args: Record<string, string | number | null | undefined>, timeoutMs = 12000): Promise<RpcCall> {
+  const url = rpcGetUrl(SUPABASE_URL ?? '', SUPABASE_ANON_KEY ?? '', name, args)
+  const ctl = new AbortController()
+  const timer = window.setTimeout(() => ctl.abort(), timeoutMs)
+  try {
+    const w = window as unknown as { __early?: Early }
+    const early = w.__early
+    let res: Response | null = null
+    if (early && early.url === url) {
+      w.__early = undefined // used once: a later search or a revisit asks afresh
+      res = await early.response.catch(() => null)
+    }
+    if (!res) res = await fetch(url, { method: 'GET', signal: ctl.signal })
+    const body = (await res.json().catch(() => null)) as { code?: string; message?: string } | unknown
+    if (!res.ok) {
+      const b = (body ?? {}) as { code?: string; message?: string }
+      return { ok: false, status: res.status, code: b.code, message: b.message ?? `HTTP ${res.status}` }
+    }
+    return { ok: true, data: body }
+  } catch (e) {
+    return { ok: false, status: 0, message: e instanceof DOMException && e.name === 'AbortError' ? 'request timed out' : 'Failed to fetch' }
+  } finally {
+    window.clearTimeout(timer)
+  }
+}
+
 export type RpcResult = { ok: true; data: unknown } | { ok: false }
 
-/** The simple form: success with data, or just { ok: false }. */
-export async function publicRpc(name: string, args: Record<string, unknown>, timeoutMs = 12000): Promise<RpcResult> {
-  const res = await rpcCall(name, args, timeoutMs)
+/** The simple form for the read-only directory functions: success with data, or just { ok: false }. */
+export async function publicRpc(name: string, args: Record<string, string | number | null | undefined>, timeoutMs = 12000): Promise<RpcResult> {
+  const res = await rpcGet(name, args, timeoutMs)
   return res.ok ? { ok: true, data: res.data } : { ok: false }
 }
