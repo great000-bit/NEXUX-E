@@ -91,7 +91,8 @@ test('the star dust canvas stops when scrolled away or hidden, and is only mount
 const allCopy = JSON.stringify({ HERO, HERO_NODES, TAGLINES, MEMBERSHIP_STRIP, ABOUT, HOW, WHY, AUDIENCE, PRIVACY, DIRECTORY, CTA, STEPS })
 
 test('the headline, buttons and corner nodes are exactly the ones asked for', () => {
-  assert.equal(HERO.eyebrow, 'Join the founding experts, Benin 2026')
+  assert.equal(HERO.eyebrow, 'Join the founding experts')
+  assert.equal(HERO.subline, 'Register once as an environmental professional and be discovered for projects, research and development finance.')
   assert.equal(HERO.headlineA, "Don't just be qualified.")
   assert.equal(HERO.headlineB, 'Be found.')
   assert.equal(HERO.small, '90 seconds. One professional profile. More opportunities.')
@@ -109,9 +110,10 @@ test('the membership strip lists bodies a person can add, and never reads as par
   assert.doesNotMatch(allCopy, /partner|endorse|trusted by|as seen/i)
 })
 
-test('no invented numbers: the only figures on the page are 90 (seconds) and 2026 (Benin)', () => {
+test('no invented numbers: the only figure in the page copy is 90 (seconds); "Benin 2026" is gone', () => {
   const digits = allCopy.match(/\d+/g) ?? []
-  assert.deepEqual([...new Set(digits)].sort(), ['2026', '90'])
+  assert.deepEqual([...new Set(digits)].sort(), ['90'])
+  assert.doesNotMatch(allCopy, /benin/i)
   assert.doesNotMatch(allCopy, /testimonial|\bstars?\b|\d+\s*(\+|%|k\b)/i)
 })
 
@@ -138,7 +140,7 @@ test('no em or en dashes anywhere in the new or restyled source', () => {
 
 test('home sections appear in the order asked for', () => {
   const src = read('src/pages/home/HomeSections.tsx')
-  const order = ['<About />', '<Expertise />', '<HowItWorks />', '<WhyRegister />', '<WhoFindsYou />', '<Privacy />', '<DirectoryTeaser />', '<FinalCta />']
+  const order = ['<About />', '<Expertise />', '<HowItWorks />', '<WhyRegister />', '<WhoFindsYou />', '<Privacy />', '<DirectoryTeaser />', '<Faq />', '<FinalCta />']
   const at = order.map((o) => src.indexOf(o))
   assert.ok(at.every((i) => i > 0), 'every section is rendered')
   assert.deepEqual([...at].sort((a, b) => a - b), at, 'in the right order')
