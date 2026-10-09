@@ -48,6 +48,7 @@ test('the app listens for vite:preloadError and wraps everything in the error bo
   const main = read('src/main.tsx')
   assert.match(main, /addEventListener\('vite:preloadError'/)
   assert.match(main, /reloadOnce\(\)/)
+  assert.match(main, /navigator\.onLine === false\) return/, 'no reload while offline: it would replace the page with the browser offline screen')
   assert.match(main, /<ErrorBoundary>[\s\S]*<BrowserRouter>[\s\S]*<App \/>[\s\S]*<\/BrowserRouter>[\s\S]*<\/ErrorBoundary>/)
 })
 
