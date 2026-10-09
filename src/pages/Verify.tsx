@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { TextField } from '../components/fields'
 import { Notice, Spinner } from '../components/ui'
+import { usePageInfo } from '../lib/pageInfo'
 import { call, getSession, saveSession } from '../lib/portal'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
@@ -23,9 +24,10 @@ export default function Verify() {
   const headingRef = useRef<HTMLHeadingElement>(null)
   const sessionMessage = (location.state as { message?: string } | null)?.message
 
+  usePageInfo({ title: 'Verify your profile | NEXUS-E', noindex: true })
+
   // Someone who is already signed in goes straight to their dashboard.
   useEffect(() => {
-    document.title = 'Verify your profile | NEXUS-E'
     if (getSession()) navigate('/verify/dashboard', { replace: true })
   }, [navigate])
 
