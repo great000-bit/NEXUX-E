@@ -67,3 +67,25 @@ test('every response carries the basic security headers, and the long cache stay
   assert.match(keys['Permissions-Policy'], /camera=\(\)/)
   assert.ok(!all.headers.some((h) => /immutable/.test(h.value)), 'nothing long-lived on the page itself')
 })
+
+test('the directory and profile data is requested from the HTML, in parallel with the script, and picked up once', () => {
+  const cfg = read('vite.config.ts')
+  assert.match(cfg, /window\.__early=\{url:u,response:fetch\(u\)\}/)
+  assert.match(cfg, /directory_profile/)
+  assert.match(cfg, /\['p_sort','name'\],\['p_limit','12'\],\['p_offset','0'\]/)
+  assert.match(cfg, /!location\.search/, 'only the plain directory is requested early, never a filtered one')
+  assert.match(cfg, /config\.env\.VITE_SUPABASE_ANON_KEY/, 'the public key comes from the build environment')
+  const rest = read('src/lib/rest.ts')
+  assert.match(rest, /early\.url === url/, 'only an identical request is reused')
+  assert.match(rest, /w\.__early = undefined/, 'used once')
+  assert.match(rest, /if \(!res\) res = await fetch\(url/, 'falls back to a normal request if the early one failed')
+  // The two directory functions are read-only, so a GET without a preflight is allowed for them (stable in the database).
+  assert.match(rest, /method: 'GET'/)
+  assert.doesNotMatch(read('src/lib/api.ts'), /rpcGet/, 'registration writes, so it stays a POST')
+})
+
+test('the admin sign-in states all hold one height, so the footer does not jump', () => {
+  const a = read('src/pages/admin/Admin.tsx')
+  assert.match(a, /function Gate[\s\S]*min-h-\[70svh\]/)
+  assert.ok((a.match(/<Gate>/g) ?? []).length >= 4, 'not configured, checking, sign in and no access are all gated')
+})
