@@ -41,3 +41,17 @@ test('the long-lived font and asset files are cached for a year and nothing else
   const long = (v.headers ?? []).filter((h) => h.headers.some((x) => /immutable/.test(x.value))).map((h) => h.source)
   assert.deepEqual(long.sort(), ['/assets/(.*)', '/fonts/(.*)'].sort())
 })
+
+test('page titles follow the page, private flows say noindex, and the home and register pages name their canonical address', () => {
+  const hook = read('src/lib/pageInfo.ts')
+  assert.match(hook, /document\.title = previousTitle/)
+  assert.match(hook, /noindex, nofollow/)
+  for (const f of ['src/pages/Verify.tsx', 'src/pages/VerifyDashboard.tsx', 'src/pages/Registered.tsx', 'src/pages/NotFound.tsx']) {
+    assert.match(read(f), /usePageInfo\(\{[^}]*noindex: true/, f + ' is noindex')
+  }
+  assert.match(read('src/pages/Home.tsx'), /canonicalPath: '\/'/)
+  assert.match(read('src/pages/Register.tsx'), /canonicalPath: '\/register'/)
+  assert.match(read('src/pages/Register.tsx'), /title: 'Register as an expert \| NEXUS-E'/)
+  // The hero's corner labels are links, so they are 44 px tall.
+  assert.match(read('src/pages/home/home.css'), /\.reel-node \{ --reel-h: 2\.75rem; \}/)
+})
