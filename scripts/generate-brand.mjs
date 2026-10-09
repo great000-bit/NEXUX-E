@@ -66,8 +66,8 @@ const og = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width
   <text x="76" y="318" font-family="Segoe UI" font-weight="600" font-size="86" fill="#ffffff" letter-spacing="-3.2">Don't just be qualified.</text>
   <text x="76" y="418" font-family="Segoe UI" font-weight="600" font-size="86" fill="url(#gt)" letter-spacing="-3.2">Be found.</text>
   <text x="78" y="486" font-family="Segoe UI" font-size="26" fill="#ffffff" fill-opacity=".84">Register once and be discovered for projects, research and development finance.</text>
-  <rect x="76" y="528" width="400" height="48" rx="24" fill="#c5dc3f"/>
-  <text x="276" y="560" text-anchor="middle" font-family="Segoe UI" font-weight="700" font-size="21" fill="#04140d">Join the founding experts, Benin 2026</text>
+  <rect x="76" y="528" width="330" height="48" rx="24" fill="#c5dc3f"/>
+  <text x="241" y="560" text-anchor="middle" font-family="Segoe UI" font-weight="700" font-size="21" fill="#04140d">Join the founding experts</text>
   <text x="1124" y="560" text-anchor="end" font-family="Segoe UI" font-weight="600" font-size="22" fill="#ffffff" fill-opacity=".78">register.nexuse.org</text>
 </svg>`
 write('og-image.png', png(og, 1200))
