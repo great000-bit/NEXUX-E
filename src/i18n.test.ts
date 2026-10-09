@@ -88,9 +88,6 @@ test('the language registry is ready for Arabic and Swahili: each language carri
   for (const l of LOCALES) assert.ok(l.dir === 'ltr' || l.dir === 'rtl')
   assert.equal(localeInfo('fr').native, 'Français')
   assert.equal(localeInfo('pt').native, 'Português')
-  const provider = read('src/i18n/I18nProvider.tsx')
-  assert.match(provider, /root\.lang = effective/)
-  assert.match(provider, /root\.dir = localeInfo\(effective\)\.dir/)
 })
 
 test('the browser language is matched, and only a non-English browser sees the first visit prompt', () => {
@@ -110,33 +107,21 @@ test('fmt fills placeholders and leaves unknown ones visible', () => {
   assert.equal(fmt('Hello {name}', {}), 'Hello {name}')
 })
 
-test('the choice is remembered in localStorage inside try/catch, and the picker is a labelled native select', () => {
+test('the language feature is switched off: English only, no picker, no prompt, no stored choice, no other language loaded', () => {
+  const provider = read('src/i18n/I18nProvider.tsx')
+  assert.match(provider, /root\.lang = 'en'/)
+  assert.match(provider, /root\.dir = 'ltr'/)
+  assert.doesNotMatch(provider, /localStorage|navigator\.language|role="dialog"|loadMessages|import\(/)
   const core = read('src/i18n/index.ts')
-  assert.match(core, /try \{\n\s+const v = localStorage\.getItem/)
-  assert.match(core, /try \{\n\s+localStorage\.setItem/)
-  const picker = read('src/components/LanguagePicker.tsx')
-  assert.match(picker, /<select/)
-  assert.match(picker, /sr-only/)
-  assert.match(picker, /lang=\{l\.code\}/)
-  const navbar = read('src/components/Navbar.tsx')
-  assert.match(navbar, /<LanguagePicker/)
-  const main = read('src/main.tsx')
-  assert.match(main, /initI18n\(\)\.then/)
-})
-
-test('the first visit prompt is a modal dialog that closes with Escape and never changes the language by itself', () => {
-  const p = read('src/i18n/I18nProvider.tsx')
-  assert.match(p, /role="dialog"/)
-  assert.match(p, /aria-modal="true"/)
-  assert.match(p, /e\.key === 'Escape'/)
-  assert.match(p, /if \(storedLocale\(\)\) return/)
-  assert.match(p, /prefersOtherLanguage\(languages\)/)
-  assert.doesNotMatch(p, /setLocaleState\(suggested/)
-})
-
-test('the admin area stays in English whatever language was chosen', () => {
-  const p = read('src/i18n/I18nProvider.tsx')
-  assert.match(p, /const effective: LocaleCode = isAdmin \? 'en' : locale/)
+  assert.doesNotMatch(core, /localStorage|import\(|storedLocale|loadMessages/)
+  assert.doesNotMatch(read('src/main.tsx'), /initI18n/)
+  assert.doesNotMatch(read('src/components/Navbar.tsx'), /LanguagePicker/)
+  // Nothing in the compiled source imports the other languages, so they are never bundled.
+  const walk = (dir: string): string[] => fs.readdirSync(path.join(root, dir), { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]))
+  for (const f of walk('src').filter((f) => /\.tsx?$/.test(f) && !/\.test\./.test(f))) {
+    assert.doesNotMatch(read(f), /from '(\.\.?\/)+(i18n\/)?(fr|pt)'|import\('(\.\.?\/)+(i18n\/)?(fr|pt)'\)/, f)
+  }
+  assert.ok(fs.existsSync(path.join(root, 'src/i18n/fr.ts')) && fs.existsSync(path.join(root, 'src/i18n/pt.ts')), 'the translation files are kept for later')
 })
 
 test('the registration page does not carry the home page words: the site half of English is loaded only by the pages that read it', () => {

@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom'
 import { Logo } from './Logo'
 import { Icon } from './icons'
 import { Button } from './ds'
-import { LanguagePicker } from './LanguagePicker'
 import { useMessages } from '../i18n/I18nProvider'
 
 /** Anchors on the home page. They work from any page because the layout scrolls to the hash. */
@@ -107,7 +106,6 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-1">
-          <LanguagePicker className="me-1" />
           <Link
             to="/verify"
             className="hidden min-h-11 items-center gap-2.5 rounded-full px-4 text-sm font-semibold text-white/90 transition-colors duration-150 hover:bg-white/10 hover:text-white lg:inline-flex"
