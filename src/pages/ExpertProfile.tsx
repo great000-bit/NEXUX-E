@@ -97,6 +97,7 @@ export default function ExpertProfile() {
     )
   }
 
+  const affiliations = profile.affiliations ?? []
   const link = safeProfileUrl(profile.profile_url)
   const verified = monthYear(profile.verified_at, m.meta.dateLocale)
   const place = [profile.state, profile.country ? label('countries', profile.country) : null].filter(Boolean).join(', ')
@@ -150,6 +151,32 @@ export default function ExpertProfile() {
           )}
         </dl>
       </section>
+
+      {affiliations.length > 0 && (
+        <section className="glass-flat rounded-[var(--radius-xl)] p-5 sm:p-6" aria-labelledby="profile-affiliations">
+          <h2 id="profile-affiliations" className="text-xl font-semibold text-green-900">{t.affiliationsTitle}</h2>
+          <p className="mt-1 text-sm text-ink-500">{t.affiliationsNote}</p>
+          {(['professional', 'ngo'] as const).map((kind) => {
+            const group = affiliations.filter((a) => a.kind === kind)
+            if (group.length === 0) return null
+            return (
+              <div key={kind} className="mt-4">
+                <h3 className="text-sm font-bold text-ink-700">{kind === 'ngo' ? t.ngos : t.professionalBodies}</h3>
+                <ul className="mt-1 divide-y divide-line text-sm">
+                  {group.map((a) => (
+                    <li key={`${kind}-${a.name}`} className="py-2 text-ink-900">
+                      <span className="font-semibold">{a.name}</span>
+                      {(kind === 'ngo' ? a.affiliation_type && (m.options.affiliationTypes as Record<string, string>)[a.affiliation_type] : a.membership_category && (m.options.membershipCategories as Record<string, string>)[a.membership_category]) && (
+                        <span className="text-ink-500"> {'·'} {kind === 'ngo' ? (m.options.affiliationTypes as Record<string, string>)[a.affiliation_type ?? ''] : (m.options.membershipCategories as Record<string, string>)[a.membership_category ?? '']}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          })}
+        </section>
+      )}
 
       <p className="text-sm text-ink-500">{t.note}</p>
     </article>

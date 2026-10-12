@@ -27,6 +27,8 @@ function fieldError(code: string, country: string): { field: ErrorKey; message: 
     case 'email_required': return { field: 'email', message: v.emailRequired }
     case 'consent_required': return { field: 'consent_contact', message: v.consent }
     case 'too_many_secondary': return { field: 'secondary_expertise', message: e.tooManySecondary }
+    case 'invalid_affiliation': return { field: 'affiliations', message: e.invalidAffiliation }
+    case 'too_many_affiliations': return { field: 'affiliations', message: e.tooManyAffiliations }
     default: return null
   }
 }

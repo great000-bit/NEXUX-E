@@ -1,5 +1,6 @@
 import { DEFAULT_COUNTRY, hasStateList } from './countries'
 import { fmt, messages } from '../i18n'
+import { affiliationProblem, affiliationsPayload, legacyFields, MAX_AFFILIATIONS, type AffiliationEntry } from './institutions'
 import { MAX_SECONDARY, STATES } from './options'
 
 export type FormData = {
@@ -20,6 +21,10 @@ export type FormData = {
   memberships: string[]
   nes_number: string
   iepn_status: string
+  /** Optional, self-declared memberships and affiliations (professional bodies and environmental NGOs). */
+  affiliations: AffiliationEntry[]
+  /** Consent to show them on the public profile, marked as self-declared. Off unless turned on. */
+  affiliations_public: boolean
   // Screen 3
   assignments: string[]
   availability: string
@@ -46,6 +51,8 @@ export const emptyForm: FormData = {
   memberships: [],
   nes_number: '',
   iepn_status: '',
+  affiliations: [],
+  affiliations_public: false,
   assignments: [],
   availability: '',
   profile_url: '',
@@ -72,6 +79,7 @@ export const FIELD_INFO: Partial<Record<ErrorKey, { label: string; step: StepInd
   phone: { label: 'Phone number', step: 0, anchor: 'phone' },
   primary_expertise: { label: 'Primary expertise', step: 1, anchor: 'primary_expertise' },
   secondary_expertise: { label: 'Secondary expertise', step: 1, anchor: 'secondary_expertise' },
+  affiliations: { label: 'Memberships and affiliations', step: 1, anchor: 'affiliations' },
   years_experience: { label: 'Years of experience', step: 1, anchor: 'years_experience' },
   qualification: { label: 'Highest qualification', step: 1, anchor: 'qualification' },
   availability: { label: 'Geographic availability', step: 2, anchor: 'availability' },
@@ -183,6 +191,11 @@ export function validateStep(step: StepIndex, f: FormData): Errors {
     req('years_experience', v.years)
     req('qualification', v.qualification)
     for (const k of ['nes_number', 'iepn_status'] as const) tooLong(k)
+    // Optional, and never a reason to stop someone registering: only a name that is too short or text that is too long is named.
+    const problems = f.affiliations.map(affiliationProblem).filter(Boolean)
+    if (f.affiliations.length > MAX_AFFILIATIONS) e.affiliations = fmt(v.tooManyAffiliations, { max: MAX_AFFILIATIONS })
+    else if (problems.includes('name')) e.affiliations = v.affiliationName
+    else if (problems.includes('long')) e.affiliations = v.affiliationLong
     if (f.secondary_expertise.length > MAX_SECONDARY) {
       e.secondary_expertise = fmt(v.secondaryMax, { max: MAX_SECONDARY })
     }
@@ -214,6 +227,7 @@ export function firstInvalidStep(f: FormData, upTo: StepIndex = 2): { step: Step
 
 export function toPayload(f: FormData) {
   const url = f.profile_url.trim()
+  const legacy = legacyFields(f.affiliations)
   return {
     full_name: f.full_name.trim().slice(0, FIELD_LIMITS.full_name),
     title: f.title,
@@ -228,9 +242,13 @@ export function toPayload(f: FormData) {
     secondary_expertise: f.secondary_expertise.filter((x) => x !== f.primary_expertise),
     years_experience: f.years_experience,
     qualification: f.qualification,
-    memberships: f.memberships,
-    nes_number: f.memberships.includes('NES') ? f.nes_number.trim().slice(0, FIELD_LIMITS.nes_number) : '',
-    iepn_status: f.memberships.includes('IEPN') ? f.iepn_status.trim().slice(0, FIELD_LIMITS.iepn_status) : '',
+    // The older fields stay filled (from the affiliations as well as from an older saved draft), so the directory filters and
+    // the admin tools that read them keep working.
+    memberships: [...new Set([...f.memberships, ...legacy.memberships])],
+    nes_number: (legacy.nes_number || (f.memberships.includes('NES') ? f.nes_number.trim() : '')).slice(0, FIELD_LIMITS.nes_number),
+    iepn_status: (legacy.iepn_status || (f.memberships.includes('IEPN') ? f.iepn_status.trim() : '')).slice(0, FIELD_LIMITS.iepn_status),
+    affiliations: affiliationsPayload(f.affiliations),
+    affiliations_public: f.affiliations_public && f.affiliations.length > 0,
     assignments: f.assignments,
     availability: f.availability,
     profile_url: (url && !/^https?:\/\//i.test(url) ? `https://${url}` : url).slice(0, FIELD_LIMITS.profile_url),

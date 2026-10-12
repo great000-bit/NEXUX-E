@@ -6,6 +6,19 @@ import { en } from './i18n/en.ts'
 import { fr } from './i18n/fr.ts'
 import { ar } from './i18n/ar.ts'
 import { pt } from './i18n/pt.ts'
+import { sw } from './i18n/sw.ts'
+import { am } from './i18n/am.ts'
+import { ha } from './i18n/ha.ts'
+import { yo } from './i18n/yo.ts'
+import { ig } from './i18n/ig.ts'
+import { zu } from './i18n/zu.ts'
+import { xh } from './i18n/xh.ts'
+import { af } from './i18n/af.ts'
+import { so } from './i18n/so.ts'
+import { om } from './i18n/om.ts'
+import { mg } from './i18n/mg.ts'
+import { rw } from './i18n/rw.ts'
+import { sn } from './i18n/sn.ts'
 import { fmt } from './i18n/types.ts'
 import { withEnglishFallback } from './i18n/fallback.ts'
 import { DEFAULT_LOCALE, LOCALES, localeInfo, PLANNED_LANGUAGES } from './i18n/locales.ts'
@@ -31,7 +44,8 @@ function flatten(value: unknown, prefix = ''): Record<string, string> {
 }
 
 const EN = flatten(en)
-const OTHERS = { fr: flatten(fr), ar: flatten(ar), pt: flatten(pt) }
+const ALL_OTHERS = { fr, ar, pt, sw, am, ha, yo, ig, zu, xh, af, so, om, mg, rw, sn }
+const OTHERS = Object.fromEntries(Object.entries(ALL_OTHERS).map(([k, v]) => [k, flatten(v)])) as Record<keyof typeof ALL_OTHERS, Record<string, string>>
 const placeholders = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort().join(',')
 
 test('every language has exactly the same keys and list lengths as English', () => {
@@ -65,7 +79,7 @@ test('nothing visible says Nigerian in any language', () => {
 test('long texts were really translated, not left in English', () => {
   for (const [code, dict] of Object.entries(OTHERS)) {
     for (const [key, text] of Object.entries(dict)) {
-      if (key.startsWith('meta.')) continue
+      if (key.startsWith('meta.') || key.startsWith('options.countries.')) continue // names of countries are often the same word
       if (EN[key].length > 25 && text === EN[key]) assert.fail(`${code} ${key} is still English`)
     }
   }
@@ -83,7 +97,7 @@ test('the translated option labels cover every stored value', () => {
     ['expertise', EXPERTISE], ['assignments', ASSIGNMENTS], ['qualifications', QUALIFICATIONS], ['years', YEARS],
     ['memberships', MEMBERSHIPS], ['countries', COUNTRIES],
   ]
-  for (const dict of [en, fr, ar, pt]) {
+  for (const dict of [en, ...Object.values(ALL_OTHERS)]) {
     for (const [group, values] of groups) {
       assert.deepEqual(Object.keys(dict.options[group]).sort(), [...values].sort(), `${dict.meta.code} ${group}`)
     }
@@ -91,20 +105,25 @@ test('the translated option labels cover every stored value', () => {
 })
 
 test('the registry carries each language: name, own name, direction and font; Arabic is right to left with its own font', () => {
-  assert.deepEqual(LOCALES.map((l) => l.code), ['en', 'fr', 'ar', 'pt'])
+  assert.deepEqual(LOCALES.map((l) => l.code), ['en', 'fr', 'ar', 'pt', 'sw', 'am', 'ha', 'yo', 'ig', 'zu', 'xh', 'af', 'so', 'om', 'mg', 'rw', 'sn'])
   assert.equal(DEFAULT_LOCALE, 'en')
   for (const l of LOCALES) {
     assert.ok(l.name && l.native, l.code)
     assert.ok(l.dir === 'ltr' || l.dir === 'rtl')
-    assert.ok(l.font === 'latin' || l.font === 'arabic')
+    assert.ok(l.font === 'latin' || l.font === 'arabic' || l.font === 'ethiopic')
+    assert.equal(l.complete, true, `${l.code} is live, so it must be complete`)
   }
   assert.equal(localeInfo('ar').dir, 'rtl')
   assert.equal(localeInfo('ar').font, 'arabic')
   assert.equal(localeInfo('ar').native, 'العربية')
   assert.deepEqual(['fr', 'pt', 'en'].map((c) => localeInfo(c as 'fr').dir), ['ltr', 'ltr', 'ltr'])
+  assert.equal(localeInfo('am').font, 'ethiopic', 'only Amharic needs the Ethiopic script')
+  assert.deepEqual(LOCALES.filter((l) => l.font !== 'latin').map((l) => l.code), ['ar', 'am'])
+  assert.deepEqual(LOCALES.filter((l) => l.dir === 'rtl').map((l) => l.code), ['ar'], 'right to left is Arabic only')
   // The later tiers are known by name, so adding one is a new file, not a redesign.
-  const later = ['sw', 'am', 'ha', 'yo', 'ig', 'zu', 'xh', 'af', 'so', 'om', 'mg', 'rw', 'sn', 'ti', 'rn', 'tn', 'st', 'ny', 'wo', 'ln', 'es']
+  const later = ['ti', 'rn', 'tn', 'st', 'ny', 'wo', 'ln', 'es']
   for (const code of later) assert.ok(PLANNED_LANGUAGES.some((p) => p.code === code), code)
+  for (const l of LOCALES) assert.ok(!(PLANNED_LANGUAGES.map((p) => p.code) as string[]).includes(l.code), `${l.code} is live, not planned`)
 })
 
 test('fmt fills placeholders and leaves unknown ones visible', () => {
@@ -206,5 +225,20 @@ test('the registration page does not carry the home page words: the site half of
 
 test('the privacy line about the country is on the home page in every language, in one sentence', () => {
   assert.equal(en.home.privacy.languageNote, 'We use your country only to pick your language and never store your IP.')
-  for (const dict of [fr, ar, pt]) assert.ok(dict.home.privacy.languageNote.length > 20)
+  for (const dict of Object.values(ALL_OTHERS)) assert.ok(dict.home.privacy.languageNote.length > 20)
+})
+
+test('Amharic is in Ethiopic script: every long text has Ethiopic letters in it', () => {
+  for (const [key, text] of Object.entries(OTHERS.am)) {
+    if (key.startsWith('meta.') || EN[key].length < 25) continue
+    assert.match(text, /[ሀ-፿]/, key)
+  }
+})
+
+test('the new languages never use right to left, and the Ethiopic font is loaded only for Amharic', () => {
+  const fonts = read('src/i18n/fonts.ts')
+  assert.match(fonts, /ethiopic/)
+  assert.ok(fonts.includes("if (font === 'ethiopic')"))
+  assert.doesNotMatch(read('src/main.tsx'), /noto-sans-ethiopic/, 'no font is bundled with the page')
+  assert.doesNotMatch(read('src/index.css'), /noto-sans-ethiopic/)
 })

@@ -1,11 +1,12 @@
-// Português. Translated from the English file, which stays the source of truth. The spelling and vocabulary follow the
-// norm used in Angola, Mozambique, Cabo Verde and the other Portuguese speaking countries of Africa (registo, ficheiro,
-// telemóvel). A native speaker should review the privacy and verification wording before it is relied on for anything formal.
+// pt. Machine translated from the English file, which stays the source of truth. Marked "needs native review" in review.json.
 import type { Messages } from './en'
 
 export const pt: Messages = {
-  meta: { code: 'pt', dateLocale: 'pt-PT', siteName: 'NEXUS-E' },
-
+  meta: {
+    code: 'pt',
+    dateLocale: 'pt-PT',
+    siteName: 'NEXUS-E',
+  },
   common: {
     optional: 'Opcional',
     select: 'Seleccionar',
@@ -18,14 +19,12 @@ export const pt: Messages = {
     notProvided: 'Não indicado',
     opensInNewTab: '(abre num novo separador)',
   },
-
   language: {
     label: 'Idioma',
     popupTitle: 'Escolha o seu idioma',
     popupText: 'O NEXUS-E está disponível nestes idiomas. Pode alterá-lo a qualquer momento no menu no topo da página.',
     suggested: 'Sugerido para o seu navegador',
   },
-
   nav: {
     howItWorks: 'Como funciona',
     expertise: 'Especialidades',
@@ -41,11 +40,9 @@ export const pt: Messages = {
     primary: 'Principal',
     skip: 'Saltar para o conteúdo',
   },
-
   footer: {
     tagline: 'Seja encontrado. Seja verificado. Seja contactado.',
-    about:
-      'O NEXUS-E é o registo africano de especialistas em ambiente verificados. Não substitui o licenciamento legal nem profissional.',
+    about: 'O NEXUS-E é o registo africano de especialistas em ambiente verificados. Não substitui o licenciamento legal nem profissional.',
     explore: 'Explorar',
     register: 'Registar-me',
     verify: 'Verificar o meu perfil',
@@ -56,14 +53,12 @@ export const pt: Messages = {
     designedBy: 'Concebido e desenvolvido por Great Emman-Wori',
     contactDeveloper: 'Contactar o programador',
   },
-
   hero: {
     welcome: 'Bem-vindo',
     eyebrow: 'Junte-se aos especialistas fundadores',
     headlineA: 'Não seja apenas qualificado.',
     headlineB: 'Seja encontrado.',
-    subline:
-      'Registe-se uma só vez como profissional de ambiente e seja descoberto para projectos, investigação e financiamento do desenvolvimento.',
+    subline: 'Registe-se uma só vez como profissional de ambiente e seja descoberto para projectos, investigação e financiamento do desenvolvimento.',
     small: '90 segundos. Um perfil profissional. Mais oportunidades.',
     register: 'Registar-me',
     verify: 'Verificar o meu perfil',
@@ -83,12 +78,20 @@ export const pt: Messages = {
       'As suas credenciais, num único perfil de confiança.',
     ],
     taglines: [
-      { title: 'Seja encontrado.', text: 'Seja descoberto para projectos, investigação e financiamento do desenvolvimento.' },
-      { title: 'Seja verificado.', text: 'Apoie o seu perfil com provas.' },
-      { title: 'Seja contactado.', text: 'Receba oportunidades que se ajustam à sua especialidade.' },
+      {
+        title: 'Seja encontrado.',
+        text: 'Seja descoberto para projectos, investigação e financiamento do desenvolvimento.',
+      },
+      {
+        title: 'Seja verificado.',
+        text: 'Apoie o seu perfil com provas.',
+      },
+      {
+        title: 'Seja contactado.',
+        text: 'Receba oportunidades que se ajustam à sua especialidade.',
+      },
     ],
   },
-
   home: {
     about: {
       eyebrow: 'O que é o NEXUS-E?',
@@ -120,10 +123,22 @@ export const pt: Messages = {
       quote: 'Construir uma rede visível e baseada em provas da especialidade ambiental africana.',
       step: 'Passo {n}',
       steps: [
-        { title: 'Digitalizar', text: 'Digitalize o código QR' },
-        { title: 'Registar', text: 'Preencha um formulário de 90 segundos' },
-        { title: 'Verificar', text: 'Complete o seu perfil e envie as provas' },
-        { title: 'Ser encontrado', text: 'Seja associado a oportunidades relevantes' },
+        {
+          title: 'Digitalizar',
+          text: 'Digitalize o código QR',
+        },
+        {
+          title: 'Registar',
+          text: 'Preencha um formulário de 90 segundos',
+        },
+        {
+          title: 'Verificar',
+          text: 'Complete o seu perfil e envie as provas',
+        },
+        {
+          title: 'Ser encontrado',
+          text: 'Seja associado a oportunidades relevantes',
+        },
       ],
     },
     why: {
@@ -168,7 +183,11 @@ export const pt: Messages = {
       registerToBeListed: 'Registar-me para ser listado',
       loadFailed: 'Não foi possível carregar o diretório neste momento. Pode abri-lo com o botão.',
     },
-    cta: { title: 'Junte-se aos especialistas fundadores', text: '90 segundos. Um perfil profissional. Mais oportunidades.', button: 'Registar-me' },
+    cta: {
+      title: 'Junte-se aos especialistas fundadores',
+      text: '90 segundos. Um perfil profissional. Mais oportunidades.',
+      button: 'Registar-me',
+    },
     faq: {
       eyebrow: 'FAQ',
       title: 'Perguntas frequentes',
@@ -204,9 +223,18 @@ export const pt: Messages = {
     },
     pageTitle: 'NEXUS-E | Bolsa Africana de Especialidade Ambiental',
   },
-
   options: {
-    titles: { Prof: 'Prof.', Dr: 'Dr.', Engr: 'Eng.', Arc: 'Arq.', Tpl: 'Urb.', Mr: 'Sr.', Mrs: 'Sra.', Ms: 'Menina', Other: 'Outro' },
+    titles: {
+      Prof: 'Prof.',
+      Dr: 'Dr.',
+      Engr: 'Eng.',
+      Arc: 'Arq.',
+      Tpl: 'Urb.',
+      Mr: 'Sr.',
+      Mrs: 'Sra.',
+      Ms: 'Menina',
+      Other: 'Outro',
+    },
     expertise: {
       'ESIA and Safeguards': 'AIAS e salvaguardas',
       'Biodiversity and Ecosystems': 'Biodiversidade e ecossistemas',
@@ -227,18 +255,33 @@ export const pt: Messages = {
       'Environmental IT': 'Informática ambiental',
       'Environmental Media': 'Comunicação ambiental',
     },
-    years: { 'Under 5': 'Menos de 5', '5 to 10': '5 a 10', '11 to 20': '11 a 20', '21 to 30': '21 a 30', '30+': 'Mais de 30' },
+    years: {
+      'Under 5': 'Menos de 5',
+      '5 to 10': '5 a 10',
+      '11 to 20': '11 a 20',
+      '21 to 30': '21 a 30',
+      '30+': 'Mais de 30',
+    },
     qualifications: {
       'OND / NCE': 'Diploma nacional (OND / NCE)',
       HND: 'Diploma superior nacional (HND)',
-      "Bachelor's degree (BSc, BEng, BTech)": 'Licenciatura (BSc, BEng, BTech)',
+      'Bachelor\'s degree (BSc, BEng, BTech)': 'Licenciatura (BSc, BEng, BTech)',
       'Postgraduate diploma': 'Diploma de pós-graduação',
-      "Master's degree (MSc, MEng, MPhil)": 'Mestrado (MSc, MEng, MPhil)',
+      'Master\'s degree (MSc, MEng, MPhil)': 'Mestrado (MSc, MEng, MPhil)',
       'Doctorate (PhD)': 'Doutoramento (PhD)',
       'Professional certification only': 'Apenas certificação profissional',
       Other: 'Outra',
     },
-    memberships: { NES: 'NES', IEPN: 'IEPN', NSE: 'NSE', NIA: 'NIA', NITP: 'NITP', NIM: 'NIM', IUCN: 'UICN', Others: 'Outras' },
+    memberships: {
+      NES: 'NES',
+      IEPN: 'IEPN',
+      NSE: 'NSE',
+      NIA: 'NIA',
+      NITP: 'NITP',
+      NIM: 'NIM',
+      IUCN: 'UICN',
+      Others: 'Outras',
+    },
     assignments: {
       Consulting: 'Consultoria',
       'ESIA/EIA': 'AIAS / AIA',
@@ -274,7 +317,7 @@ export const pt: Messages = {
       Chad: 'Chade',
       Comoros: 'Comores',
       Congo: 'Congo',
-      "Côte d'Ivoire": 'Costa do Marfim',
+      'Côte d\'Ivoire': 'Costa do Marfim',
       'Democratic Republic of the Congo': 'República Democrática do Congo',
       Djibouti: 'Jibuti',
       Egypt: 'Egipto',
@@ -318,13 +361,45 @@ export const pt: Messages = {
       Zimbabwe: 'Zimbabué',
       Other: 'Outro país',
     },
-    bodies: { NES: 'NES', IEPN: 'IEPN', NSE: 'NSE', NIA: 'NIA', NITP: 'NITP', NIM: 'NIM', IUCN: 'UICN', Other: 'Outro organismo' },
+    bodies: {
+      NES: 'NES',
+      IEPN: 'IEPN',
+      NSE: 'NSE',
+      NIA: 'NIA',
+      NITP: 'NITP',
+      NIM: 'NIM',
+      IUCN: 'UICN',
+      Other: 'Outro organismo',
+    },
+    membershipCategories: {
+      Member: 'Membro',
+      Associate: 'Membro associado',
+      Fellow: 'Membro honorário (Fellow)',
+      Student: 'Estudante',
+      Honorary: 'Honorário',
+      Other: 'Outra',
+    },
+    affiliationTypes: {
+      employee: 'Funcionário',
+      consultant: 'Consultor',
+      member: 'Membro',
+      volunteer: 'Voluntário',
+      board_member: 'Membro do conselho de administração',
+      partner: 'Parceiro',
+    },
   },
-
   register: {
     pageTitle: 'Registo de especialista | NEXUS-E',
-    stepNames: ['Identidade', 'Especialidade', 'Perfil de oportunidades'],
-    stepTitles: ['Diga-nos quem é', 'A sua especialidade', 'O seu perfil de oportunidades'],
+    stepNames: [
+      'Identidade',
+      'Especialidade',
+      'Perfil de oportunidades',
+    ],
+    stepTitles: [
+      'Diga-nos quem é',
+      'A sua especialidade',
+      'O seu perfil de oportunidades',
+    ],
     stepIntros: [
       'Usamos estes dados para criar o seu registo e para o contactar.',
       'Escolha as áreas em que é mais forte. Pode acrescentar até três áreas secundárias.',
@@ -366,8 +441,7 @@ export const pt: Messages = {
       membershipsHint: 'Serão verificadas mais tarde, durante a verificação.',
       nesNumber: 'Número de membro NES',
       iepnStatus: 'Licença ou estatuto IEPN',
-      membershipNote:
-        'Os dados de filiação e de licença são recolhidos como futuros elementos de verificação. O registo não substitui o licenciamento legal nem profissional.',
+      membershipNote: 'Os dados de filiação e de licença são recolhidos como futuros elementos de verificação. O registo não substitui o licenciamento legal nem profissional.',
       assignments: 'Missões para as quais está disponível',
       assignmentsHint: 'Escolha todas as que se aplicam.',
       availability: 'Disponibilidade geográfica',
@@ -380,6 +454,42 @@ export const pt: Messages = {
       discoverableNo: 'Não, manter privado',
       discoverableNoSub: 'Fico no registo mas não sou listado.',
       consent: 'Aceito ser contactado sobre oportunidades e dou o meu consentimento para que o NEXUS-E guarde os meus dados para esse fim.',
+      aff: {
+        toggle: 'Acrescentar filiações e afiliações (opcional)',
+        intro: 'Opcional, e pode saltar. Tudo o que está aqui é declarado por si: o NEXUS-E não o verifica, a menos que envie provas mais tarde.',
+        loading: 'A carregar a lista',
+        loadFailed: 'Não foi possível carregar a lista. Pode escrever um nome em Outro (especificar).',
+        retry: 'Tentar novamente',
+        professionalTitle: 'Ordens e associações profissionais',
+        professionalHelp: 'Escolha aquelas a que pertence. Pesquise pelo nome ou pela sigla.',
+        professionalSearch: 'Pesquisar ordens e associações profissionais',
+        ngoTitle: 'ONG ambientais',
+        ngoHelp: 'Escolha as organizações com que trabalha ou de que é membro.',
+        ngoSearch: 'Pesquisar ONG ambientais',
+        searchPlaceholder: 'Escreva um nome ou uma sigla',
+        noResults: 'Sem resultados. Pode acrescentá-la em Outro (especificar).',
+        otherOption: 'Outro (especificar)',
+        otherLabel: 'Nome da organização',
+        otherPlaceholder: 'Escreva o nome completo',
+        otherAdd: 'Acrescentar',
+        otherHint: 'Verificamos antes de a juntar à lista. Até lá, só você e a equipa do NEXUS-E a podem ver.',
+        selected: 'Selecionadas',
+        remove: 'Remover {name}',
+        pending: 'Sugerida, a aguardar análise',
+        category: 'Categoria de membro',
+        categoryPlaceholder: 'Escolher',
+        number: 'Número de membro',
+        numberHint: 'Privado: só você e os administradores do NEXUS-E o podem ver.',
+        licence: 'Licença profissional ou estatuto',
+        licenceHint: 'Se este organismo atribuir uma. Privado.',
+        affiliationType: 'Qual é a sua ligação?',
+        limit: 'Pode acrescentar até 20.',
+        consent: 'Mostrar no meu perfil público, com a indicação de «declarado pelo próprio»',
+        consentHint: 'Desativado, a menos que o ative. Os números de membro e os dados de licença nunca são mostrados publicamente, qualquer que seja a sua escolha.',
+        selfDeclared: 'Declarado pelo próprio: o NEXUS-E não o verificou.',
+        notListed: 'A sua organização não está na lista? Escolha Outro (especificar). Também pode registar-se sem acrescentar nada aqui.',
+        count: '{n} acrescentada(s)',
+      },
     },
     summaryLabels: {
       full_name: 'Nome completo',
@@ -398,6 +508,7 @@ export const pt: Messages = {
       profile_url: 'Ligação do perfil',
       discoverable: 'Visibilidade',
       consent_contact: 'Consentimento para ser contactado',
+      affiliations: 'Filiações e afiliações',
     },
     summaryFix: 'Corrija {n} {things} abaixo para continuar',
     thing: 'ponto',
@@ -408,7 +519,6 @@ export const pt: Messages = {
     serviceTitle: 'Não conseguimos concluir o seu registo',
     saved: 'As suas respostas ficam guardadas neste dispositivo até terminar.',
   },
-
   validation: {
     tooLong: 'Utilize no máximo {limit} caracteres.',
     fullName: 'Escreva o seu nome completo, por exemplo Ada Obi.',
@@ -418,8 +528,7 @@ export const pt: Messages = {
     country: 'Escolha o seu país na lista.',
     state: 'Escolha o seu estado na lista.',
     region: 'Escreva o seu estado, província ou região.',
-    emailRequired:
-      'Escreva o seu endereço de correio electrónico, por exemplo nome@exemplo.com. Enviamos para aí o seu ID de especialista, e usa-o para entrar e verificar o seu perfil.',
+    emailRequired: 'Escreva o seu endereço de correio electrónico, por exemplo nome@exemplo.com. Enviamos para aí o seu ID de especialista, e usa-o para entrar e verificar o seu perfil.',
     emailInvalid: 'Escreva um endereço de correio electrónico válido, por exemplo nome@exemplo.com.',
     phoneNigeria: 'Escreva um número de telefone válido, por exemplo 0803 123 4567, ou deixe em branco.',
     phoneIntl: 'Escreva o seu número com o indicativo do país, por exemplo +244 923 456 789, ou deixe em branco.',
@@ -431,8 +540,10 @@ export const pt: Messages = {
     discoverable: 'Escolha Sim ou Não para nos dizer se as organizações o podem encontrar.',
     consent: 'Marque esta caixa. Precisamos do seu consentimento para o contactar antes de o podermos registar.',
     profileUrl: 'Escreva uma ligação válida, por exemplo linkedin.com/in/oseunome, ou deixe em branco.',
+    tooManyAffiliations: 'Pode acrescentar até {max} filiações e afiliações. Remova algumas.',
+    affiliationName: 'Escreva o nome da organização, ou remova-a.',
+    affiliationLong: 'Encurte o nome, o número de membro ou o texto da licença.',
   },
-
   apiErrors: {
     alreadyRegistered: 'Se for você, o seu ID de especialista foi mostrado depois de se registar.',
     duplicateEmail: 'Este endereço de correio electrónico já está registado.',
@@ -447,13 +558,13 @@ export const pt: Messages = {
     notConfigured: 'O registo ainda não está aberto. Tente novamente mais tarde.',
     unavailable: 'Não conseguimos guardar o seu registo neste momento. Tente novamente daqui a pouco. As suas respostas estão guardadas.',
     network: 'Não conseguimos ligar-nos. Verifique a sua ligação à internet e tente novamente. As suas respostas estão guardadas.',
+    invalidAffiliation: 'Não foi possível guardar uma das suas filiações ou afiliações. Verifique-as, ou remova-as e registe-se sem elas.',
+    tooManyAffiliations: 'Pode acrescentar até 20 filiações e afiliações. Remova algumas.',
   },
-
   registered: {
     pageTitle: 'Está registado | NEXUS-E',
     noneTitle: 'Nenhum registo encontrado',
-    noneText:
-      'Não encontrámos nenhum registo recente neste dispositivo. Se já se registou antes, procure o seu ID de especialista no correio electrónico.',
+    noneText: 'Não encontrámos nenhum registo recente neste dispositivo. Se já se registou antes, procure o seu ID de especialista no correio electrónico.',
     start: 'Iniciar o registo',
     title: 'Está registado',
     welcome: 'Bem-vindo aos especialistas fundadores do NEXUS-E. Guarde bem o seu ID de especialista.',
@@ -464,27 +575,23 @@ export const pt: Messages = {
     copyFailedSr: 'A cópia falhou. O ID está seleccionado, use a função copiar do seu dispositivo.',
     copyBlocked: 'A cópia foi bloqueada. O ID está seleccionado para que o possa copiar manualmente.',
     nextTitle: 'A seguir: conclua a sua verificação',
-    nextText:
-      'Conclua a verificação para obter o estatuto de especialista verificado. Depois da conferência, convidá-lo-emos a confirmar a sua filiação, licença e credenciais com o seu ID de especialista. Não há mais nada a fazer hoje.',
+    nextText: 'Conclua a verificação para obter o estatuto de especialista verificado. Depois da conferência, convidá-lo-emos a confirmar a sua filiação, licença e credenciais com o seu ID de especialista. Não há mais nada a fazer hoje.',
     verify: 'Verificar o meu perfil',
     home: 'Voltar à página inicial',
   },
-
   verify: {
     pageTitle: 'Verificar o seu perfil | NEXUS-E',
     eyebrow: 'Verificação',
     titleEmail: 'Verificar o seu perfil',
     titleCode: 'Verifique o seu correio electrónico',
-    introEmail:
-      'Envie a sua filiação, licença ou habilitação para podermos verificar o seu perfil. Escreva o endereço de correio electrónico com que se registou e enviar-lhe-emos um código de acesso.',
+    introEmail: 'Envie a sua filiação, licença ou habilitação para podermos verificar o seu perfil. Escreva o endereço de correio electrónico com que se registou e enviar-lhe-emos um código de acesso.',
     introCode: 'Escreva o código de 6 dígitos que enviámos. Funciona uma só vez e expira em 10 minutos.',
     emailLabel: 'O seu correio electrónico de registo',
     emailInvalid: 'Escreva o endereço de correio electrónico com que se registou, por exemplo nome@exemplo.com.',
     sendCode: 'Enviar-me um código',
     sendingCode: 'A enviar o código',
     sending: 'A enviar',
-    codeSent:
-      'Se esse endereço de correio electrónico estiver registado no NEXUS-E, enviámos-lhe um código de 6 dígitos. O código funciona uma só vez e expira em 10 minutos.',
+    codeSent: 'Se esse endereço de correio electrónico estiver registado no NEXUS-E, enviámos-lhe um código de 6 dígitos. O código funciona uma só vez e expira em 10 minutos.',
     codeLabel: 'Código de 6 dígitos',
     codeInvalid: 'Escreva o código de 6 dígitos recebido no seu correio electrónico.',
     signIn: 'Entrar',
@@ -495,10 +602,8 @@ export const pt: Messages = {
     differentEmail: 'Usar outro endereço de correio electrónico',
     notRegistered: 'Ainda não está registado?',
     registerFirst: 'Registe-se primeiro',
-    phoneOnly:
-      'Se se registou apenas com um número de telefone, contacte a equipa do NEXUS-E para acrescentar um endereço de correio electrónico ao seu registo.',
+    phoneOnly: 'Se se registou apenas com um número de telefone, contacte a equipa do NEXUS-E para acrescentar um endereço de correio electrónico ao seu registo.',
   },
-
   dashboard: {
     pageTitle: 'A sua verificação | NEXUS-E',
     loadFailedTitle: 'Não conseguimos carregar a sua página',
@@ -520,10 +625,8 @@ export const pt: Messages = {
     },
     statusHelp: {
       pending: 'Está registado. Acrescente os seus documentos abaixo e envie-os quando estiver pronto.',
-      under_review:
-        'Temos os seus documentos e um avaliador está a analisá-los. Enviaremos um correio electrónico assim que houver uma decisão.',
-      more_evidence:
-        'Precisamos de um pouco mais da sua parte. Leia a mensagem abaixo, acrescente ou substitua documentos e envie novamente.',
+      under_review: 'Temos os seus documentos e um avaliador está a analisá-los. Enviaremos um correio electrónico assim que houver uma decisão.',
+      more_evidence: 'Precisamos de um pouco mais da sua parte. Leia a mensagem abaixo, acrescente ou substitua documentos e envie novamente.',
       verified: 'O seu perfil foi verificado. Obrigado por concluir o processo.',
       not_verified: 'Desta vez não conseguimos verificar o seu perfil. O motivo está abaixo.',
     },
@@ -557,11 +660,9 @@ export const pt: Messages = {
     continueUpload: 'Continuar para o envio',
     saving: 'A guardar',
     fileLimit: 'Pode manter até {max} ficheiros. Elimine um antes de acrescentar outro.',
-    stillTooBig:
-      'Reduzimos esta fotografia tanto quanto é razoável e ainda ultrapassa 5 MB. Tire-a de novo com uma qualidade mais baixa, ou envie um PDF.',
+    stillTooBig: 'Reduzimos esta fotografia tanto quanto é razoável e ainda ultrapassa 5 MB. Tire-a de novo com uma qualidade mais baixa, ou envie um PDF.',
     submitTitle: 'Pronto para enviar?',
-    submitText:
-      'Acrescente pelo menos um documento de filiação, licença ou habilitação. Depois de enviar, os seus ficheiros ficam bloqueados enquanto os analisamos.',
+    submitText: 'Acrescente pelo menos um documento de filiação, licença ou habilitação. Depois de enviar, os seus ficheiros ficam bloqueados enquanto os analisamos.',
     submit: 'Enviar para análise',
     submitting: 'A enviar',
     submitHint: 'O botão é activado quando tiver acrescentado um documento de filiação, licença ou habilitação.',
@@ -592,8 +693,14 @@ export const pt: Messages = {
         title: 'Licença profissional',
         help: 'A sua licença de exercício ou certificado de inscrição, se tiver um.',
       },
-      qualification: { title: 'Habilitação mais elevada', help: 'O certificado da sua habilitação mais elevada.' },
-      cv: { title: 'CV (opcional)', help: 'Um CV curto ajuda os avaliadores, mas não basta por si só.' },
+      qualification: {
+        title: 'Habilitação mais elevada',
+        help: 'O certificado da sua habilitação mais elevada.',
+      },
+      cv: {
+        title: 'CV (opcional)',
+        help: 'Um CV curto ajuda os avaliadores, mas não basta por si só.',
+      },
     },
     slot: {
       body: 'Organismo profissional',
@@ -623,8 +730,7 @@ export const pt: Messages = {
         'Um selo de especialista verificado',
       ],
       never: 'Ninguém pode ver o seu número de telefone, o seu endereço de correio electrónico ou os seus documentos.',
-      onlyVerified:
-        'Só são listados os especialistas verificados. Pode mudar de ideias a qualquer momento, e a sua página pública deixa de abrir de imediato.',
+      onlyVerified: 'Só são listados os especialistas verificados. Pode mudar de ideias a qualquer momento, e a sua página pública deixa de abrir de imediato.',
       doneLive: 'Está agora listado no diretório público.',
       donePending: 'A sua escolha foi guardada. Aparecerá no diretório depois de verificado.',
       doneRemoved: 'Foi removido do diretório público. A sua página pública já não abre.',
@@ -638,8 +744,7 @@ export const pt: Messages = {
       loading: 'A carregar as oportunidades',
       loadFailed: 'Não conseguimos carregar as oportunidades',
       onlyVerifiedTitle: 'Só os especialistas verificados podem manifestar interesse',
-      onlyVerifiedText:
-        'Pode ler as oportunidades abaixo já. Quando a sua verificação for aprovada, poderá dizer-nos que está interessado.',
+      onlyVerifiedText: 'Pode ler as oportunidades abaixo já. Quando a sua verificação for aprovada, poderá dizer-nos que está interessado.',
       noneTitle: 'Sem oportunidades abertas neste momento',
       noneText: 'Quando for publicada uma, aparecerá aqui.',
       matches: 'Corresponde ao seu perfil',
@@ -655,18 +760,35 @@ export const pt: Messages = {
       withdraw: 'Retirar interesse',
       express: 'Manifestar interesse',
     },
+    affiliations: {
+      title: 'As suas filiações e afiliações',
+      intro: 'O que declarou ao registar-se. É declarado por si: não foi verificado, e indicar uma organização não torna um perfil verificado.',
+      private: 'Os números de membro e os dados de licença só são visíveis para si e para os administradores do NEXUS-E.',
+      empty: 'Não acrescentou nenhuma filiação ou afiliação.',
+      pending: 'Sugerida, a aguardar análise. Só você e a equipa do NEXUS-E a podem ver.',
+      number: 'Número de membro',
+      licence: 'Licença ou estatuto',
+      category: 'Categoria',
+      evidence: 'Estado das provas',
+      statusRegistered: 'Registado',
+      statusEvidenceSubmitted: 'Provas enviadas',
+      statusVerified: 'Verificado',
+      publicTitle: 'Mostrar no meu perfil público',
+      publicOn: 'As suas filiações e afiliações são mostradas na sua página pública, com a indicação de «declarado pelo próprio». Os números e os dados de licença nunca são mostrados.',
+      publicOff: 'As suas filiações e afiliações não são mostradas na sua página pública.',
+      publicShow: 'Mostrá-las, com a indicação de «declarado pelo próprio»',
+      publicHide: 'Deixar de as mostrar',
+      loadFailed: 'Não conseguimos carregar as suas filiações e afiliações.',
+    },
   },
-
   files: {
     empty: 'Este ficheiro está vazio. Escolha o ficheiro novamente.',
     unitKb: 'KB',
     unitMb: 'MB',
     tooLarge: 'Este ficheiro tem {mb} MB e o limite é 5 MB. Escolha um ficheiro mais pequeno, ou digitalize com uma resolução mais baixa.',
     badName: 'Escolha um ficheiro PDF, JPG ou PNG.',
-    notReal:
-      'Este ficheiro não parece ser um PDF, JPG ou PNG verdadeiro, embora o nome diga que é. Guarde-o ou digitalize-o novamente.',
+    notReal: 'Este ficheiro não parece ser um PDF, JPG ou PNG verdadeiro, embora o nome diga que é. Guarde-o ou digitalize-o novamente.',
   },
-
   portal: {
     network: 'Não conseguimos ligar-nos. Verifique a sua ligação à internet e tente novamente.',
     notConfigured: 'A verificação ainda não está aberta. Tente novamente mais tarde.',
@@ -680,8 +802,7 @@ export const pt: Messages = {
       empty: 'Este ficheiro está vazio. Escolha o ficheiro novamente.',
       too_large: 'Este ficheiro tem mais de 5 MB. Escolha um mais pequeno, ou uma digitalização de resolução mais baixa.',
       bad_type: 'Escolha um ficheiro PDF, JPG ou PNG.',
-      active_content:
-        'Este PDF contém conteúdo activo, como scripts, que não podemos aceitar. Imprima-o para um novo PDF ou envie uma fotografia do documento.',
+      active_content: 'Este PDF contém conteúdo activo, como scripts, que não podemos aceitar. Imprima-o para um novo PDF ou envie uma fotografia do documento.',
       upload_missing: 'O envio não terminou. Tente novamente.',
       bad_value: 'Essa escolha não foi compreendida. Tente novamente.',
       server_error: 'Ocorreu um problema do nosso lado. Tente novamente daqui a pouco.',
@@ -689,21 +810,17 @@ export const pt: Messages = {
       locked: 'As suas provas foram enviadas e estão bloqueadas enquanto as analisamos.',
       consent_required: 'Aceite o aviso de privacidade antes de enviar seja o que for.',
       bad_label: 'Escolha de que organismo profissional é este documento de filiação.',
-      no_evidence:
-        'Acrescente pelo menos um documento antes de enviar: um cartão ou certificado de membro, uma licença, ou um certificado de habilitação.',
+      no_evidence: 'Acrescente pelo menos um documento antes de enviar: um cartão ou certificado de membro, uma licença, ou um certificado de habilitação.',
       not_verified: 'Só os especialistas verificados podem manifestar interesse. Quando a sua verificação for aprovada, poderá fazê-lo.',
       not_open: 'Esta oportunidade já não aceita manifestações de interesse. Actualize a página para ver o que está aberto.',
     },
   },
-
   directory: {
     pageTitle: 'Encontre um especialista verificado | NEXUS-E',
-    pageDescription:
-      'Pesquise profissionais de ambiente verificados de toda a África por especialidade, país, habilitação e disponibilidade. Todos os especialistas listados aqui foram verificados e escolheram ser listados.',
+    pageDescription: 'Pesquise profissionais de ambiente verificados de toda a África por especialidade, país, habilitação e disponibilidade. Todos os especialistas listados aqui foram verificados e escolheram ser listados.',
     eyebrow: 'Diretório NEXUS-E',
     title: 'Encontre um especialista verificado',
-    intro:
-      'Todos os especialistas aqui tiveram as suas credenciais verificadas e escolheram ser listados. Os números de telefone, endereços de correio electrónico e documentos nunca são mostrados.',
+    intro: 'Todos os especialistas aqui tiveram as suas credenciais verificadas e escolheram ser listados. Os números de telefone, endereços de correio electrónico e documentos nunca são mostrados.',
     searchLabel: 'Pesquisar por nome, organização ou especialidade',
     searchAria: 'Pesquisar no diretório',
     placeholder: 'Por exemplo: Ada, zonas húmidas, Luanda',
@@ -712,7 +829,11 @@ export const pt: Messages = {
     hideFilters: 'Ocultar filtros',
     clear: 'Limpar tudo',
     sort: 'Ordenar',
-    sorts: { name: 'Nome, de A a Z', experience: 'Mais experiência primeiro', newest: 'Verificados recentemente primeiro' },
+    sorts: {
+      name: 'Nome, de A a Z',
+      experience: 'Mais experiência primeiro',
+      newest: 'Verificados recentemente primeiro',
+    },
     filterLabels: {
       expertise: 'Especialidade',
       country: 'País',
@@ -745,14 +866,12 @@ export const pt: Messages = {
     searchFailed: 'Não conseguimos carregar o diretório. Verifique a sua ligação e tente novamente.',
     profileFailed: 'Não conseguimos carregar este perfil. Verifique a sua ligação e tente novamente.',
   },
-
   profile: {
     loading: 'A carregar o perfil',
     errorTitle: 'Não conseguimos carregar este perfil',
     backToDirectory: 'Voltar ao diretório',
     missingTitle: 'Este perfil não está disponível',
-    missingText:
-      'Não há nenhum especialista listado neste endereço. O especialista pode ter escolhido não ser listado, ou a ligação pode estar errada.',
+    missingText: 'Não há nenhum especialista listado neste endereço. O especialista pode ter escolhido não ser listado, ou a ligação pode estar errada.',
     searchDirectory: 'Pesquisar no diretório',
     metaTitle: 'Perfil de especialista | NEXUS-E',
     metaMissing: 'Este perfil não está disponível no NEXUS-E.',
@@ -773,15 +892,17 @@ export const pt: Messages = {
       link: 'Ligação do perfil',
     },
     note: 'Este especialista foi verificado pelo NEXUS-E e escolheu ser listado. Os números de telefone, endereços de correio electrónico e documentos nunca são mostrados aqui.',
+    affiliationsTitle: 'Filiações e afiliações',
+    affiliationsNote: 'Declarado pelo próprio especialista. O NEXUS-E não o verificou, e indicar uma organização não torna um perfil verificado.',
+    professionalBodies: 'Ordens e associações profissionais',
+    ngos: 'ONG ambientais',
   },
-
   notFound: {
     pageTitle: 'Página não encontrada | NEXUS-E',
     title: 'Não foi possível encontrar esta página',
     text: 'A ligação pode estar desactualizada. Pode recomeçar a partir da página inicial.',
     home: 'Voltar à página inicial',
   },
-
   errorBoundary: {
     staleTitle: 'Está disponível uma nova versão',
     failedTitle: 'Ocorreu um problema',

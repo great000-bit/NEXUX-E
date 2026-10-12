@@ -6,6 +6,7 @@ import { formatSize } from '../../lib/fileCheck'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Notice, Spinner } from '../../components/ui'
 import type { Expert } from './csv'
+import { AdminAffiliations } from './AdminAffiliations'
 
 type FileRow = {
   id: string
@@ -329,6 +330,8 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
           )}
         </section>
       </div>
+
+      <AdminAffiliations expertId={expert.expert_id} publicConsent={Boolean((expert as { affiliations_public?: boolean }).affiliations_public)} />
 
       {/* Decision */}
       <section className="card p-5 sm:p-6" aria-labelledby="decision-h">

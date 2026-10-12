@@ -18,9 +18,20 @@ export type Listing = {
   qualification: string
 }
 
+export type PublicAffiliation = {
+  name: string
+  acronym: string | null
+  kind: 'professional' | 'ngo'
+  category: string
+  membership_category: string | null
+  affiliation_type: string | null
+}
+
 export type PublicProfile = Listing & {
   secondary_expertise: string[]
   memberships: string[]
+  /** Only present when the expert agreed to show them; names and the kind of tie, never numbers. Self-declared. */
+  affiliations?: PublicAffiliation[]
   assignments: string[]
   availability: string
   profile_url: string | null

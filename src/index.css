@@ -397,6 +397,14 @@
   background: linear-gradient(to bottom, rgb(3 17 10 / 0.9) 0%, rgb(3 17 10 / 0.6) 60%, transparent 100%);
 }
 
+/* Amharic: the Ethiopic font is fetched only when Amharic is on screen (src/i18n/fonts.ts). */
+html[lang='am'] {
+  --font-sans: 'Noto Sans Ethiopic', 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Noto Sans Ethiopic', 'Sora Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+html[lang='am'] body, html[lang='am'] h1, html[lang='am'] h2, html[lang='am'] h3 { letter-spacing: 0; }
+html[lang='am'] [class*='uppercase'] { text-transform: none; }
+
 /* Right to left */
 html[lang='ar'] {
   --font-sans: 'Noto Sans Arabic', 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;

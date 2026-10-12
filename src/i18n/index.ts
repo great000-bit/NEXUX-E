@@ -27,6 +27,19 @@ const loaders: Record<LocaleCode, () => Promise<Messages>> = {
   fr: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./fr')).fr),
   ar: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./ar')).ar),
   pt: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./pt')).pt),
+  sw: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./sw')).sw),
+  am: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./am')).am),
+  ha: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./ha')).ha),
+  yo: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./yo')).yo),
+  ig: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./ig')).ig),
+  zu: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./zu')).zu),
+  xh: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./xh')).xh),
+  af: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./af')).af),
+  so: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./so')).so),
+  om: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./om')).om),
+  mg: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./mg')).mg),
+  rw: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./rw')).rw),
+  sn: async () => withEnglishFallback((await import('./en')).en as unknown as Messages, (await import('./sn')).sn),
 }
 
 const cache = new Map<LocaleCode, Messages>([['en', en]])

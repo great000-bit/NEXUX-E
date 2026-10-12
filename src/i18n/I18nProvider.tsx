@@ -45,7 +45,12 @@ export function I18nProvider({ start, children }: { start: Start; children: Reac
   useEffect(() => {
     if (!start.needsCountry || isAdmin) return
     let live = true
-    void fetchCountry().then(async (country) => {
+    let timer = 0
+    // After the page has loaded, so the lookup never competes with the first paint.
+    const ask = () => {
+      timer = window.setTimeout(() => void lookup(), 300)
+    }
+    const lookup = () => fetchCountry().then(async (country) => {
       const code = localeForCountry(country)
       if (!live || picked.current || code === DEFAULT_LOCALE) return
       try {
@@ -55,8 +60,12 @@ export function I18nProvider({ start, children }: { start: Start; children: Reac
       }
       if (live && !picked.current) setLocaleState(code)
     })
+    if (document.readyState === 'complete') ask()
+    else window.addEventListener('load', ask, { once: true })
     return () => {
       live = false
+      window.clearTimeout(timer)
+      window.removeEventListener('load', ask)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
