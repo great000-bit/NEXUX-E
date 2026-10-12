@@ -44,13 +44,16 @@ test('the function never reads, logs or stores an IP address', () => {
   assert.match(src, /x-vercel-ip-country/)
 })
 
-test('the single page app rewrite does not catch /api, and /api is not given the app page', () => {
+test('no page rewrite catches /api, and /api is not given the app page', () => {
   const cfg = JSON.parse(read('vercel.json')) as { rewrites: { source: string; destination: string }[] }
-  const spa = cfg.rewrites.find((r) => r.destination === '/index.html')!
-  const re = new RegExp(`^${spa.source}$`)
-  assert.ok(!re.test('/api/geo'), '/api/geo is not rewritten')
-  assert.ok(!re.test('/api/anything/else'))
-  for (const p of ['/', '/register', '/experts/NEX-000001', '/verify/dashboard', '/apiary']) assert.ok(re.test(p), p)
+  const spa = cfg.rewrites.filter((r) => r.destination === '/index.html')
+  assert.ok(spa.length >= 1)
+  // The page rewrites are written as regular expressions with :name parts. None of them may match an /api address.
+  const matches = (path: string) => spa.some((r) => new RegExp(`^${r.source.replace(/:(\w+)\*/g, '.*').replace(/:(\w+)/g, '[^/]+')}$`).test(path))
+  assert.ok(!matches('/api/geo'), '/api/geo is not rewritten')
+  assert.ok(!matches('/api/anything/else'))
+  for (const p of ['/register', '/experts/NEX-000001', '/verify/dashboard']) assert.ok(matches(p), p)
+  assert.ok(!matches('/apiary'), 'an unknown address is a real 404 now')
 })
 
 // ---- the browser side: asked once, cached for the session, never holds the page up

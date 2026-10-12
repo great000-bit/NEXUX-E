@@ -3,3 +3,5 @@ Allow: /
 Disallow: /admin
 Disallow: /verify
 Disallow: /registered
+
+Sitemap: https://register.nexuse.org/sitemap.xml

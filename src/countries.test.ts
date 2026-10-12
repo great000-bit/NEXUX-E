@@ -106,14 +106,14 @@ test('the directory can be filtered by country, in the address bar and in the da
   assert.equal(filtersFromParams(new URLSearchParams('state=Lagos')).state, 'Lagos')
 })
 
-test('the admin exports end with a Country column, so the earlier columns keep their places', () => {
+test('the admin exports carry the country: third column of the default export, last column of the interest export', () => {
   const text = ['id', 'expert_id', 'full_name', 'title', 'organisation', 'position', 'years_experience', 'qualification', 'availability', 'created_at', 'consent_at', 'verification_status', 'primary_expertise', 'interested_at']
   const base = { ...Object.fromEntries(text.map((k) => [k, ''])), expert_id: 'NEX-000001', secondary_expertise: [], memberships: [], assignments: [], state: 'Nairobi', discoverable: true, consent_contact: true }
   const split = (csv: string) => csv.replace(String.fromCharCode(0xfeff), '').split(String.fromCharCode(13, 10))
   const lines = split(toCsv([{ ...base, country: 'Kenya' } as never]))
-  assert.equal(lines[0].split(',').at(-1), '"Country"')
-  assert.equal(lines[1].split(',').at(-1), '"Kenya"')
-  assert.equal(split(toCsv([base as never]))[1].split(',').at(-1), '"Nigeria"', 'a row with no country is Nigeria')
+  assert.equal(lines[0].split(',')[2], '"Country"')
+  assert.equal(lines[1].split(',')[2], '"Kenya"')
+  assert.equal(split(toCsv([base as never]))[1].split(',')[2], '"Nigeria"', 'a row with no country is Nigeria')
   const interest = split(interestToCsv([{ ...base, country: 'Ghana' } as never]))
   assert.equal(interest[0].split(',').at(-1), '"Country"')
   assert.equal(interest[1].split(',').at(-1), '"Ghana"')

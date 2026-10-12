@@ -37,37 +37,51 @@ export type Expert = {
   created_at: string
 }
 
-const COLUMNS: { header: string; get: (e: Expert) => string }[] = [
-  { header: 'Expert ID', get: (e) => e.expert_id },
-  { header: 'Registered at', get: (e) => e.created_at },
-  { header: 'Title', get: (e) => e.title },
-  { header: 'Full name', get: (e) => e.full_name },
-  { header: 'Organisation', get: (e) => e.organisation },
-  { header: 'Position', get: (e) => e.position },
-  { header: 'State', get: (e) => e.state },
-  { header: 'Phone', get: (e) => e.phone ?? '' },
-  { header: 'Email', get: (e) => e.email ?? '' },
-  { header: 'Primary expertise', get: (e) => e.primary_expertise },
-  { header: 'Secondary expertise', get: (e) => e.secondary_expertise.join('; ') },
-  { header: 'Years of experience', get: (e) => e.years_experience },
-  { header: 'Highest qualification', get: (e) => e.qualification },
-  { header: 'Memberships', get: (e) => e.memberships.join('; ') },
-  { header: 'NES number', get: (e) => e.nes_number ?? '' },
-  { header: 'IEPN status', get: (e) => e.iepn_status ?? '' },
-  { header: 'Assignments', get: (e) => e.assignments.join('; ') },
-  { header: 'Availability', get: (e) => e.availability },
-  { header: 'Profile URL', get: (e) => e.profile_url ?? '' },
-  { header: 'Discoverable', get: (e) => (e.discoverable ? 'Yes' : 'No') },
-  { header: 'Consent to be contacted', get: (e) => (e.consent_contact ? 'Yes' : 'No') },
-  { header: 'Consent recorded at', get: (e) => e.consent_at },
-  { header: 'Verification status', get: (e) => statusLabel(e.verification_status) },
-  { header: 'Evidence submitted at', get: (e) => e.submitted_at ?? '' },
-  { header: 'Reviewed at', get: (e) => e.reviewed_at ?? '' },
-  { header: 'Reviewed by', get: (e) => e.reviewed_by ?? '' },
-  { header: 'Verified at', get: (e) => e.verified_at ?? '' },
-  // Added last, so a spreadsheet that reads the earlier columns by position keeps working.
-  { header: 'Country', get: (e) => e.country ?? 'Nigeria' },
-]
+/** One expert's declared memberships and affiliations, by name. Self-declared; a number or licence is never here. */
+export type AffiliationName = { name: string; acronym: string | null; kind: 'professional' | 'ngo'; pending: boolean }
+export type AffiliationsByExpert = Record<string, AffiliationName[]>
+
+/** "Name (NES); Name (suggested, not yet reviewed)". Falls back to the older membership list when nothing was declared. */
+export function affiliationsText(e: Expert, byExpert?: AffiliationsByExpert): string {
+  const items = byExpert?.[e.expert_id]
+  if (items?.length) {
+    return items.map((i) => (i.pending ? `${i.name} (suggested, not yet reviewed)` : i.acronym && !i.name.includes(i.acronym) ? `${i.name} (${i.acronym})` : i.name)).join('; ')
+  }
+  return e.memberships.join('; ')
+}
+
+/**
+ * The default export. Contact details are included only for an expert who agreed to be contacted, and membership
+ * numbers and licence details are never included (they stay in the expert's own record and the review screen).
+ */
+function columns(byExpert?: AffiliationsByExpert): { header: string; get: (e: Expert) => string }[] {
+  const contact = (e: Expert, v: string | null | undefined) => (e.consent_contact ? (v ?? '') : '')
+  return [
+    { header: 'Expert ID', get: (e) => e.expert_id },
+    { header: 'Registered at', get: (e) => e.created_at },
+    { header: 'Country', get: (e) => e.country ?? 'Nigeria' },
+    { header: 'Primary expertise', get: (e) => e.primary_expertise },
+    { header: 'Verification status', get: (e) => statusLabel(e.verification_status) },
+    { header: 'Memberships and affiliations (self-declared)', get: (e) => affiliationsText(e, byExpert) },
+    { header: 'Consent to be contacted', get: (e) => (e.consent_contact ? 'Yes' : 'No') },
+    { header: 'Title', get: (e) => contact(e, e.title) },
+    { header: 'Full name', get: (e) => contact(e, e.full_name) },
+    { header: 'Email', get: (e) => contact(e, e.email) },
+    { header: 'Phone', get: (e) => contact(e, e.phone) },
+    { header: 'Organisation', get: (e) => e.organisation },
+    { header: 'Position', get: (e) => e.position },
+    { header: 'State or region', get: (e) => e.state },
+    { header: 'Secondary expertise', get: (e) => e.secondary_expertise.join('; ') },
+    { header: 'Years of experience', get: (e) => e.years_experience },
+    { header: 'Highest qualification', get: (e) => e.qualification },
+    { header: 'Assignments', get: (e) => e.assignments.join('; ') },
+    { header: 'Availability', get: (e) => e.availability },
+    { header: 'Discoverable', get: (e) => (e.discoverable ? 'Yes' : 'No') },
+    { header: 'Evidence submitted at', get: (e) => e.submitted_at ?? '' },
+    { header: 'Reviewed at', get: (e) => e.reviewed_at ?? '' },
+    { header: 'Verified at', get: (e) => e.verified_at ?? '' },
+  ]
+}
 
 /** Quote a cell, and defuse spreadsheet formulas (=, +, -, @) typed into the public form. */
 function cell(value: string): string {
@@ -75,9 +89,10 @@ function cell(value: string): string {
   return `"${safe.replace(/"/g, '""')}"`
 }
 
-export function toCsv(rows: Expert[]): string {
-  const lines = [COLUMNS.map((c) => cell(c.header)).join(',')]
-  for (const r of rows) lines.push(COLUMNS.map((c) => cell(c.get(r))).join(','))
+export function toCsv(rows: Expert[], byExpert?: AffiliationsByExpert): string {
+  const cols = columns(byExpert)
+  const lines = [cols.map((c) => cell(c.header)).join(',')]
+  for (const r of rows) lines.push(cols.map((c) => cell(c.get(r))).join(','))
   // BOM so Excel reads UTF-8 names correctly.
   return '﻿' + lines.join('\r\n')
 }
@@ -180,8 +195,8 @@ export function downloadCsvText(text: string, filename: string) {
   URL.revokeObjectURL(url)
 }
 
-export function downloadCsv(rows: Expert[], filename: string) {
-  const blob = new Blob([toCsv(rows)], { type: 'text/csv;charset=utf-8' })
+export function downloadCsv(rows: Expert[], filename: string, byExpert?: AffiliationsByExpert) {
+  const blob = new Blob([toCsv(rows, byExpert)], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url

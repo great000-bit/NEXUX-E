@@ -39,23 +39,49 @@ const row: Expert = {
 
 const parse = (csv: string) => csv.replace('﻿', '').split('\r\n')
 
-test('the original columns are still there, in their original order', () => {
+test('the default export starts with the columns the brief asks for, in order', () => {
   const head = parse(toCsv([row]))[0].split(',').map((h) => h.replace(/"/g, ''))
-  const original = [
-    'Expert ID', 'Registered at', 'Title', 'Full name', 'Organisation', 'Position', 'State', 'Phone', 'Email',
-    'Primary expertise', 'Secondary expertise', 'Years of experience', 'Highest qualification', 'Memberships',
-    'NES number', 'IEPN status', 'Assignments', 'Availability', 'Profile URL', 'Discoverable',
-    'Consent to be contacted', 'Consent recorded at', 'Verification status',
-  ]
-  assert.deepEqual(head.slice(0, original.length), original)
+  assert.deepEqual(head.slice(0, 6), [
+    'Expert ID', 'Registered at', 'Country', 'Primary expertise', 'Verification status', 'Memberships and affiliations (self-declared)',
+  ])
 })
 
-test('verification columns are added at the end and show readable status names', () => {
+test('no membership number, licence detail or other private field is in the default export', () => {
+  const head = parse(toCsv([row]))[0]
+  for (const bad of ['NES number', 'IEPN', 'licence', 'Licence', 'number', 'Profile URL']) assert.ok(!head.includes(bad), bad)
+  const line = parse(toCsv([{ ...row, nes_number: 'SECRET-123', iepn_status: 'LICENCE-XYZ' }]))[1]
+  assert.ok(!line.includes('SECRET-123') && !line.includes('LICENCE-XYZ'))
+})
+
+test('contact details are included only for an expert who agreed to be contacted', () => {
+  const yes = parse(toCsv([{ ...row, consent_contact: true }]))[1]
+  const no = parse(toCsv([{ ...row, consent_contact: false }]))[1]
+  for (const v of [row.email, row.phone, 'Ada']) {
+    assert.ok(v && yes.includes(v), 'included with consent')
+    assert.ok(v && !no.includes(v), 'left out without consent')
+  }
+  assert.ok(no.includes('"No"'))
+})
+
+test('declared memberships and affiliations are listed by name; a suggestion is marked; the older list is the fallback', () => {
+  const by = {
+    [row.expert_id]: [
+      { name: 'Nigerian Environmental Society (NES)', acronym: 'NES', kind: 'professional' as const, pending: false },
+      { name: 'Some Society', acronym: null, kind: 'professional' as const, pending: true },
+      { name: 'Nature Kenya', acronym: null, kind: 'ngo' as const, pending: false },
+    ],
+  }
+  const line = parse(toCsv([row], by))[1]
+  assert.ok(line.includes('"Nigerian Environmental Society (NES); Some Society (suggested, not yet reviewed); Nature Kenya"'))
+  const fallback = parse(toCsv([{ ...row, memberships: ['NES', 'IUCN'] }]))[1]
+  assert.ok(fallback.includes('"NES; IUCN"'))
+})
+
+test('verification dates come after, and show readable status names', () => {
   const [head, line] = parse(toCsv([row]))
   const names = head.split(',').map((h) => h.replace(/"/g, ''))
-  assert.deepEqual(names.slice(-5), ['Evidence submitted at', 'Reviewed at', 'Reviewed by', 'Verified at', 'Country'])
+  assert.deepEqual(names.slice(-3), ['Evidence submitted at', 'Reviewed at', 'Verified at'])
   assert.ok(line.includes('"Verified"'))
-  assert.ok(line.includes('"admin@example.org"'))
 })
 
 test('commas and quotes inside cells are escaped, and the file starts with a BOM for Excel', () => {

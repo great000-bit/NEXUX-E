@@ -6,7 +6,7 @@ import { COUNTRIES } from '../../lib/countries'
 import { STATUS_LABEL, STATUS_ORDER } from '../../lib/verification'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Notice, Spinner } from '../../components/ui'
-import { downloadCsv, type Expert } from './csv'
+import { downloadCsv, type AffiliationsByExpert, type Expert } from './csv'
 import { RegistrationStats } from './RegistrationStats'
 
 const PAGE = 1000
@@ -85,6 +85,16 @@ export default function Dashboard() {
   )
 
   const filtersOn = Boolean(q || expertise || country || state || membership || discoverable || vstatus)
+  // The default export: memberships and affiliations by name (self-declared), contact details only for experts who agreed
+  // to be contacted, and never a membership number or licence detail. If the affiliations cannot be fetched, the export
+  // still works and falls back to the older membership list.
+  const exportCsv = async () => {
+    let byExpert: AffiliationsByExpert | undefined
+    const { data, error: rpcError } = await supabase.rpc('admin_affiliations_summary')
+    if (!rpcError && data && typeof data === 'object') byExpert = data as AffiliationsByExpert
+    downloadCsv(filtered, `nexus-e-experts-${filtersOn ? 'filtered-' : ''}${stamp}.csv`, byExpert)
+  }
+
   const clear = () => {
     setQ(''); setExpertise(''); setCountry(''); setState(''); setMembership(''); setDiscoverable(''); setVstatus('')
   }
@@ -152,7 +162,7 @@ export default function Dashboard() {
             <button
               className="btn btn-primary !min-h-10 !px-4"
               disabled={!filtered.length}
-              onClick={() => downloadCsv(filtered, `nexus-e-experts-${filtersOn ? 'filtered-' : ''}${stamp}.csv`)}
+              onClick={() => void exportCsv()}
             >
               Export {filtersOn ? 'filtered' : 'all'} to CSV
             </button>

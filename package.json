@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/postbuild.mjs",
     "typecheck": "tsc -b --noEmit",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -15,7 +15,7 @@
     "i18n:from-text": "node --import ./scripts/register-ts.mjs scripts/i18n-text.mjs from-text",
     "i18n:import": "node --import ./scripts/register-ts.mjs scripts/i18n-csv.mjs import",
     "qr": "node scripts/generate-qr.mjs",
-    "test:email": "node --test supabase/functions/send-confirmation-emails/logic.test.ts supabase/functions/send-confirmation-emails/status.test.ts",
+    "test:email": "node --test supabase/functions/send-confirmation-emails/logic.test.ts supabase/functions/send-confirmation-emails/status.test.ts supabase/functions/notify-registrations/compose.test.ts",
     "test:portal": "node --test supabase/functions/expert-portal/portal.test.ts",
     "test": "npm run check:i18n && npm run test:app && npm run test:email && npm run test:portal",
     "test:app": "node --import ./scripts/register-ts.mjs --test src/lib/form.test.ts src/lib/image.test.ts src/lib/directoryFilters.test.ts src/lib/opportunities.test.ts src/pages/admin/csv.test.ts src/app.test.ts src/phase3.test.ts src/design.test.ts src/home.test.ts src/heroMotion.test.ts src/publicSurface.test.ts src/sectors.test.ts src/faq.test.ts src/wording.test.ts src/deploySafety.test.ts src/perf.test.ts src/formLimits.test.ts src/i18n.test.ts src/countries.test.ts src/detect.test.ts src/geo.test.ts",
