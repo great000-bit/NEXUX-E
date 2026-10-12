@@ -6,6 +6,7 @@ import App from './App'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { reloadOnce } from './lib/chunkReload'
 import { I18nProvider } from './i18n/I18nProvider'
+import { initI18n } from './i18n'
 
 // After a deploy, an open tab may ask for a script or style file that no longer exists. Vite raises this event
 // for it. One fresh load fixes it (the guard in reloadOnce means it can never loop; if a second failure follows,
@@ -16,14 +17,18 @@ window.addEventListener('vite:preloadError', (event) => {
   if (reloadOnce()) event.preventDefault()
 })
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <ErrorBoundary>
-      <BrowserRouter>
-        <I18nProvider>
-          <App />
-        </I18nProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
-  </StrictMode>,
-)
+// A saved pick or a browser language is applied before the first paint, so the page never flashes English.
+// Everyone else sees the page at once, and it switches if their country says so (see I18nProvider).
+initI18n().then((start) => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <I18nProvider start={start}>
+            <App />
+          </I18nProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </StrictMode>,
+  )
+})

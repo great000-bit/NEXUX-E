@@ -156,6 +156,7 @@ export const fr: Messages = {
         'Les données d’inscription sont stockées de manière sécurisée et ne sont visibles que par les administrateurs autorisés.',
         'L’annuaire ne remplace pas les agréments légaux ni les licences professionnelles.',
       ],
+      languageNote: 'Nous utilisons votre pays uniquement pour choisir votre langue et nous ne conservons jamais votre adresse IP.',
     },
     directory: {
       eyebrow: 'L’annuaire',

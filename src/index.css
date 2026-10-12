@@ -396,3 +396,16 @@
   content: ''; position: absolute; inset: 0 0 -1.25rem 0; z-index: -1; pointer-events: none;
   background: linear-gradient(to bottom, rgb(3 17 10 / 0.9) 0%, rgb(3 17 10 / 0.6) 60%, transparent 100%);
 }
+
+/* Right to left */
+html[lang='ar'] {
+  --font-sans: 'Noto Sans Arabic', 'Manrope Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+  --font-display: 'Noto Sans Arabic', 'Sora Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+}
+html[lang='ar'] body, html[lang='ar'] h1, html[lang='ar'] h2, html[lang='ar'] h3 { letter-spacing: 0; }
+html[lang='ar'] .eyebrow, html[lang='ar'] [class*='tracking-'] { letter-spacing: 0; }
+html[lang='ar'] [class*='uppercase'] { text-transform: none; }
+[dir='rtl'] input[type='email'], [dir='rtl'] input[type='tel'], [dir='rtl'] input[type='url'],
+[dir='rtl'] #field-verify_code, [dir='rtl'] input[name='website'] { direction: ltr; text-align: end; }
+[dir='rtl'] svg[data-flip] { transform: scaleX(-1); }
+[dir='rtl'] .timeline-line-h { --tl-dir: -90deg; }

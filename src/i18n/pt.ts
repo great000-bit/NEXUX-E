@@ -157,6 +157,7 @@ export const pt: Messages = {
         'Os dados de registo são guardados em segurança e só são visíveis para administradores autorizados.',
         'O diretório não substitui o licenciamento legal nem profissional.',
       ],
+      languageNote: 'Usamos o seu país apenas para escolher o seu idioma e nunca guardamos o seu endereço IP.',
     },
     directory: {
       eyebrow: 'O diretório',

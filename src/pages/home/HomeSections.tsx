@@ -217,6 +217,7 @@ function Privacy() {
             </li>
           ))}
         </ul>
+        <p className="text-sm text-ink-500 lg:col-span-2">{t.languageNote}</p>
       </GlassCard>
     </Section>
   )

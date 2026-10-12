@@ -72,6 +72,7 @@ export default function Registered() {
         </p>
         <p
           id="expert-id"
+          dir="ltr"
           className="relative mt-3 select-all font-display text-[2.4rem] font-semibold tracking-wide sm:text-5xl"
           style={{ fontVariantNumeric: 'lining-nums tabular-nums' }}
         >
