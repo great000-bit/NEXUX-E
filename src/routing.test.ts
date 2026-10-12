@@ -70,3 +70,10 @@ test('the content security policy is report only, matches what the site loads, a
     assert.ok(csp.includes(part), part)
   }
 })
+
+test('the Vite preset is switched off, because its own catch-all would turn every unknown address back into a 200', () => {
+  const cfg = JSON.parse(read('vercel.json')) as Record<string, unknown>
+  assert.equal(cfg.framework, null)
+  assert.equal(cfg.outputDirectory, 'dist')
+  assert.equal(cfg.buildCommand, 'npm run build')
+})
