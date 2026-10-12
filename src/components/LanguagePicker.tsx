@@ -1,7 +1,7 @@
 import { useI18n } from '../i18n/I18nProvider'
 import { isLocale, LOCALES } from '../i18n/locales'
 
-/** The language choice in the header: a native select, so it is keyboard and screen reader friendly on every phone. */
+/** The language choice in the header, always there as a manual override: a native select, so it works on every phone. */
 export function LanguagePicker({ className = '' }: { className?: string }) {
   const { locale, m, setLocale } = useI18n()
   return (

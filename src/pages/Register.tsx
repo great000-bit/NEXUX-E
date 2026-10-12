@@ -424,11 +424,11 @@ export default function Register() {
             </button>
           )}
           {step < 2 ? (
-            <button type="button" className="btn btn-primary ml-auto flex-1 sm:flex-none sm:px-10" onClick={next}>
+            <button type="button" className="btn btn-primary ms-auto flex-1 sm:flex-none sm:px-10" onClick={next}>
               {r.continue}
             </button>
           ) : (
-            <button type="submit" className="btn btn-primary ml-auto flex-1 sm:flex-none sm:px-10" disabled={submitting}>
+            <button type="submit" className="btn btn-primary ms-auto flex-1 sm:flex-none sm:px-10" disabled={submitting}>
               {submitting ? (<><Spinner label={r.submitting} /> {r.submitting}</>) : service ? m.common.tryAgain : r.submit}
             </button>
           )}

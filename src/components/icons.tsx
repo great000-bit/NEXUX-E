@@ -71,6 +71,7 @@ export function Icon({
       strokeWidth={strokeWidth}
       strokeLinecap="round"
       strokeLinejoin="round"
+      data-flip={name === 'arrow-right' ? '' : undefined}
       role={label ? 'img' : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}

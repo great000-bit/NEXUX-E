@@ -40,7 +40,13 @@ export const enSite = {
     },
     why: { eyebrow: WHY.eyebrow, title: WHY.title, items: [...WHY.items] },
     audience: { eyebrow: AUDIENCE.eyebrow, title: AUDIENCE.title, items: AUDIENCE.items.map((i) => i.label) },
-    privacy: { eyebrow: PRIVACY.eyebrow, title: PRIVACY.title, lead: PRIVACY.lead, points: [...PRIVACY.points] },
+    privacy: {
+      eyebrow: PRIVACY.eyebrow,
+      title: PRIVACY.title,
+      lead: PRIVACY.lead,
+      points: [...PRIVACY.points],
+      languageNote: 'We use your country only to pick your language and never store your IP.',
+    },
     directory: {
       eyebrow: DIRECTORY.eyebrow,
       title: DIRECTORY.title,

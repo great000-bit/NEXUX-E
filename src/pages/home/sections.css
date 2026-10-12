@@ -17,7 +17,7 @@
 .timeline { --p: 0; position: relative; }
 .timeline-line { position: absolute; background: rgb(255 255 255 / 0.14); border-radius: 2px; }
 .timeline-line::after { content: ''; position: absolute; inset: 0; border-radius: 2px; background: linear-gradient(var(--tl-dir, 180deg), #c5dc3f, #62aa2a); transform-origin: top left; }
-.timeline-line-v { left: 1.35rem; top: 1.5rem; bottom: 1.5rem; width: 2px; }
+.timeline-line-v { inset-inline-start: 1.35rem; top: 1.5rem; bottom: 1.5rem; width: 2px; }
 .timeline-line-v::after { transform: scaleY(var(--p)); }
 .timeline-line-h { left: 12.5%; right: 12.5%; top: 1.5rem; height: 2px; --tl-dir: 90deg; }
 .timeline-line-h::after { transform: scaleX(var(--p)); }
@@ -36,7 +36,7 @@
 }
 /* The thin lime accent line on the left. It grows from the top when the item opens. */
 .faq-item::before {
-  content: ''; position: absolute; left: 0; top: 0.9rem; bottom: 0.9rem; width: 3px; border-radius: 3px;
+  content: ''; position: absolute; inset-inline-start: 0; top: 0.9rem; bottom: 0.9rem; width: 3px; border-radius: 3px;
   background: linear-gradient(180deg, #c5dc3f, #62aa2a); transform: scaleY(0.28); transform-origin: top; opacity: 0.55;
   transition: transform var(--dur-3) var(--ease), opacity var(--dur-2) var(--ease);
 }
@@ -46,7 +46,7 @@
 
 .faq-q {
   display: flex; align-items: center; gap: 1rem; width: 100%; min-height: 3.75rem; padding: 0.9rem 1.1rem 0.9rem 1.35rem;
-  background: none; border: 0; cursor: pointer; color: #f1f8e6; text-align: left; border-radius: var(--radius-lg);
+  background: none; border: 0; cursor: pointer; color: #f1f8e6; text-align: start; border-radius: var(--radius-lg);
 }
 .faq-q:focus-visible { outline: 2px solid #e1ee8a; outline-offset: -3px; box-shadow: none; }
 .faq-num { flex: none; font-family: var(--font-display); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; color: var(--color-lime-500); opacity: 0.85; }
@@ -68,7 +68,7 @@
 .faq-answer { margin: 0; padding: 0 1.35rem 1.35rem 3.6rem; font-size: 0.97rem; line-height: 1.7; color: var(--color-ink-700);
   transform: translateY(-6px); transition: transform var(--dur-3) var(--ease); }
 .faq-panel[data-open='true'] .faq-answer { transform: translateY(0); }
-@media (max-width: 480px) { .faq-answer { padding-left: 1.35rem; } }
+@media (max-width: 480px) { .faq-answer { padding-inline-start: 1.35rem; } }
 
 .faq-intro { position: relative; }
 @media (min-width: 1024px) { .faq-intro { position: sticky; top: 7rem; } }
