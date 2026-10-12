@@ -26,8 +26,8 @@ const MINT = '#e6f2d0'
 const INK = '#0f1a14'
 const INK_SOFT = '#2f3d35'
 
-type Content = {
-  /** Replaces "Dear <name>," (used for emails that go to an administrator). */
+export type Content = {
+  /** Replaces "Dear <name>," (used for emails that go to an administrator). An empty string leaves the greeting out. */
   greeting?: string
   /** Replaces the default line at the bottom of the email. */
   footer?: string
@@ -39,6 +39,10 @@ type Content = {
   quote?: string
   after?: string[]
   button?: { label: string; href: string }
+  /** A short bar above the heading, for example TEST. */
+  banner?: string
+  /** A neat block of label and value rows (the same block style as the quote). */
+  details?: { label: string; value: string }[]
 }
 
 /** Keeps line breaks and tabs, drops other control characters, and caps the length. */
@@ -131,12 +135,13 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
   }
 }
 
-function render(c: Content, name: string): { html: string; text: string } {
+export function render(c: Content, name: string): { html: string; text: string } {
   const greeting = c.greeting ?? `Dear ${name},`
   const text = [
-    greeting,
-    '',
+    ...(c.banner ? [c.banner, ''] : []),
+    ...(greeting ? [greeting, ''] : []),
     ...c.paragraphs.flatMap((p) => [p, '']),
+    ...(c.details ? [...c.details.map((d) => `${d.label}: ${d.value}`), ''] : []),
     ...(c.quote ? [`${c.quoteLabel}:`, c.quote, ''] : []),
     ...(c.after ?? []).flatMap((p) => [p, '']),
     ...(c.button ? [`${c.button.label}: ${c.button.href}`, ''] : []),
@@ -166,10 +171,21 @@ function render(c: Content, name: string): { html: string; text: string } {
         <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#cfe3bf;margin-top:6px;">African Environmental Expertise Exchange</div>
       </td></tr>
       <tr><td style="padding:32px 32px 8px 32px;font-family:Arial,Helvetica,sans-serif;color:${INK};">
+        ${c.banner ? `<div style="display:inline-block;margin:0 0 16px 0;padding:6px 14px;border-radius:999px;background:${LIME};color:${GREEN_900};font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">${escapeHtml(c.banner)}</div>` : ''}
         <h1 style="margin:0 0 16px 0;font-family:Georgia,'Times New Roman',serif;font-size:28px;line-height:1.2;color:${GREEN_900};">${escapeHtml(c.heading)}</h1>
-        ${p(greeting, INK)}
+        ${greeting ? p(greeting, INK) : ''}
         ${c.paragraphs.map((s) => p(s)).join('\n        ')}
       </td></tr>
+      ${
+        c.details && c.details.length
+          ? `<tr><td style="padding:0 32px 8px 32px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:${MINT};border-radius:14px;"><tr><td style="padding:18px 22px;">${c.details
+              .map(
+                (d) =>
+                  `<div style="font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:${GREEN_800};margin:0 0 4px 0;">${escapeHtml(d.label)}</div><div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.6;color:${INK};margin:0 0 14px 0;word-break:break-word;white-space:pre-line;">${escapeHtml(d.value)}</div>`,
+              )
+              .join('')}</td></tr></table></td></tr>`
+          : ''
+      }
       ${
         c.quote
           ? `<tr><td style="padding:0 32px 8px 32px;"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:${MINT};border-radius:14px;"><tr><td style="padding:18px 22px;">

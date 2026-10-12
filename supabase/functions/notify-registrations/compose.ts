@@ -1,5 +1,7 @@
 // The admin notification email. Pure functions, no network, so they are tested without a server.
+// It uses the same layout code as the expert emails (header, logo, colours, button, footer): see status-emails.ts.
 // Rules: English only, plain and short, and never any contact detail (no name, phone or email of the expert).
+import { render, type Content } from './status-emails.ts'
 
 export type Registration = {
   id: number
@@ -12,6 +14,7 @@ export type Registration = {
 export const SUMMARY_THRESHOLD = 5
 
 const LAGOS = 'Africa/Lagos'
+const FOOTER = 'You are receiving this because you are an administrator of NEXUS-E.'
 
 /** "12 Oct 2026, 21:04 (Lagos time)" */
 export function formatTime(iso: string): string {
@@ -24,43 +27,66 @@ export function formatTime(iso: string): string {
   return `${p('day')} ${p('month')} ${p('year')}, ${p('hour')}:${p('minute')} (Lagos time)`
 }
 
-const esc = (v: string) => v.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-
 type Email = { subject: string; text: string; html: string }
 
-function wrap(lines: string[], adminUrl: string): Email['html'] {
-  const rows = lines.map((l) => `<p style="margin:0 0 8px 0;">${esc(l)}</p>`).join('')
-  return `<!doctype html><html lang="en"><body style="margin:0;padding:16px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.5;color:#0f1a14;">${rows}<p style="margin:12px 0 0 0;"><a href="${esc(adminUrl)}">${esc(adminUrl)}</a></p></body></html>`
-}
+const build = (c: Content): Email => ({ subject: c.subject, ...render(c, '') })
+
+const button = (adminUrl: string) => ({ label: 'Open admin dashboard', href: adminUrl })
 
 export function buildSingle(r: Registration, today: number, adminUrl: string): Email {
-  const lines = [
-    `Expert ID: ${r.expertId}`,
-    `Primary expertise: ${r.primaryExpertise || 'Not given'}`,
-    `Country: ${r.country || 'Not given'}`,
-    `Registered: ${formatTime(r.registeredAt)}`,
-    `Registrations today: ${today}`,
-    'Admin dashboard:',
-  ]
-  return { subject: `New NEXUS-E registration ${r.expertId}`, text: `${lines.join('\n')}\n${adminUrl}\n`, html: wrap(lines, adminUrl) }
+  return build({
+    greeting: '',
+    footer: FOOTER,
+    subject: `New NEXUS-E registration ${r.expertId}`,
+    heading: 'New registration',
+    paragraphs: ['A new expert has registered on NEXUS-E.'],
+    details: [
+      { label: 'Expert ID', value: r.expertId },
+      { label: 'Primary expertise', value: r.primaryExpertise || 'Not given' },
+      { label: 'Country', value: r.country || 'Not given' },
+      { label: 'Time (Africa/Lagos)', value: formatTime(r.registeredAt) },
+      { label: 'Registrations today', value: String(today) },
+    ],
+    button: button(adminUrl),
+  })
 }
 
 export function buildSummary(rs: Registration[], today: number, adminUrl: string): Email {
   const sorted = [...rs].sort((a, b) => a.registeredAt.localeCompare(b.registeredAt))
-  const lines = [
-    `${rs.length} new registrations`,
-    `From: ${formatTime(sorted[0].registeredAt)}`,
-    `To: ${formatTime(sorted[sorted.length - 1].registeredAt)}`,
-    `Expert IDs: ${sorted.map((r) => r.expertId).join(', ')}`,
-    `Registrations today: ${today}`,
-    'Admin dashboard:',
-  ]
-  return { subject: `${rs.length} new NEXUS-E registrations`, text: `${lines.join('\n')}\n${adminUrl}\n`, html: wrap(lines, adminUrl) }
+  return build({
+    greeting: '',
+    footer: FOOTER,
+    subject: `${rs.length} new NEXUS-E registrations`,
+    heading: `${rs.length} new registrations`,
+    paragraphs: [`${rs.length} new experts have registered on NEXUS-E.`],
+    details: [
+      { label: 'Expert IDs', value: sorted.map((r) => r.expertId).join('\n') },
+      { label: 'From (Africa/Lagos)', value: formatTime(sorted[0].registeredAt) },
+      { label: 'To (Africa/Lagos)', value: formatTime(sorted[sorted.length - 1].registeredAt) },
+      { label: 'Registrations today', value: String(today) },
+    ],
+    button: button(adminUrl),
+  })
 }
 
+/** The same design as the real emails with sample details, marked TEST, so the design can be seen without registering anyone. */
 export function buildTest(adminUrl: string): Email {
-  const lines = ['This is a test of the registration notification.', 'No one has registered.', 'Admin dashboard:']
-  return { subject: 'TEST notification', text: `${lines.join('\n')}\n${adminUrl}\n`, html: wrap(lines, adminUrl) }
+  return build({
+    greeting: '',
+    footer: FOOTER,
+    banner: 'TEST',
+    subject: 'TEST notification',
+    heading: 'New registration',
+    paragraphs: ['This is a test. No one has registered. A real notification looks like this.'],
+    details: [
+      { label: 'Expert ID', value: 'NEX-000123' },
+      { label: 'Primary expertise', value: 'Water and Hydrogeology' },
+      { label: 'Country', value: 'Kenya' },
+      { label: 'Time (Africa/Lagos)', value: formatTime(new Date().toISOString()) },
+      { label: 'Registrations today', value: '1' },
+    ],
+    button: button(adminUrl),
+  })
 }
 
 /** More than five waiting at once means a busy hour: one summary instead of many emails. */
