@@ -217,6 +217,11 @@ export const ig: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Ọ dị',
+      limited: 'Ịdị ntakịrị',
+      not_available: 'Ọ dịghị',
+    },
   },
   register: {
     pageTitle: 'Debanye aha dị ka ọkachamara | NEXUS-E',
@@ -795,6 +800,12 @@ export const ig: Messages = {
       withdraw: 'Wepụ mmasị',
       express: 'Gosi mmasị',
     },
+    consulting: {
+      title: 'Ịdị maka ndụmọdụ',
+      help: 'Gwa òtù ndị ahụ ma ị nwere ike ime ọrụ ndụmọdụ. Ọ na-apụta n\'profaịlụ gị nke ọha naanị ma e depụtara gị.',
+      saved: 'Echekwara.',
+      notSet: 'Etinyebeghị ya',
+    },
   },
   files: {
     empty: 'Faịlụ a bụ efu. Biko họrọ faịlụ ahụ ọzọ.',
@@ -879,7 +890,11 @@ export const ig: Messages = {
       membership: 'Ịbụ onye otu ọrụ',
       assignment: 'Dị njikere maka ọrụ n\'',
       availability: 'Ebe ị dị',
+      consulting: 'Ịdị maka ndụmọdụ',
+      body: 'Òtù ọkachamara',
+      ngo: 'NGO gbasara gburugburu ebe obibi',
     },
+    filterNote: 'Ndị ọkachamara n\'onwe ha na-ekwupụta ndị otu na njikọ. Enwere ike ịchọ ha naanị maka ndị ọkachamara họọrọ igosi ha.',
   },
   profile: {
     loading: 'Na-ebu nkọwa',
@@ -910,6 +925,7 @@ export const ig: Messages = {
       openTo: 'Dị njikere maka',
       canWork: 'Nwere ike ịrụ ọrụ n\'',
       link: 'Njikọ nkọwa',
+      consulting: 'Ịdị maka ndụmọdụ',
     },
   },
 }

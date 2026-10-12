@@ -217,6 +217,11 @@ export const sw: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Inapatikana',
+      limited: 'Upatikanaji mdogo',
+      not_available: 'Haipatikani',
+    },
   },
   register: {
     pageTitle: 'Jisajili kama mtaalamu | NEXUS-E',
@@ -795,6 +800,12 @@ export const sw: Messages = {
       withdraw: 'Ondoa nia',
       express: 'Onyesha nia',
     },
+    consulting: {
+      title: 'Upatikanaji wa ushauri',
+      help: 'Waambie mashirika kama unaweza kuchukua kazi za ushauri. Inaonekana kwenye wasifu wako wa umma ikiwa umeorodheshwa tu.',
+      saved: 'Imehifadhiwa.',
+      notSet: 'Bado haijawekwa',
+    },
   },
   files: {
     empty: 'Faili hii ni tupu. Tafadhali chagua faili tena.',
@@ -879,7 +890,11 @@ export const sw: Messages = {
       membership: 'Uanachama wa kitaaluma',
       assignment: 'Yuko tayari kwa kazi za',
       availability: 'Upatikanaji wa kijiografia',
+      consulting: 'Upatikanaji wa ushauri',
+      body: 'Chombo cha kitaaluma',
+      ngo: 'NGO ya mazingira',
     },
+    filterNote: 'Uanachama na ushirika vimetangazwa na wataalamu wenyewe. Vinaweza kutafutwa kwa wataalamu waliochagua kuviweka wazi tu.',
   },
   profile: {
     loading: 'Inapakia wasifu',
@@ -910,6 +925,7 @@ export const sw: Messages = {
       openTo: 'Yuko tayari kwa',
       canWork: 'Anaweza kufanya kazi',
       link: 'Kiungo cha wasifu',
+      consulting: 'Upatikanaji wa ushauri',
     },
   },
 }

@@ -109,6 +109,7 @@ export default function ExpertProfile() {
     [t.rows.memberships, profile.memberships.length ? profile.memberships.map((x) => label('memberships', x)).join(', ') : null],
     [t.rows.openTo, profile.assignments.length ? profile.assignments.map((x) => label('assignments', x)).join(', ') : null],
     [t.rows.canWork, label('availability', profile.availability)],
+    [t.rows.consulting, profile.consulting_availability ? label('consulting', profile.consulting_availability) : null],
   ]
 
   return (

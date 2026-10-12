@@ -217,6 +217,11 @@ export const mg: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Misy',
+      limited: 'Fahafahana voafetra',
+      not_available: 'Tsy misy',
+    },
   },
   register: {
     pageTitle: 'Misoratra anarana ho manam-pahaizana | NEXUS-E',
@@ -795,6 +800,12 @@ export const mg: Messages = {
       withdraw: 'Esory ny fahalianana',
       express: 'Asehoy ny fahalianana',
     },
+    consulting: {
+      title: 'Fahafahana hanome torohevitra',
+      help: 'Lazao amin\'ny fikambanana raha afaka manao asa torohevitra ianao. Miseho amin\'ny mombamomba ahy ampahibemaso izany raha ao anaty lisitra ianao ihany.',
+      saved: 'Voatahiry.',
+      notSet: 'Mbola tsy voafidy',
+    },
   },
   files: {
     empty: 'Foana ity rakitra ity. Fidio rakitra hafa azafady.',
@@ -879,7 +890,11 @@ export const mg: Messages = {
       membership: 'Fikambanana ara-matihanina',
       assignment: 'Vonona hiasa amin\'ny',
       availability: 'Fahafahana araka ny faritra',
+      consulting: 'Fahafahana hanome torohevitra',
+      body: 'Fikambanana ara-matihanina',
+      ngo: 'ONG momba ny tontolo iainana',
     },
+    filterNote: 'Ny manam-pahaizana no milaza ny fikambanana sy ny fifandraisany. Azo karohina ihany izany ho an\'ireo manam-pahaizana nifidy ny hampiseho azy.',
   },
   profile: {
     loading: 'Mampiditra ny mombamomba',
@@ -910,6 +925,7 @@ export const mg: Messages = {
       openTo: 'Misokatra amin\'ny',
       canWork: 'Afaka miasa any',
       link: 'Rohy mombamomba',
+      consulting: 'Fahafahana hanome torohevitra',
     },
   },
 }

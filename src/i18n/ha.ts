@@ -217,6 +217,11 @@ export const ha: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Yana nan',
+      limited: 'Samuwa mai iyaka',
+      not_available: 'Babu shi',
+    },
   },
   register: {
     pageTitle: 'Yi rajista a matsayin ƙwararre | NEXUS-E',
@@ -795,6 +800,12 @@ export const ha: Messages = {
       withdraw: 'Janye sha\'awa',
       express: 'Nuna sha\'awa',
     },
+    consulting: {
+      title: 'Samuwar bada shawara',
+      help: 'Gaya wa ƙungiyoyi ko za ka iya karɓar aikin bada shawara. Yana bayyana a shafinka na jama\'a ne kawai idan an lissafa ka.',
+      saved: 'An adana.',
+      notSet: 'Ba a saita ba tukuna',
+    },
   },
   files: {
     empty: 'Wannan fayil babu komai a ciki. Da fatan a sake zaɓar fayil ɗin.',
@@ -879,7 +890,11 @@ export const ha: Messages = {
       membership: 'Zama memba a ƙungiyar sana\'a',
       assignment: 'A shirye don ayyuka a',
       availability: 'Samuwa a wurare',
+      consulting: 'Samuwar bada shawara',
+      body: 'Hukumar sana\'a',
+      ngo: 'Kungiyar muhalli mai zaman kanta',
     },
+    filterNote: 'Membobi da alaƙa ƙwararrun ne suka bayyana su da kansu. Za a iya nemansu ne kawai ga ƙwararrun da suka zaɓi nuna su.',
   },
   profile: {
     loading: 'Ana loda bayanan martaba',
@@ -910,6 +925,7 @@ export const ha: Messages = {
       openTo: 'A shirye don',
       canWork: 'Zai iya aiki',
       link: 'Hanyar bayanan martaba',
+      consulting: 'Samuwar bada shawara',
     },
   },
 }

@@ -123,6 +123,7 @@ export type ExpertRecord = {
   nes_number: string | null
   iepn_status: string | null
   availability: string
+  consulting_availability?: string | null
   discoverable: boolean
   verification_status: string
   verified_at: string | null

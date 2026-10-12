@@ -217,6 +217,11 @@ export const zu: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Iyatholakala',
+      limited: 'Ukutholakala okukhawulelwe',
+      not_available: 'Ayitholakali',
+    },
   },
   register: {
     pageTitle: 'Bhalisa njengochwepheshe | NEXUS-E',
@@ -795,6 +800,12 @@ export const zu: Messages = {
       withdraw: 'Khipha isithakazelo',
       express: 'Bonisa isithakazelo',
     },
+    consulting: {
+      title: 'Ukutholakala kokweluleka',
+      help: 'Tshela izinhlangano ukuthi ungasebenza yini emisebenzini yokweluleka. Ivela kuphrofayela yakho yomphakathi kuphela uma ufakwe ohlwini.',
+      saved: 'Kugciniwe.',
+      notSet: 'Akumiswanga okwamanje',
+    },
   },
   files: {
     empty: 'Leli fayela alinalutho. Sicela ukhethe ifayela futhi.',
@@ -879,7 +890,11 @@ export const zu: Messages = {
       membership: 'Ubulungu bobungcweti',
       assignment: 'Ulungele imisebenzi e',
       availability: 'Ukutholakala kwendawo',
+      consulting: 'Ukutholakala kokweluleka',
+      body: 'Umkhandlu wobungcweti',
+      ngo: 'I-NGO yemvelo',
     },
+    filterNote: 'Ubulungu nokuxhumana kushiwo ngochwepheshe ngokwabo. Kungasesha kuphela kochwepheshe abakhethe ukukubonisa.',
   },
   profile: {
     loading: 'Ilayisha iphrofayela',
@@ -910,6 +925,7 @@ export const zu: Messages = {
       openTo: 'Ulungele',
       canWork: 'Angasebenza e',
       link: 'Isixhumanisi seprofayela',
+      consulting: 'Ukutholakala kokweluleka',
     },
   },
 }

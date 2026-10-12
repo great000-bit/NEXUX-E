@@ -16,6 +16,7 @@ export type Listing = {
   primary_expertise: string
   years_experience: string
   qualification: string
+  consulting_availability?: string | null
 }
 
 export type PublicAffiliation = {
@@ -34,6 +35,7 @@ export type PublicProfile = Listing & {
   affiliations?: PublicAffiliation[]
   assignments: string[]
   availability: string
+  consulting_availability?: string | null
   profile_url: string | null
   verified_at: string | null
 }

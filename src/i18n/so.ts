@@ -217,6 +217,11 @@ export const so: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Waa diyaar',
+      limited: 'Diyaar muddo xaddidan',
+      not_available: 'Ma diyaar aha',
+    },
   },
   register: {
     pageTitle: 'Iska diiwaan geli khabiir ahaan | NEXUS-E',
@@ -795,6 +800,12 @@ export const so: Messages = {
       withdraw: 'Ka noqo xiisaha',
       express: 'Muuji xiise',
     },
+    consulting: {
+      title: 'Helitaanka la-talinta',
+      help: 'U sheeg hay\'adaha haddii aad qaadan karto shaqada la-talinta. Waxay ka muuqataa profile-kaaga bulshada oo keliya haddii lagu liis geliyay.',
+      saved: 'La keydiyay.',
+      notSet: 'Weli lama dejin',
+    },
   },
   files: {
     empty: 'Faylkan waa madhan yahay. Fadlan dooro fayl kale.',
@@ -879,7 +890,11 @@ export const so: Messages = {
       membership: 'Xubinnimo xirfadeed',
       assignment: 'U diyaar ah hawlo ku jira',
       availability: 'Helitaanka juqraafi ahaan',
+      consulting: 'Helitaanka la-talinta',
+      body: 'Hay\'ad xirfadeed',
+      ngo: 'NGO deegaan',
     },
+    filterNote: 'Xubinnimada iyo xiriirka waxaa is-sheega khubarada laftooda. Waa la baadhi karaa oo keliya khubarada doortay inay muujiyaan.',
   },
   profile: {
     loading: 'Profile-ka ayaa la rarayaa',
@@ -910,6 +925,7 @@ export const so: Messages = {
       openTo: 'Furan',
       canWork: 'Wuxuu ka shaqeyn karaa',
       link: 'Xiriirka profile',
+      consulting: 'Helitaanka la-talinta',
     },
   },
 }

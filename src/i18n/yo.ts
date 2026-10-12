@@ -217,6 +217,11 @@ export const yo: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Wà',
+      limited: 'Wíwà tí ó ní ààlà',
+      not_available: 'Kò sí',
+    },
   },
   register: {
     pageTitle: 'Forúkọ sílẹ̀ gẹ́gẹ́ bí ògbógi | NEXUS-E',
@@ -795,6 +800,12 @@ export const yo: Messages = {
       withdraw: 'Yọ ìfẹ́ kúrò',
       express: 'Fi ìfẹ́ hàn',
     },
+    consulting: {
+      title: 'Wíwà fún ìgbìmọ̀ràn',
+      help: 'Sọ fún àwọn àjọ bóyá o lè gba iṣẹ́ ìgbìmọ̀ràn. Ó máa hàn lórí ojú-ìwé gbogbo ènìyàn rẹ tí a bá ti kọ orúkọ rẹ sílẹ̀ nìkan.',
+      saved: 'A ti fi pamọ́.',
+      notSet: 'A kò tíì ṣètò rẹ̀',
+    },
   },
   files: {
     empty: 'Fáìlì yìí ṣofo. Jọ̀wọ́ tún yan fáìlì náà.',
@@ -879,7 +890,11 @@ export const yo: Messages = {
       membership: 'Ẹgbẹ́ iṣẹ́-ọwọ́',
       assignment: 'Wà fún iṣẹ́ ní',
       availability: 'Ibi tí ó wà fún iṣẹ́',
+      consulting: 'Wíwà fún ìgbìmọ̀ràn',
+      body: 'Ẹgbẹ́ iṣẹ́',
+      ngo: 'Àjọ àyíká tí kì í ṣe ti ìjọba',
     },
+    filterNote: 'Àwọn ọmọ ẹgbẹ́ àti ìbáṣepọ̀ ni àwọn akọ̀ṣẹ́mọṣẹ́ fúnra wọn kéde. A lè wá wọn fún àwọn akọ̀ṣẹ́mọṣẹ́ tí wọ́n yàn láti fi wọ́n hàn nìkan.',
   },
   profile: {
     loading: 'Ń gbé àlàyé wá',
@@ -910,6 +925,7 @@ export const yo: Messages = {
       openTo: 'Wà fún',
       canWork: 'Lè ṣiṣẹ́ ní',
       link: 'Ìjápọ̀ àlàyé',
+      consulting: 'Wíwà fún ìgbìmọ̀ràn',
     },
   },
 }

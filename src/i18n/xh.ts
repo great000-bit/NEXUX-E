@@ -217,6 +217,11 @@ export const xh: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Iyafumaneka',
+      limited: 'Ukufumaneka okuncitshisiweyo',
+      not_available: 'Ayifumaneki',
+    },
   },
   register: {
     pageTitle: 'Bhalisa njengengcali | NEXUS-E',
@@ -795,6 +800,12 @@ export const xh: Messages = {
       withdraw: 'Susa umdla',
       express: 'Bonisa umdla',
     },
+    consulting: {
+      title: 'Ukufumaneka kokucebisa',
+      help: 'Xelela imibutho ukuba ungakwazi ukwenza umsebenzi wokucebisa. Ivela kwiprofayile yakho kawonke-wonke kuphela ukuba ufakwe kuluhlu.',
+      saved: 'Igciniwe.',
+      notSet: 'Ayikamiselwa okwangoku',
+    },
   },
   files: {
     empty: 'Le fayile ayinanto. Nceda ukhethe enye ifayile.',
@@ -879,7 +890,11 @@ export const xh: Messages = {
       membership: 'Ubulungu bobugcisa',
       assignment: 'Ilungele imisebenzi ye',
       availability: 'Ukufumaneka kwendawo',
+      consulting: 'Ukufumaneka kokucebisa',
+      body: 'Umbutho wobugcisa',
+      ngo: 'I-NGO yokusingqongileyo',
     },
+    filterNote: 'Ubulungu nobudlelwane buchazwa ziingcali ngokwazo. Bunokukhangelwa kuphela kwiingcali ezikhethe ukububonisa.',
   },
   profile: {
     loading: 'Iyalayisha iprofayile',
@@ -910,6 +925,7 @@ export const xh: Messages = {
       openTo: 'Ilungele',
       canWork: 'Inokusebenza e',
       link: 'Ikhonkco leprofayile',
+      consulting: 'Ukufumaneka kokucebisa',
     },
   },
 }

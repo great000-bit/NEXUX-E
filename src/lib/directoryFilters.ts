@@ -1,7 +1,7 @@
 // Pure helpers for the public directory: which filters exist, how they live in the address bar,
 // and how a person's name and links are shown. No network and no browser APIs, so tests can run them.
 import { COUNTRIES } from './countries'
-import { ASSIGNMENTS, AVAILABILITY, EXPERTISE, MEMBERSHIPS, QUALIFICATIONS, STATES, YEARS } from './options'
+import { ASSIGNMENTS, AVAILABILITY, CONSULTING, EXPERTISE, MEMBERSHIPS, QUALIFICATIONS, STATES, YEARS } from './options'
 
 export const PAGE_SIZE = 12
 
@@ -22,6 +22,10 @@ export type Filters = {
   membership: string
   assignment: string
   availability: string
+  consulting: string
+  /** An institution id (professional body) and another (NGO). Both are searched only for experts who made them public. */
+  body: string
+  ngo: string
   sort: Sort
   page: number
 }
@@ -36,6 +40,9 @@ export const EMPTY_FILTERS: Filters = {
   membership: '',
   assignment: '',
   availability: '',
+  consulting: '',
+  body: '',
+  ngo: '',
   sort: 'name',
   page: 1,
 }
@@ -50,12 +57,17 @@ export const FILTER_OPTIONS = {
   membership: MEMBERSHIPS,
   assignment: ASSIGNMENTS,
   availability: AVAILABILITY,
+  consulting: CONSULTING,
 } as const
 
 export type FilterKey = keyof typeof FILTER_OPTIONS
 export const FILTER_KEYS = Object.keys(FILTER_OPTIONS) as FilterKey[]
 
 export const MAX_QUERY_LENGTH = 80
+
+/** The two institution filters hold an id from the public institution list. Anything that is not an id is ignored. */
+export const INSTITUTION_KEYS = ['body', 'ngo'] as const
+export const INSTITUTION_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 const isOneOf = (list: readonly string[], v: string) => list.includes(v)
 
@@ -66,6 +78,10 @@ export function filtersFromParams(params: URLSearchParams): Filters {
   for (const key of FILTER_KEYS) {
     const v = params.get(key) ?? ''
     if (isOneOf(FILTER_OPTIONS[key], v)) f[key] = v
+  }
+  for (const key of INSTITUTION_KEYS) {
+    const v = params.get(key) ?? ''
+    if (INSTITUTION_ID.test(v)) f[key] = v.toLowerCase()
   }
   const sort = params.get('sort') ?? ''
   if (SORTS.some((s) => s.value === sort)) f.sort = sort as Sort
@@ -79,6 +95,7 @@ export function paramsFromFilters(f: Filters): Record<string, string> {
   const out: Record<string, string> = {}
   if (f.q) out.q = f.q
   for (const key of FILTER_KEYS) if (f[key]) out[key] = f[key]
+  for (const key of INSTITUTION_KEYS) if (f[key]) out[key] = f[key]
   if (f.sort !== 'name') out.sort = f.sort
   if (f.page > 1) out.page = String(f.page)
   return out
@@ -86,7 +103,7 @@ export function paramsFromFilters(f: Filters): Record<string, string> {
 
 /** How many filters (not counting the search words, sort or page) are switched on. */
 export function activeFilterCount(f: Filters): number {
-  return FILTER_KEYS.filter((k) => f[k]).length
+  return FILTER_KEYS.filter((k) => f[k]).length + INSTITUTION_KEYS.filter((k) => f[k]).length
 }
 
 export const hasAnyFilter = (f: Filters) => Boolean(f.q) || activeFilterCount(f) > 0
@@ -105,6 +122,9 @@ export function searchArgs(f: Filters) {
     p_membership: f.membership || null,
     p_assignment: f.assignment || null,
     p_availability: f.availability || null,
+    p_consulting: f.consulting || null,
+    p_body: f.body || null,
+    p_ngo: f.ngo || null,
     p_sort: f.sort,
     p_limit: PAGE_SIZE,
     p_offset: (f.page - 1) * PAGE_SIZE,

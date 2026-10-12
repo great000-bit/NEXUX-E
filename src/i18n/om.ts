@@ -217,6 +217,11 @@ export const om: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Ni argama',
+      limited: 'Argamuu daangeffame',
+      not_available: 'Hin argamu',
+    },
   },
   register: {
     pageTitle: 'Ogeessa ta\'uun galmaa\'i | NEXUS-E',
@@ -795,6 +800,12 @@ export const om: Messages = {
       withdraw: 'Fedhii deebisi',
       express: 'Fedhii agarsiisi',
     },
+    consulting: {
+      title: 'Argamuu gorsaa',
+      help: 'Hojii gorsaa fudhachuu danda\'uu dhiisuu kee dhaabbilee himi. Yoo tarreeffamte qofa piroofaayilii ummataa kee irratti mul\'ata.',
+      saved: 'Kuufameera.',
+      notSet: 'Ammallee hin kaa\'amne',
+    },
   },
   files: {
     empty: 'Faayiliin kun duwwaadha. Maaloo faayilii biraa filadhu.',
@@ -879,7 +890,11 @@ export const om: Messages = {
       membership: 'Miseensummaa ogummaa',
       assignment: 'Hojii kanaaf qophaa\'e',
       availability: 'Argamuu lafaa',
+      consulting: 'Argamuu gorsaa',
+      body: 'Dhaabbata ogummaa',
+      ngo: 'NGO naannoo',
     },
+    filterNote: 'Miseensummaa fi hariiroon ogeeyyii mataa isaaniitiin kan ibsame dha. Ogeeyyii agarsiisuu filatan qofaaf barbaadamuu danda\'a.',
   },
   profile: {
     loading: 'Piroofaayilii fe\'aa jira',
@@ -910,6 +925,7 @@ export const om: Messages = {
       openTo: 'Banaa',
       canWork: 'Hojjechuu danda\'a',
       link: 'Hidhata piroofaayilii',
+      consulting: 'Argamuu gorsaa',
     },
   },
 }

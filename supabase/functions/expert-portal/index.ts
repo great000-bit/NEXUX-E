@@ -175,7 +175,7 @@ Deno.serve(async (req) => {
       const { data: e } = await db
         .from('experts')
         .select(
-          'expert_id, full_name, title, organisation, position, country, state, email, phone, primary_expertise, secondary_expertise, years_experience, qualification, memberships, nes_number, iepn_status, availability, discoverable, verification_status, verified_at, review_message, submitted_at, evidence_consent_at, created_at',
+          'expert_id, full_name, title, organisation, position, country, state, email, phone, primary_expertise, secondary_expertise, years_experience, qualification, memberships, nes_number, iepn_status, availability, consulting_availability, discoverable, verification_status, verified_at, review_message, submitted_at, evidence_consent_at, created_at',
         )
         .eq('expert_id', expertId)
         .maybeSingle()
@@ -297,6 +297,12 @@ Deno.serve(async (req) => {
       if (typeof body.value !== 'boolean') return fail(400, 'bad_value', 'That choice was not understood. Please try again.')
       const out = await rpc('portal_set_discoverable', { p_expert_id: expertId, p_value: body.value })
       return respond(200, { ok: true, ...(out as object) })
+    }
+
+    if (action === 'set_consulting') {
+      if (!['available', 'limited', 'not_available'].includes(String(body.value ?? ''))) return fail(400, 'bad_value', 'That choice was not understood. Please try again.')
+      await rpc('portal_set_consulting', { p_expert_id: expertId, p_value: String(body.value) })
+      return respond(200, { ok: true })
     }
 
     // The expert's own memberships and affiliations, with the private details (number, licence). Only they and admins see these.

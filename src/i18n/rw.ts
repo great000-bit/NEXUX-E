@@ -217,6 +217,11 @@ export const rw: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Arahari',
+      limited: 'Aboneka ku rugero ruto',
+      not_available: 'Ntaboneka',
+    },
   },
   register: {
     pageTitle: 'Iyandikishe nk\'impuguke | NEXUS-E',
@@ -795,6 +800,12 @@ export const rw: Messages = {
       withdraw: 'Kuraho inyungu',
       express: 'Erekana inyungu',
     },
+    consulting: {
+      title: 'Kuboneka ku bujyanama',
+      help: 'Bwira ibigo niba ushobora gukora ubujyanama. Bigaragara ku mwirondoro wawe rusange gusa niba uri ku rutonde.',
+      saved: 'Byabitswe.',
+      notSet: 'Ntibirashyirwaho',
+    },
   },
   files: {
     empty: 'Iyi dosiye irimo ubusa. Nyamuneka hitamo indi dosiye.',
@@ -879,7 +890,11 @@ export const rw: Messages = {
       membership: 'Ubunyamuryango bw\'umwuga',
       assignment: 'Yiteguye imirimo ya',
       availability: 'Aho ashobora gukorera',
+      consulting: 'Kuboneka ku bujyanama',
+      body: 'Ikigo cy\'umwuga',
+      ngo: 'NGO y\'ibidukikije',
     },
+    filterNote: 'Ubunyamuryango n\'imikoranire byivugirwa n\'impuguke ubwazo. Bishobora gushakishwa ku mpuguke zahisemo kubigaragaza gusa.',
   },
   profile: {
     loading: 'Umwirondoro urimo kuza',
@@ -910,6 +925,7 @@ export const rw: Messages = {
       openTo: 'Yiteguye',
       canWork: 'Ashobora gukorera',
       link: 'Ihuza ry\'umwirondoro',
+      consulting: 'Kuboneka ku bujyanama',
     },
   },
 }

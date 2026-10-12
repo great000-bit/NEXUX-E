@@ -217,6 +217,11 @@ export const am: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'ይገኛሉ',
+      limited: 'ውስን ተገኝነት',
+      not_available: 'አይገኙም',
+    },
   },
   register: {
     pageTitle: 'እንደ ባለሙያ ይመዝገቡ | NEXUS-E',
@@ -795,6 +800,12 @@ export const am: Messages = {
       withdraw: 'ፍላጎት አንሳ',
       express: 'ፍላጎት አሳይ',
     },
+    consulting: {
+      title: 'የምክር አገልግሎት ተገኝነት',
+      help: 'የምክር ሥራ መውሰድ ይችሉ እንደሆነ ለድርጅቶች ይንገሩ። በዝርዝር ውስጥ ከተካተቱ ብቻ በሕዝብ መገለጫዎ ላይ ይታያል።',
+      saved: 'ተቀምጧል።',
+      notSet: 'ገና አልተመረጠም',
+    },
   },
   files: {
     empty: 'ይህ ፋይል ባዶ ነው። እባክዎ ፋይሉን እንደገና ይምረጡ።',
@@ -879,7 +890,11 @@ export const am: Messages = {
       membership: 'የሙያ አባልነት',
       assignment: 'ለሥራዎች ዝግጁ በ',
       availability: 'የሚገኙበት አካባቢ',
+      consulting: 'የምክር አገልግሎት ተገኝነት',
+      body: 'የሙያ አካል',
+      ngo: 'የአካባቢ መንግሥታዊ ያልሆነ ድርጅት',
     },
+    filterNote: 'አባልነቶችና ግንኙነቶች በባለሙያዎቹ ራሳቸው የተገለጹ ናቸው። ለማሳየት ለመረጡ ባለሙያዎች ብቻ ሊፈለጉ ይችላሉ።',
   },
   profile: {
     loading: 'መገለጫውን በመጫን ላይ',
@@ -910,6 +925,7 @@ export const am: Messages = {
       openTo: 'ዝግጁ የሆነበት',
       canWork: 'መሥራት የሚችልበት',
       link: 'የመገለጫ አገናኝ',
+      consulting: 'የምክር አገልግሎት ተገኝነት',
     },
   },
 }

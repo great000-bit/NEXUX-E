@@ -387,6 +387,11 @@ export const fr: Messages = {
       board_member: 'Membre du conseil d’administration',
       partner: 'Partenaire',
     },
+    consulting: {
+      available: 'Disponible',
+      limited: 'Disponibilité limitée',
+      not_available: 'Non disponible',
+    },
   },
   register: {
     pageTitle: 'Inscription d’un expert | NEXUS-E',
@@ -780,6 +785,12 @@ export const fr: Messages = {
       publicHide: 'Ne plus les afficher',
       loadFailed: 'Nous n’avons pas pu charger vos appartenances et affiliations.',
     },
+    consulting: {
+      title: 'Disponibilité pour le conseil',
+      help: 'Indiquez aux organisations si vous pouvez accepter des missions de conseil. Elle n\'apparaît sur votre profil public que si vous êtes inscrit au répertoire.',
+      saved: 'Enregistré.',
+      notSet: 'Pas encore renseignée',
+    },
   },
   files: {
     empty: 'Ce fichier est vide. Veuillez choisir à nouveau le fichier.',
@@ -843,6 +854,9 @@ export const fr: Messages = {
       membership: 'Appartenance professionnelle',
       assignment: 'Disponible pour des missions de type',
       availability: 'Disponibilité géographique',
+      consulting: 'Disponibilité pour le conseil',
+      body: 'Organisme professionnel',
+      ngo: 'ONG environnementale',
     },
     results: 'Résultats',
     searching: 'Recherche en cours...',
@@ -865,6 +879,7 @@ export const fr: Messages = {
     notOpen: 'L’annuaire n’est pas encore ouvert. Veuillez réessayer plus tard.',
     searchFailed: 'Nous n’avons pas pu charger l’annuaire. Vérifiez votre connexion et réessayez.',
     profileFailed: 'Nous n’avons pas pu charger ce profil. Vérifiez votre connexion et réessayez.',
+    filterNote: 'Les adhésions et affiliations sont déclarées par les experts eux-mêmes. Elles ne peuvent être recherchées que pour les experts qui ont choisi de les afficher.',
   },
   profile: {
     loading: 'Chargement du profil',
@@ -890,6 +905,7 @@ export const fr: Messages = {
       openTo: 'Disponible pour',
       canWork: 'Peut travailler',
       link: 'Lien de profil',
+      consulting: 'Disponibilité pour le conseil',
     },
     note: 'Cet expert a été vérifié par NEXUS-E et a choisi d’être répertorié. Les numéros de téléphone, adresses e-mail et documents ne sont jamais affichés ici.',
     affiliationsTitle: 'Appartenances et affiliations',

@@ -217,6 +217,11 @@ export const af: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Beskikbaar',
+      limited: 'Beperkte beskikbaarheid',
+      not_available: 'Nie beskikbaar nie',
+    },
   },
   register: {
     pageTitle: 'Registreer as kundige | NEXUS-E',
@@ -795,6 +800,12 @@ export const af: Messages = {
       withdraw: 'Trek belangstelling terug',
       express: 'Toon belangstelling',
     },
+    consulting: {
+      title: 'Beskikbaarheid vir konsultasie',
+      help: 'Sê vir organisasies of jy konsultasiewerk kan aanvaar. Dit verskyn net op jou openbare profiel as jy gelys is.',
+      saved: 'Gestoor.',
+      notSet: 'Nog nie gestel nie',
+    },
   },
   files: {
     empty: 'Hierdie lêer is leeg. Kies asseblief \'n ander lêer.',
@@ -879,7 +890,11 @@ export const af: Messages = {
       membership: 'Professionele lidmaatskap',
       assignment: 'Beskikbaar vir opdragte in',
       availability: 'Geografiese beskikbaarheid',
+      consulting: 'Beskikbaarheid vir konsultasie',
+      body: 'Professionele liggaam',
+      ngo: 'Omgewings-NRO',
     },
+    filterNote: 'Lidmaatskappe en verbintenisse word deur die kundiges self verklaar. Dit kan slegs gesoek word vir kundiges wat gekies het om dit te wys.',
   },
   profile: {
     loading: 'Laai tans profiel',
@@ -910,6 +925,7 @@ export const af: Messages = {
       openTo: 'Beskikbaar vir',
       canWork: 'Kan werk in',
       link: 'Profielskakel',
+      consulting: 'Beskikbaarheid vir konsultasie',
     },
   },
 }

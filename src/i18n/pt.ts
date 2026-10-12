@@ -387,6 +387,11 @@ export const pt: Messages = {
       board_member: 'Membro do conselho de administração',
       partner: 'Parceiro',
     },
+    consulting: {
+      available: 'Disponível',
+      limited: 'Disponibilidade limitada',
+      not_available: 'Indisponível',
+    },
   },
   register: {
     pageTitle: 'Registo de especialista | NEXUS-E',
@@ -780,6 +785,12 @@ export const pt: Messages = {
       publicHide: 'Deixar de as mostrar',
       loadFailed: 'Não conseguimos carregar as suas filiações e afiliações.',
     },
+    consulting: {
+      title: 'Disponibilidade para consultoria',
+      help: 'Diga às organizações se pode aceitar trabalho de consultoria. Só aparece no seu perfil público se estiver listado.',
+      saved: 'Guardado.',
+      notSet: 'Ainda não definida',
+    },
   },
   files: {
     empty: 'Este ficheiro está vazio. Escolha o ficheiro novamente.',
@@ -843,6 +854,9 @@ export const pt: Messages = {
       membership: 'Filiação profissional',
       assignment: 'Disponível para missões em',
       availability: 'Disponibilidade geográfica',
+      consulting: 'Disponibilidade para consultoria',
+      body: 'Organismo profissional',
+      ngo: 'ONG ambiental',
     },
     results: 'Resultados',
     searching: 'A pesquisar...',
@@ -865,6 +879,7 @@ export const pt: Messages = {
     notOpen: 'O diretório ainda não está aberto. Tente novamente mais tarde.',
     searchFailed: 'Não conseguimos carregar o diretório. Verifique a sua ligação e tente novamente.',
     profileFailed: 'Não conseguimos carregar este perfil. Verifique a sua ligação e tente novamente.',
+    filterNote: 'As filiações e afiliações são declaradas pelos próprios especialistas. Só podem ser pesquisadas para os especialistas que escolheram mostrá-las.',
   },
   profile: {
     loading: 'A carregar o perfil',
@@ -890,6 +905,7 @@ export const pt: Messages = {
       openTo: 'Disponível para',
       canWork: 'Pode trabalhar',
       link: 'Ligação do perfil',
+      consulting: 'Disponibilidade para consultoria',
     },
     note: 'Este especialista foi verificado pelo NEXUS-E e escolheu ser listado. Os números de telefone, endereços de correio electrónico e documentos nunca são mostrados aqui.',
     affiliationsTitle: 'Filiações e afiliações',

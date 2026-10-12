@@ -125,6 +125,11 @@ export const enCore = {
       Africa: 'Across Africa',
       International: 'International',
     },
+    consulting: {
+      available: 'Available',
+      limited: 'Limited availability',
+      not_available: 'Not available',
+    },
     countries: same(COUNTRY_NAMES),
     membershipCategories: { Member: 'Member', Associate: 'Associate', Fellow: 'Fellow', Student: 'Student', Honorary: 'Honorary', Other: 'Other' },
     affiliationTypes: { employee: 'Employee', consultant: 'Consultant', member: 'Member', volunteer: 'Volunteer', board_member: 'Board member', partner: 'Partner' },

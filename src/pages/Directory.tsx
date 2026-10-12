@@ -3,9 +3,11 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { VerifiedBadge } from '../components/VerifiedBadge'
 import { Notice, Spinner } from '../components/ui'
+import { fetchInstitutions } from '../lib/institutionsApi'
+import { kindOf, type Institution } from '../lib/institutions'
 import { searchExperts, type Listing } from '../lib/directory'
 import {
-  activeFilterCount, displayName, FILTER_KEYS, FILTER_OPTIONS, filtersFromParams, hasAnyFilter,
+  activeFilterCount, displayName, FILTER_KEYS, FILTER_OPTIONS, filtersFromParams, hasAnyFilter, INSTITUTION_KEYS,
   MAX_QUERY_LENGTH, pageCount, paramsFromFilters, PAGE_SIZE, SORTS, type FilterKey, type Filters, type Sort,
 } from '../lib/directoryFilters'
 import { usePageMeta } from '../lib/meta'
@@ -22,6 +24,7 @@ const FILTER_GROUP: Record<FilterKey, string | null> = {
   membership: 'memberships',
   assignment: 'assignments',
   availability: 'availability',
+  consulting: 'consulting',
 }
 
 type Loaded = { key: string; ok: true; total: number; items: Listing[] } | { key: string; ok: false; message: string }
@@ -38,8 +41,21 @@ export default function Directory() {
   const [loaded, setLoaded] = useState<Loaded | null>(null)
   const [retry, setRetry] = useState(0)
   const [showFilters, setShowFilters] = useState(() => activeFilterCount(filters) > 0)
+  const [institutions, setInstitutions] = useState<Institution[]>([])
   const headingRef = useRef<HTMLHeadingElement>(null)
   const firstRun = useRef(true)
+
+  // The two institution lists are fetched when the filters are opened, so the first paint does not wait for them.
+  useEffect(() => {
+    if (!showFilters || institutions.length) return
+    let live = true
+    void fetchInstitutions().then((r) => {
+      if (live && r.ok) setInstitutions(r.items)
+    })
+    return () => {
+      live = false
+    }
+  }, [showFilters, institutions.length])
 
   const plain = !hasAnyFilter(filters) && filters.page === 1 && filters.sort === 'name'
   usePageMeta({
@@ -172,6 +188,18 @@ export default function Directory() {
                 </select>
               </div>
             ))}
+            {INSTITUTION_KEYS.map((k) => (
+              <div key={k}>
+                <label htmlFor={`directory-${k}`} className="field-label">{t.filterLabels[k]}</label>
+                <select id={`directory-${k}`} className="input" value={filters[k]} onChange={(e) => apply({ [k]: e.target.value })}>
+                  <option value="">{m.common.any}</option>
+                  {institutions
+                    .filter((i) => kindOf(i.category) === (k === 'ngo' ? 'ngo' : 'professional'))
+                    .map((i) => <option key={i.id} value={i.id}>{i.acronym && !i.name.includes(i.acronym) ? `${i.name} (${i.acronym})` : i.name}</option>)}
+                </select>
+              </div>
+            ))}
+            <p className="text-sm text-ink-500 sm:col-span-2">{t.filterNote}</p>
           </div>
         )}
       </form>
@@ -221,6 +249,9 @@ export default function Directory() {
                   </div>
                   <p className="mt-0.5 break-words text-sm text-ink-700">{e.position}, {e.organisation}</p>
                   <p className="mt-2 text-sm font-semibold text-ink-900">{label('expertise', e.primary_expertise)}</p>
+                  {e.consulting_availability && (
+                    <p className="mt-1 text-xs font-bold text-green-800">{t.filterLabels.consulting}: {label('consulting', e.consulting_availability)}</p>
+                  )}
                   <p className="mt-0.5 text-sm text-ink-500">
                     {[e.state, e.country ? label('countries', e.country) : null].filter(Boolean).join(', ')} · {fmt(t.yearsShort, { years: label('years', e.years_experience) })} · {label('qualifications', e.qualification)}
                   </p>

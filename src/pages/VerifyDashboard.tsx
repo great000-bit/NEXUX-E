@@ -3,6 +3,7 @@ import { usePageInfo } from '../lib/pageInfo'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AffiliationsCard } from '../components/AffiliationsCard'
+import { ConsultingCard } from '../components/ConsultingCard'
 import { ListingCard } from '../components/ListingCard'
 import { OpportunitiesSection } from '../components/OpportunitiesSection'
 import { StatusBadge } from '../components/StatusBadge'
@@ -321,6 +322,7 @@ export default function VerifyDashboard() {
         </>
       )}
 
+      <ConsultingCard value={expert.consulting_availability} token={token} onChanged={refresh} onSessionEnded={sessionEnded} />
       <AffiliationsCard token={token} onSessionEnded={sessionEnded} />
 
       {/* Registered details */}

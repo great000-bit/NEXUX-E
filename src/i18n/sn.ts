@@ -217,6 +217,11 @@ export const sn: Messages = {
       NIM: 'NIM',
       IUCN: 'IUCN',
     },
+    consulting: {
+      available: 'Zviripo',
+      limited: 'Kuwanikwa kushoma',
+      not_available: 'Hazvipo',
+    },
   },
   register: {
     pageTitle: 'Nyoresa semunyanzvi | NEXUS-E',
@@ -795,6 +800,12 @@ export const sn: Messages = {
       withdraw: 'Bvisa kufarira',
       express: 'Ratidza kufarira',
     },
+    consulting: {
+      title: 'Kuwanikwa kwekupa mazano',
+      help: 'Udza masangano kana uchigona kutora basa rekupa mazano. Rinoonekwa paprofile yako yeveruzhinji chete kana wakaiswa murondedzero.',
+      saved: 'Zvachengetwa.',
+      notSet: 'Hazvisati zvaiswa',
+    },
   },
   files: {
     empty: 'Faera iri harina chinhu. Ndapota sarudza rimwe faera.',
@@ -879,7 +890,11 @@ export const sn: Messages = {
       membership: 'Hunhengo hweunyanzvi',
       assignment: 'Wakagadzirira mabasa ari',
       availability: 'Kuwanikwa kwenzvimbo',
+      consulting: 'Kuwanikwa kwekupa mazano',
+      body: 'Sangano reunyanzvi',
+      ngo: 'NGO yezvakatipoteredza',
     },
+    filterNote: 'Hunhengo nehukama hunozivikanwa nevanyanzvi pachavo. Hunogona kutsvakwa chete kuvanyanzvi vakasarudza kuhuratidza.',
   },
   profile: {
     loading: 'Kurodha profile',
@@ -910,6 +925,7 @@ export const sn: Messages = {
       openTo: 'Wakagadzirira',
       canWork: 'Anogona kushanda mu',
       link: 'Chinongedzo cheprofile',
+      consulting: 'Kuwanikwa kwekupa mazano',
     },
   },
 }

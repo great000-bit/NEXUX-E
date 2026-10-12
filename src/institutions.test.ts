@@ -91,7 +91,7 @@ test('the institutions CSV carries every field the brief names, one row each, wi
   assert.ok(csv.startsWith('﻿'))
   const [head, row] = csv.slice(1).split('\r\n')
   for (const h of ['Organisation name', 'Acronym', 'Country', 'Geographic coverage', 'Category', 'Specialisation', 'Website', 'Public contact', 'Verification status', 'Verification date', 'Evidence source', 'Suggested by', 'Status']) {
-    assert.ok(head.split(',').includes(h), h)
+    assert.ok(head.split(',').map((x) => x.replace(/"/g, '')).includes(h), h)
   }
   assert.match(row, /unverified/)
 })

@@ -68,3 +68,6 @@ export const ASSIGNMENTS = [
 ] as const
 
 export const AVAILABILITY = ['State only', 'Nigeria', 'West Africa', 'Africa', 'International'] as const
+
+/** Consulting availability, set by the expert after registering. */
+export const CONSULTING = ['available', 'limited', 'not_available'] as const
