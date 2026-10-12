@@ -1,8 +1,37 @@
 {
   "rewrites": [
-    { "source": "/(register|registered|verify|verify/dashboard|experts|admin)/?", "destination": "/index.html" },
-    { "source": "/experts/:expertId/?", "destination": "/index.html" },
-    { "source": "/admin/:path*", "destination": "/index.html" }
+    {
+      "source": "/register",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/registered",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/verify",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/verify/dashboard",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/experts",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/experts/:expertId",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin/:path*",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {

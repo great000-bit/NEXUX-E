@@ -28,7 +28,11 @@ test('every page route of the app is answered with the app shell', () => {
     const sample = '/' + p.replace(/\/\*$/, '/x').replace(':expertId', 'NEX-000001')
     assert.ok(rewritten(sample), `${sample} has no rewrite`)
   }
-  for (const extra of ['/register/', '/admin', '/admin/opportunities', '/experts/NEX-000123']) assert.ok(rewritten(extra), extra)
+  for (const extra of ['/admin', '/admin/opportunities', '/experts/NEX-000123']) assert.ok(rewritten(extra), extra)
+})
+
+test('every rewrite uses only the simple pattern forms Vercel accepts (a path, :name, :name*): anything else fails the deployment', () => {
+  for (const r of vercel.rewrites) assert.match(r.source, /^(\/[A-Za-z0-9-]+|\/:[A-Za-z]+\*?)+$/, r.source)
 })
 
 test('there is no catch-all rewrite, so an unknown address is a real 404, and /api is never rewritten', () => {
