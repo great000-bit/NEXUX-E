@@ -8,7 +8,7 @@ import { COUNTRY_LANGUAGES } from './countryLanguages'
 import { browserLocale, DEFAULT_LOCALE, LOCALES, type LocaleCode } from './locales'
 
 /** The language for a country (ISO 3166 two letter code), when it is live; otherwise English. */
-export function localeForCountry(country: string | null | undefined, live: readonly LocaleCode[] = LOCALES.map((l) => l.code)): LocaleCode {
+export function localeForCountry(country: string | null | undefined, live: readonly LocaleCode[] = LOCALES.filter((l) => l.complete).map((l) => l.code)): LocaleCode {
   const row = country ? COUNTRY_LANGUAGES[country.trim().toUpperCase()] : undefined
   return row && live.includes(row.default as LocaleCode) ? (row.default as LocaleCode) : DEFAULT_LOCALE
 }

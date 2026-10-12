@@ -12,7 +12,8 @@ test('detection order: a saved pick first, then a supported browser language, th
   assert.deepEqual(decide(null, ['ar-EG']), { locale: 'ar', source: 'browser', needsCountry: false })
   assert.deepEqual(decide(null, ['en-US', 'pt-AO']), { locale: 'pt', source: 'browser', needsCountry: false }, 'English is skipped, a later supported language counts')
   assert.deepEqual(decide(null, ['en-NG']), { locale: 'en', source: 'default', needsCountry: true }, 'an English browser asks the country')
-  assert.deepEqual(decide(null, ['sw-KE', 'ha']), { locale: 'en', source: 'default', needsCountry: true }, 'an unsupported language asks the country')
+  assert.deepEqual(decide(null, ['sw-KE', 'ha']), { locale: 'sw', source: 'browser', needsCountry: false }, 'Swahili is live now')
+  assert.deepEqual(decide(null, ['zh-CN', 'ti']), { locale: 'en', source: 'default', needsCountry: true }, 'an unsupported language asks the country')
   assert.deepEqual(decide(null, []), { locale: 'en', source: 'default', needsCountry: true })
 })
 
@@ -23,14 +24,16 @@ test('browser languages: region and case are ignored, English and unknown langua
   assert.equal(browserLocale(['zh-CN', 'ar']), 'ar')
 })
 
-test('the agreed country map: Arabic EG LY SD; French and Portuguese lists; everything else English', () => {
+test('the agreed country map: Arabic EG LY SD; French and Portuguese lists; the Tier 2 home countries; everything else English', () => {
   const arabic = ['EG', 'LY', 'SD']
   const french = ['BJ', 'BF', 'BI', 'CF', 'CD', 'CG', 'CI', 'CM', 'DJ', 'DZ', 'GA', 'GN', 'KM', 'MA', 'MG', 'ML', 'MR', 'NE', 'SN', 'TD', 'TG', 'TN']
   const portuguese = ['AO', 'CV', 'GW', 'MZ', 'ST']
   for (const iso of arabic) assert.equal(localeForCountry(iso), 'ar', iso)
   for (const iso of french) assert.equal(localeForCountry(iso), 'fr', iso)
   for (const iso of portuguese) assert.equal(localeForCountry(iso), 'pt', iso)
-  const mapped = new Set([...arabic, ...french, ...portuguese])
+  const tier2: Record<string, string> = { KE: 'sw', TZ: 'sw', ET: 'am', SO: 'so', RW: 'rw' }
+  for (const [iso, code] of Object.entries(tier2)) assert.equal(localeForCountry(iso), code, iso)
+  const mapped = new Set([...arabic, ...french, ...portuguese, ...Object.keys(tier2)])
   for (const iso of Object.keys(COUNTRY_LANGUAGES).filter((c) => !mapped.has(c))) assert.equal(localeForCountry(iso), 'en', `${iso} is English`)
   assert.equal(localeForCountry('NG'), 'en', 'Nigeria stays English')
   assert.equal(localeForCountry('eg'), 'ar', 'case does not matter')
@@ -41,8 +44,9 @@ test('anything unknown is English: a country outside Africa, nothing, or rubbish
 })
 
 test('a language that is not live yet is English, and goes live without any change to the country data', () => {
-  assert.equal(localeForCountry('KE'), 'en', 'Swahili is planned, not live')
-  assert.equal(localeForCountry('KE', ['en', 'sw'] as unknown as LocaleCode[]), 'sw', 'once Swahili is live, Kenya is Swahili')
+  assert.equal(localeForCountry('ER'), 'en', 'Tigrinya is planned, not live')
+  assert.equal(localeForCountry('ER', ['en', 'ti'] as unknown as LocaleCode[]), 'ti', 'once Tigrinya is live, Eritrea is Tigrinya')
+  assert.equal(localeForCountry('KE', ['en'] as LocaleCode[]), 'en', 'a language that is not in the live list is never chosen')
   assert.equal(localeForCountry('EG', ['en', 'fr'] as LocaleCode[]), 'en', 'a country whose language is not live falls back to English')
 })
 
@@ -56,4 +60,11 @@ test('the country data covers all 54 African countries exactly once, with known 
     assert.ok(!row.additional.includes(row.default), `${iso} lists its default twice`)
   }
   assert.ok(LOCALES.every((l) => KNOWN_LANGUAGE_CODES.includes(l.code)))
+})
+
+test('a country default switches only when that language is complete', () => {
+  const half = LOCALES.map((l) => (l.code === 'sw' ? { ...l, complete: false } : l))
+  const live = half.filter((l) => l.complete).map((l) => l.code)
+  assert.equal(localeForCountry('KE', live), 'en', 'an incomplete Swahili would leave Kenya on English')
+  assert.equal(localeForCountry('KE'), 'sw')
 })

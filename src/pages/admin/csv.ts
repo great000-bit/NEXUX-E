@@ -111,6 +111,57 @@ export function interestToCsv(rows: InterestedExpert[]): string {
   return '﻿' + lines.join('\r\n')
 }
 
+export type InstitutionRow = {
+  id: string
+  name: string
+  acronym: string | null
+  country: string | null
+  coverage: string
+  category: string
+  specialisation: string | null
+  website: string | null
+  public_contact: string | null
+  verification_status: string
+  verification_date: string | null
+  evidence_source: string | null
+  suggested_by: string | null
+  status: string
+  experts: number
+  created_at: string
+  updated_at: string
+}
+
+const CATEGORY_NAME: Record<string, string> = {
+  professional_body: 'Professional body',
+  statutory_council: 'Statutory or regulatory council',
+  scientific_society: 'Scientific society',
+  ngo_network: 'NGO or conservation network',
+}
+
+const INSTITUTION_COLUMNS: { header: string; get: (i: InstitutionRow) => string }[] = [
+  { header: 'Organisation name', get: (i) => i.name },
+  { header: 'Acronym', get: (i) => i.acronym ?? '' },
+  { header: 'Country', get: (i) => i.country ?? '' },
+  { header: 'Geographic coverage', get: (i) => i.coverage },
+  { header: 'Category', get: (i) => CATEGORY_NAME[i.category] ?? i.category },
+  { header: 'Specialisation', get: (i) => i.specialisation ?? '' },
+  { header: 'Website', get: (i) => i.website ?? '' },
+  { header: 'Public contact', get: (i) => i.public_contact ?? '' },
+  { header: 'Verification status', get: (i) => i.verification_status },
+  { header: 'Verification date', get: (i) => i.verification_date ?? '' },
+  { header: 'Evidence source', get: (i) => i.evidence_source ?? '' },
+  { header: 'Suggested by', get: (i) => i.suggested_by ?? '' },
+  { header: 'Status', get: (i) => i.status },
+  { header: 'Experts', get: (i) => String(i.experts ?? 0) },
+]
+
+/** The institutions table, one row each, ready for a spreadsheet. */
+export function institutionsToCsv(rows: InstitutionRow[]): string {
+  const lines = [INSTITUTION_COLUMNS.map((c) => cell(c.header)).join(',')]
+  for (const r of rows) lines.push(INSTITUTION_COLUMNS.map((c) => cell(c.get(r))).join(','))
+  return '﻿' + lines.join('\r\n')
+}
+
 /** A file name that is safe on every system, built from an opportunity title. */
 export function csvFileName(prefix: string, title: string, date: Date = new Date()): string {
   const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'opportunity'

@@ -82,11 +82,22 @@ The import rewrites `src/i18n/<code>.ts` and `review.json`. Run `npm test` after
 
 ## Machine translation status
 
-All French, Portuguese and Arabic text was machine translated from the English and is marked **needs native review**.
-Emails are English only for now. Arabic number words (for example the day counts) need a native check for plural forms.
+All French, Portuguese and Arabic text, and all Tier 2 text (Swahili, Amharic, Hausa, Yoruba, Igbo, Zulu, Xhosa,
+Afrikaans, Somali, Oromo, Malagasy, Kinyarwanda, Shona), was machine translated from the English and is marked
+**needs native review** in `review.json` and in `docs/translations/translations.csv`. The rows a native speaker should read
+first are marked `privacy and verification` in the `priority` column: the privacy notice, the consent lines, verification,
+and everything that says memberships are self-declared. Emails are English only for now. Arabic number words (for
+example the day counts) need a native check for plural forms.
+
+## When a country switches language
+
+A country's default language is used only when that language is **complete** (`complete: true` in `locales.ts`, which means
+every text is translated; `npm run check:i18n` fails the build if a live language lacks a key). A language that is
+not complete is never chosen for a country, so a visitor is never switched into a half finished language.
+Amharic is the one language that needs another script (Ethiopic); its font is fetched only while Amharic is on screen.
+Oromo is written in the Latin script and needs no extra font. None of the new languages is right to left.
 
 ## Later tiers (not live)
 
-Swahili, Amharic, Hausa, Yoruba, Igbo, Zulu, Xhosa, Afrikaans, Somali, Oromo, Malagasy, Kinyarwanda, Shona, then
-Tigrinya, Kirundi, Setswana, Sesotho, Chichewa, Wolof, Lingala, and Spanish. They are already named in
-`PLANNED_LANGUAGES`, and the country data already lists them for each country.
+Tigrinya, Kirundi, Setswana, Sesotho, Chichewa, Wolof, Lingala, Spanish, Bambara, Berber and Swati. They are already
+named in `PLANNED_LANGUAGES`, and the country data already lists them for each country.

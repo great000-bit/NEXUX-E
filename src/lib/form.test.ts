@@ -84,7 +84,7 @@ test('the registration payload is cleaned the way the server expects', () => {
   assert.deepEqual(p.secondary_expertise, ['Water and Hydrogeology'], 'the primary area is dropped from the secondary list')
   assert.equal(p.website, '', 'the honeypot is sent empty')
   assert.deepEqual(Object.keys(p).sort(), [
-    'availability', 'consent_contact', 'country', 'discoverable', 'email', 'full_name', 'iepn_status', 'memberships', 'nes_number',
+    'affiliations', 'affiliations_public', 'availability', 'consent_contact', 'country', 'discoverable', 'email', 'full_name', 'iepn_status', 'memberships', 'nes_number',
     'organisation', 'phone', 'position', 'primary_expertise', 'profile_url', 'qualification', 'secondary_expertise',
     'state', 'title', 'website', 'years_experience', 'assignments',
   ].sort())

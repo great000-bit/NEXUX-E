@@ -1,0 +1,613 @@
+[
+  {
+    "name": "Nigerian Environmental Society (NES)",
+    "acronym": "NES",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Environmental practice, impact assessment",
+    "source_type": "Professional society",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Institute of Environmental Practitioners of Nigeria (IEPN)",
+    "acronym": "IEPN",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Environmental practice and licensing",
+    "source_type": "Professional body",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Environmental Health Council of Nigeria (EHCON)",
+    "acronym": "EHCON",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "statutory_council",
+    "specialisation": "Environmental health",
+    "source_type": "Regulatory council",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nigerian Society for Conservation Biology (NSCB)",
+    "acronym": "NSCB",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "scientific_society",
+    "specialisation": "Biodiversity and conservation",
+    "source_type": "Scientific society",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Association for Environmental Impact Assessment of Nigeria (AEIAN)",
+    "acronym": "AEIAN",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "EIA/ESIA",
+    "source_type": "Impact assessment association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nigerian Society of Engineers (NSE)",
+    "acronym": "NSE",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Environmental and infrastructure engineering",
+    "source_type": "Engineering association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nigerian Institute of Town Planners (NITP)",
+    "acronym": "NITP",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Land use and spatial planning",
+    "source_type": "Planning association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "IAIA-Ghana",
+    "acronym": "IAIA-Ghana",
+    "country": "Ghana",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "EIA/ESIA",
+    "source_type": "Impact assessment association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Ghana Institution of Engineering (GhIE)",
+    "acronym": "GhIE",
+    "country": "Ghana",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Environmental infrastructure",
+    "source_type": "Engineering association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Environmental Assessment Practitioners Association of South Africa (EAPASA)",
+    "acronym": "EAPASA",
+    "country": "South Africa",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Environmental assessment practitioners",
+    "source_type": "Registration body",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "South African Council for Natural Scientific Professions (SACNASP)",
+    "acronym": "SACNASP",
+    "country": "South Africa",
+    "coverage": "national",
+    "category": "statutory_council",
+    "specialisation": "Natural science professional registration",
+    "source_type": "Statutory council",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "International Association for Impact Assessment South Africa (IAIAsa)",
+    "acronym": "IAIAsa",
+    "country": "South Africa",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "EIA/ESIA",
+    "source_type": "Impact assessment association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Institute of Waste Management of Southern Africa (IWMSA)",
+    "acronym": "IWMSA",
+    "country": "South Africa",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Waste and circular economy",
+    "source_type": "Professional institute",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Southern African Institute of Ecologists and Environmental Scientists (SAIE&ES)",
+    "acronym": "SAIE&ES",
+    "country": "South Africa",
+    "coverage": "national",
+    "category": "scientific_society",
+    "specialisation": "Ecology and environmental science",
+    "source_type": "Scientific society",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Environment Institute of Kenya (EIK)",
+    "acronym": "EIK",
+    "country": "Kenya",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Environmental assessment and audit",
+    "source_type": "Professional association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Uganda Association for Impact Assessment (UAIA)",
+    "acronym": "UAIA",
+    "country": "Uganda",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "EIA/ESIA",
+    "source_type": "Impact assessment association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Impact Assessment Association Zambia (IAAZ)",
+    "acronym": "IAAZ",
+    "country": "Zambia",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "Impact assessment",
+    "source_type": "Impact assessment association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Associação Moçambicana de Avaliação do Impacto Ambiental (AMAIA)",
+    "acronym": "AMAIA",
+    "country": "Mozambique",
+    "coverage": "national",
+    "category": "professional_body",
+    "specialisation": "EIA/ESIA",
+    "source_type": "Impact assessment association",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nigerian Conservation Foundation (NCF)",
+    "acronym": "NCF",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Biodiversity, wetlands, conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Environmental Rights Action / Friends of the Earth Nigeria",
+    "acronym": "ERA",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Environmental justice and pollution",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Health of Mother Earth Foundation (HOMEF)",
+    "acronym": "HOMEF",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Ecological justice and extractives",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Green Concern for Development (GREENCODE)",
+    "acronym": "GREENCODE",
+    "country": "Nigeria",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Community climate and conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Ghana Wildlife Society",
+    "acronym": null,
+    "country": "Ghana",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Wildlife and biodiversity",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "A Rocha Ghana",
+    "acronym": null,
+    "country": "Ghana",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Forests and community conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "NATURAMA",
+    "acronym": null,
+    "country": "Burkina Faso",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Biodiversity conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Association Burundaise pour la protection de la Nature (ABN)",
+    "acronym": "ABN",
+    "country": "Burundi",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Biosfera",
+    "acronym": null,
+    "country": "Cabo Verde",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Marine biodiversity",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "SOS-Forêts",
+    "acronym": null,
+    "country": "Côte d'Ivoire",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Forest conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nature Conservation Egypt",
+    "acronym": null,
+    "country": "Egypt",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Biodiversity conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Ethiopian Wildlife and Natural History Society",
+    "acronym": null,
+    "country": "Ethiopia",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Wildlife and natural history",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Guinée-Ecologie",
+    "acronym": null,
+    "country": "Guinea",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Ecology and conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nature Kenya",
+    "acronym": null,
+    "country": "Kenya",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Biodiversity and birds",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Green Belt Movement",
+    "acronym": null,
+    "country": "Kenya",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Forests and community livelihoods",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "WildlifeDirect",
+    "acronym": null,
+    "country": "Kenya",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Wildlife conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Society for the Conservation of Nature of Liberia",
+    "acronym": null,
+    "country": "Liberia",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Asity Madagascar",
+    "acronym": null,
+    "country": "Madagascar",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Biodiversity",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Wildlife and Environmental Society of Malawi",
+    "acronym": null,
+    "country": "Malawi",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Wildlife and environmental education",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nature Mauritanie",
+    "acronym": null,
+    "country": "Mauritania",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Nature conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Mauritian Wildlife Foundation",
+    "acronym": null,
+    "country": "Mauritius",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Species recovery",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "GREPOM / BirdLife Maroc",
+    "acronym": "GREPOM",
+    "country": "Morocco",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Bird conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nature Rwanda",
+    "acronym": null,
+    "country": "Rwanda",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Biodiversity conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nature-Communautés-Développement",
+    "acronym": null,
+    "country": "Senegal",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Community conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nature Seychelles",
+    "acronym": null,
+    "country": "Seychelles",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Island conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Conservation Society of Sierra Leone",
+    "acronym": null,
+    "country": "Sierra Leone",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "BirdLife South Africa",
+    "acronym": null,
+    "country": "South Africa",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Bird conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Endangered Wildlife Trust",
+    "acronym": null,
+    "country": "South Africa",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Threatened species",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nature Tanzania",
+    "acronym": null,
+    "country": "Tanzania",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Tanzania Forest Conservation Group",
+    "acronym": null,
+    "country": "Tanzania",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Forest conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Association Les Amis des Oiseaux",
+    "acronym": null,
+    "country": "Tunisia",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Bird conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Nature Uganda",
+    "acronym": null,
+    "country": "Uganda",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "BirdWatch Zambia",
+    "acronym": null,
+    "country": "Zambia",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Bird conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "BirdLife Zimbabwe",
+    "acronym": null,
+    "country": "Zimbabwe",
+    "coverage": "national",
+    "category": "ngo_network",
+    "specialisation": "Bird conservation",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "African Wildlife Foundation",
+    "acronym": "AWF",
+    "country": "Pan-African",
+    "coverage": "pan_african",
+    "category": "ngo_network",
+    "specialisation": "Wildlife and landscapes",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "African Parks",
+    "acronym": null,
+    "country": "Pan-African",
+    "coverage": "pan_african",
+    "category": "ngo_network",
+    "specialisation": "Protected areas",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "BirdLife International – Africa",
+    "acronym": "BirdLife",
+    "country": "Pan-African",
+    "coverage": "pan_african",
+    "category": "ngo_network",
+    "specialisation": "Bird conservation networks",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Wetlands International Africa",
+    "acronym": "Wetlands International",
+    "country": "Pan-African",
+    "coverage": "pan_african",
+    "category": "ngo_network",
+    "specialisation": "Wetlands and mangroves",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Wildlife Conservation Society (WCS)",
+    "acronym": "WCS",
+    "country": "Pan-African",
+    "coverage": "pan_african",
+    "category": "ngo_network",
+    "specialisation": "Wildlife and ecological research",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "IUCN African programmes",
+    "acronym": "IUCN",
+    "country": "Pan-African",
+    "coverage": "pan_african",
+    "category": "ngo_network",
+    "specialisation": "Conservation policy and networks",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "WWF African programmes",
+    "acronym": "WWF",
+    "country": "Pan-African",
+    "coverage": "pan_african",
+    "category": "ngo_network",
+    "specialisation": "Biodiversity and sustainability",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "Conservation International African programmes",
+    "acronym": "CI",
+    "country": "Pan-African",
+    "coverage": "pan_african",
+    "category": "ngo_network",
+    "specialisation": "Natural capital and biodiversity",
+    "source_type": "NGO",
+    "evidence_source": "NEXUS-E institutional directory, October 2026 (client document). Not verified: current legal status, official contacts and membership claims must be confirmed."
+  },
+  {
+    "name": "International Association for Impact Assessment (IAIA)",
+    "acronym": "IAIA",
+    "country": "Pan-African",
+    "coverage": "international",
+    "category": "professional_body",
+    "specialisation": "Impact assessment",
+    "source_type": "Added from the developer brief (not in the institution document)",
+    "added": true,
+    "evidence_source": "Named in the NEXUS-E developer implementation brief. Not verified: current legal status, official contacts and membership claims must be confirmed."
+  }
+]

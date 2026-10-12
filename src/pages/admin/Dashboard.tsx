@@ -7,6 +7,7 @@ import { STATUS_LABEL, STATUS_ORDER } from '../../lib/verification'
 import { StatusBadge } from '../../components/StatusBadge'
 import { Notice, Spinner } from '../../components/ui'
 import { downloadCsv, type Expert } from './csv'
+import { RegistrationStats } from './RegistrationStats'
 
 const PAGE = 1000
 
@@ -114,6 +115,8 @@ export default function Dashboard() {
         <Stat label="Today" value={rows ? stats.today : null} />
         <Stat label="Discoverable" value={rows ? stats.discoverable : null} />
       </dl>
+
+      <RegistrationStats />
 
       <section aria-label="Search and filters" className="card mt-6 space-y-4 p-4 sm:p-5">
         <div>

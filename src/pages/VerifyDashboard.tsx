@@ -2,6 +2,7 @@ import '../i18n/enSite'
 import { usePageInfo } from '../lib/pageInfo'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AffiliationsCard } from '../components/AffiliationsCard'
 import { ListingCard } from '../components/ListingCard'
 import { OpportunitiesSection } from '../components/OpportunitiesSection'
 import { StatusBadge } from '../components/StatusBadge'
@@ -319,6 +320,8 @@ export default function VerifyDashboard() {
           <OpportunitiesSection token={token} onSessionEnded={sessionEnded} />
         </>
       )}
+
+      <AffiliationsCard token={token} onSessionEnded={sessionEnded} />
 
       {/* Registered details */}
       <section className="card p-5 sm:p-6" aria-labelledby="details-title">

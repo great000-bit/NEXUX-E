@@ -16,6 +16,24 @@ import { useHeroMotion } from './useHeroMotion'
 import { HERO_NODES, MEMBERSHIP_STRIP } from './content'
 import './home.css'
 
+/** True once the page has loaded and gone quiet for a moment, so the first paint and the load never compete with the motion. */
+function useArmed() {
+  const [armed, setArmed] = useState(false)
+  useEffect(() => {
+    let t = 0
+    const go = () => {
+      t = window.setTimeout(() => setArmed(true), 1200)
+    }
+    if (document.readyState === 'complete') go()
+    else window.addEventListener('load', go, { once: true })
+    return () => {
+      window.clearTimeout(t)
+      window.removeEventListener('load', go)
+    }
+  }, [])
+  return armed
+}
+
 /**
  * The first screen. The headline is real text and is the largest thing painted, so it is what the browser
  * measures as the page loaded. Everything behind it is decoration, and none of it is needed to read the page.
@@ -23,7 +41,11 @@ import './home.css'
 export default function Hero() {
   const m = useMessages()
   const h = m.hero
-  const { motion, reels, hidden } = useHeroMotion()
+  const base = useHeroMotion()
+  const armed = useArmed()
+  const motion = base.motion && armed
+  const reels = armed ? base.reels : ('off' as typeof base.reels)
+  const hidden = base.hidden
   // The rolling expertise lines are shown in the language now chosen; each keeps its icon through its English name.
   const expertiseLabels = useMemo(() => EXPERTISE.map((x) => m.options.expertise[x]), [m])
   const iconFor = useCallback((text: string) => EXPERTISE_ICON[EXPERTISE[expertiseLabels.indexOf(text)]], [expertiseLabels])

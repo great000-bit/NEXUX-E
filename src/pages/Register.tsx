@@ -9,11 +9,12 @@ import { AFRICAN_COUNTRIES, hasStateList, OTHER_COUNTRY } from '../lib/countries
 import { fmt, messages } from '../i18n'
 import { useMessages } from '../i18n/I18nProvider'
 import {
-  ASSIGNMENTS, AVAILABILITY, EXPERTISE, MAX_SECONDARY, MEMBERSHIPS,
+  ASSIGNMENTS, AVAILABILITY, EXPERTISE, MAX_SECONDARY,
   QUALIFICATIONS, STATES, TITLES, YEARS,
 } from '../lib/options'
 import { registerExpert } from '../lib/api'
 import { CheckList, ConsentBox, fieldId, RadioList, SelectField, TextField } from '../components/fields'
+import { AffiliationsSection } from '../components/AffiliationsSection'
 import { ErrorSummary, Notice, ProgressBar, Spinner } from '../components/ui'
 import { Turnstile } from '../components/Turnstile'
 
@@ -344,27 +345,13 @@ export default function Register() {
                   options={QUALIFICATIONS} labelFor={optionLabel('qualifications')} value={form.qualification}
                   onChange={(v) => set('qualification', v)} error={errors.qualification}
                 />
-                <CheckList
-                  fieldKey="memberships" legend={f.memberships}
-                  hint={f.membershipsHint}
-                  options={MEMBERSHIPS} labelFor={optionLabel('memberships')} values={form.memberships}
-                  onChange={(v) => set('memberships', v)} columns={2}
+                <AffiliationsSection
+                  entries={form.affiliations}
+                  onEntries={(next) => set('affiliations', next)}
+                  isPublic={form.affiliations_public}
+                  onPublic={(v) => set('affiliations_public', v)}
+                  error={errors.affiliations}
                 />
-                {form.memberships.includes('NES') && (
-                  <TextField
-                    fieldKey="nes_number" label={f.nesNumber}
-                    value={form.nes_number} onChange={(v) => set('nes_number', v)}
-                  />
-                )}
-                {form.memberships.includes('IEPN') && (
-                  <TextField
-                    fieldKey="iepn_status" label={f.iepnStatus}
-                    value={form.iepn_status} onChange={(v) => set('iepn_status', v)}
-                  />
-                )}
-                <p className="rounded-[var(--radius-md)] bg-blue-100 px-4 py-3 text-sm text-blue-700">
-                  {f.membershipNote}
-                </p>
               </div>
             )}
 
