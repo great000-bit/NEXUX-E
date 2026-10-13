@@ -685,7 +685,7 @@ export const ig: Messages = {
     submitText: 'Gbakwunye opekata mpe otu akwụkwọ nke ịbụ onye otu, akwụkwọ ikike ma ọ bụ mmụta. Mgbe ị zipụchara, a na-akpọchi faịlụ gị mgbe anyị na-enyocha ha.',
     submit: 'Zipu maka nyocha',
     submitting: 'Na-ezipu',
-    submitHint: 'Bọtịnụ ahụ na-agbanye mgbe ị gbakwunyere akwụkwọ ịbụ onye otu, akwụkwọ ikike ma ọ bụ mmụta.',
+    submitHint: 'Bọtịnụ ahụ na-ebili mgbe ị tinyere asambodo agụmakwụkwọ, otu ma ọ bụ ikike ọrụ, ọrụ edere n\'ọrụ na otu onye akaebe.',
     detailsTitle: 'Ozi ị jiri debanye aha',
     detailsNote: 'Iji gbanwee ozi ndị a, biko kpọtụrụ ndị otu NEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const ig: Messages = {
       cv: {
         title: 'CV (nhọrọ)',
         help: 'CV dị mkpụmkpụ na-enyere ndị nyocha aka, ma ọ naghị ezuru naanị ya.',
+      },
+      project_role: {
+        title: 'Ọrụ edere n\'ọrụ',
+        help: 'Akwụkwọ na-egosi ọrụ ị rụrụ na ọrụ gị n\'ime ya, dị ka ibe nkwekọrịta, usoro ọrụ, mkpuchi akụkọ ma ọ bụ akwụkwọ ozi sitere n\'aka ndị ahịa.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const ig: Messages = {
       saved: 'Echekwara.',
       notSet: 'Etinyebeghị ya',
     },
+    completion: {
+      title: 'Imecha profaịlụ gị',
+      intro: 'Ndebanye aha were otu nkeji. Nzọụkwụ ndị a nke nhọrọ na-eme ka profaịlụ gị sie ike ma hapụ NEXUS-E ịlele ya. Mee ha n\'usoro ọ bụla, mgbe ọ bụla.',
+      percent: '{n}% emechara',
+      next: 'Nzọụkwụ na-esote',
+      done: 'Emechara',
+      allDone: 'Ihe niile dị njikere. Nyefee ihe akaebe gị maka nyocha mgbe ị dị njikere.',
+      steps: {
+        registered: 'Edebanyela aha',
+        consent: 'Nabata ọkwa nzuzo nke ihe akaebe',
+        consulting: 'Setịpụ ịdị gị maka ndụmọdụ',
+        memberships: 'Tinye ndị otu na njikọ gị (nhọrọ)',
+        qualification: 'Bulite asambodo agụmakwụkwọ gị kasị elu',
+        credential: 'Bulite akwụkwọ otu ma ọ bụ ikike ọrụ',
+        projectRole: 'Bulite akwụkwọ na-egosi ọrụ ị rụrụ n\'ọrụ',
+        reference: 'Tinye opekata mpe otu onye akaebe',
+      },
+    },
+    references: {
+      title: 'Ndị akaebe',
+      help: 'Kpọpụta onye nwere ike ikwu maka ọrụ gị. Anyị anaghị akpọtụrụ ndị akaebe n\'onwe ya. Onye nyocha NEXUS-E nwere ike ime ya dị ka akụkụ nke nkwenye ma dekọọ nsonaazụ.',
+      none: 'Ị tinyebeghị onye akaebe.',
+      name: 'Aha onye akaebe',
+      organisation: 'Òtù onye akaebe',
+      relationship: 'Mmekọrịta gị (dịka onye nlekọta ma ọ bụ onye ahịa)',
+      add: 'Tinye onye akaebe',
+      remove: 'Wepụ {name}',
+      limit: 'Ị nwere ike itinye ruo 3.',
+      locked: 'Enweghị ike ịgbanwe ndị akaebe mgbe a na-enyocha ihe akaebe gị.',
+    },
   },
   files: {
     empty: 'Faịlụ a bụ efu. Biko họrọ faịlụ ahụ ọzọ.',
@@ -839,6 +873,8 @@ export const ig: Messages = {
       no_evidence: 'Biko gbakwunye opekata mpe otu akwụkwọ tupu ịzipu: kaadị ma ọ bụ asambodo onye otu, akwụkwọ ikike, ma ọ bụ asambodo mmụta.',
       not_verified: 'Naanị Ndị Ọkachamara a Kwadoro nwere ike igosi mmasị. Ozugbo a kwadoro nkwado gị, ị nwere ike.',
       not_open: 'Ohere a anaghịzi anabata mmasị. Biko melite peeji ahụ ka ị hụ ihe meghere ugbu a.',
+      incomplete: 'Mkpokọta gị emechabeghị. Tinye asambodo agụmakwụkwọ, otu ma ọ bụ ikike ọrụ, ọrụ edere n\'ọrụ na otu onye akaebe, wee nyefee.',
+      reference_limit: 'Ị nwere ike itinye ruo 3.',
     },
   },
   directory: {

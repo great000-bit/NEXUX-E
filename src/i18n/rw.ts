@@ -685,7 +685,7 @@ export const rw: Messages = {
     submitText: 'Ongeraho nibura inyandiko imwe y\'ubunyamuryango, uruhushya cyangwa impamyabumenyi. Nyuma yo kohereza, amadosiye yawe afungwa mu gihe dusuzuma.',
     submit: 'Ohereza kugira ngo bisuzumwe',
     submitting: 'Birimo koherezwa',
-    submitHint: 'Buto irakora umaze kongeraho inyandiko y\'ubunyamuryango, uruhushya cyangwa impamyabumenyi.',
+    submitHint: 'Buto ikora umaze kongeraho impamyabumenyi, ubunyamuryango cyangwa uruhushya rw\'umwuga, uruhare rwanditse mu mushinga n\'umuntu umwe utanga ubuhamya.',
     detailsTitle: 'Amakuru wiyandikishijeho',
     detailsNote: 'Kugira ngo uhindure aya makuru, nyamuneka vugana n\'itsinda rya NEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const rw: Messages = {
       cv: {
         title: 'CV (si ngombwa)',
         help: 'CV ngufi ifasha abasuzuma, ariko ntiyonyine ntiyaba ihagije.',
+      },
+      project_role: {
+        title: 'Uruhare rwanditse mu mushinga',
+        help: 'Inyandiko yerekana umushinga wakoranye n\'uruhare rwawe, nk\'urupapuro rw\'amasezerano, amabwiriza y\'akazi, igifuniko cya raporo cyangwa ibaruwa y\'umukiriya.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const rw: Messages = {
       saved: 'Byabitswe.',
       notSet: 'Ntibirashyirwaho',
     },
+    completion: {
+      title: 'Uko umwirondoro wawe wuzuye',
+      intro: 'Kwiyandikisha byatwaye umunota umwe. Izi ntambwe zitari ngombwa zikomeza umwirondoro wawe kandi zemerera NEXUS-E kuwusuzuma. Zikore uko ushaka, igihe ushakiye.',
+      percent: '{n}% byuzuye',
+      next: 'Intambwe ikurikira',
+      done: 'Byarangiye',
+      allDone: 'Byose biri ku murongo. Ohereza ibimenyetso byawe ngo bisuzumwe igihe witeguye.',
+      steps: {
+        registered: 'Wiyandikishije',
+        consent: 'Emera integuza y\'ibanga ry\'ibimenyetso',
+        consulting: 'Shyiraho uko ushobora gukora ubujyanama',
+        memberships: 'Ongeraho ubunyamuryango n\'imikoranire (si ngombwa)',
+        qualification: 'Ohereza impamyabumenyi yawe ihanitse',
+        credential: 'Ohereza inyandiko y\'ubunyamuryango cyangwa uruhushya rw\'umwuga',
+        projectRole: 'Ohereza inyandiko yerekana uruhare wagize mu mushinga',
+        reference: 'Ongeraho nibura umuntu umwe ushobora gutanga ubuhamya',
+      },
+    },
+    references: {
+      title: 'Abatanga ubuhamya',
+      help: 'Vuga umuntu washobora kuvuga ku kazi kawe. Ntitubahamagara mu buryo bwikora. Usuzuma wa NEXUS-E ashobora kubikora nk\'igice cyo kwemeza kandi akandika ibyavuyemo.',
+      none: 'Ntacyo uratanga ho ubuhamya.',
+      name: 'Izina ry\'utanga ubuhamya',
+      organisation: 'Ikigo cy\'utanga ubuhamya',
+      relationship: 'Isano mufitanye (urugero, umuyobozi cyangwa umukiriya)',
+      add: 'Ongeraho utanga ubuhamya',
+      remove: 'Kuraho {name}',
+      limit: 'Ushobora kongeraho kugeza kuri 3.',
+      locked: 'Abatanga ubuhamya ntibashobora guhindurwa mu gihe ibimenyetso byawe bisuzumwa.',
+    },
   },
   files: {
     empty: 'Iyi dosiye irimo ubusa. Nyamuneka hitamo indi dosiye.',
@@ -839,6 +873,8 @@ export const rw: Messages = {
       no_evidence: 'Nyamuneka ongeraho nibura inyandiko imwe mbere yo kohereza: ikarita cyangwa icyemezo cy\'ubunyamuryango, uruhushya, cyangwa icyemezo cy\'impamyabumenyi.',
       not_verified: 'Impuguke Zemejwe gusa ni zo zishobora kugaragaza inyungu. Kwemeza kwawe kumaze kwemerwa, ushobora kubikora.',
       not_open: 'Aya mahirwe ntagikira inyungu. Nyamuneka vugurura urupapuro urebe ibifunguye ubu.',
+      incomplete: 'Ibyo watanze ntibirakwira. Ongeraho impamyabumenyi, ubunyamuryango cyangwa uruhushya rw\'umwuga, uruhare rwanditse mu mushinga n\'umuntu umwe utanga ubuhamya, hanyuma wohereze.',
+      reference_limit: 'Ushobora kongeraho kugeza kuri 3.',
     },
   },
   directory: {

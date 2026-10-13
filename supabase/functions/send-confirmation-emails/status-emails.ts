@@ -8,6 +8,7 @@ export type StatusTemplate =
   | 'verification_verified'
   | 'verification_not_verified'
   | 'opportunity_interest'
+  | 'evidence_submitted'
 
 export type EmailJob = {
   template: string
@@ -80,6 +81,23 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
           'Open the opportunity in the admin area to see their registered details, and everyone else who has expressed interest.',
         ],
         button: { label: 'Open the opportunity', href: `${site}/admin/opportunities${isId ? `/${oppId}` : ''}` },
+      }
+    }
+    case 'evidence_submitted': {
+      // For the administrator: the minimum, with no name, phone or email. The review screen has the rest.
+      const shown = (v: unknown) => clean(v, 120).replace(/\s+/g, ' ') || 'Not given'
+      return {
+        greeting: '',
+        footer: 'You are receiving this because you are an administrator of NEXUS-E.',
+        subject: `Evidence submitted ${job.expert_id}: NEXUS-E`,
+        heading: 'Evidence submitted',
+        paragraphs: ['An expert has submitted a complete set of evidence for review.'],
+        details: [
+          { label: 'Expert ID', value: job.expert_id },
+          { label: 'Primary expertise', value: shown(job.payload?.primary_expertise) },
+          { label: 'Country', value: shown(job.payload?.country) },
+        ],
+        button: { label: 'Open review', href: `${site}/admin/verification/${encodeURIComponent(job.expert_id)}` },
       }
     }
     case 'verification_received':
@@ -227,7 +245,7 @@ export const STATUS_TEMPLATES: StatusTemplate[] = [
 ]
 
 /** Emails that go to an administrator, not to the expert. They greet with "Hello," and say why the admin got them. */
-export const ADMIN_TEMPLATES: StatusTemplate[] = ['opportunity_interest']
+export const ADMIN_TEMPLATES: StatusTemplate[] = ['opportunity_interest', 'evidence_submitted']
 
 /** Builds the email for any outbox row. Throws for a template it does not know. */
 export function composeEmail(job: EmailJob, opts: EmailOptions): BuiltEmail {

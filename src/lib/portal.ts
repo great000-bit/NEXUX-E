@@ -142,4 +142,11 @@ export type EvidenceFile = {
   created_at: string
 }
 
-export type MeResponse = { expert: ExpertRecord; consented: boolean; editable: boolean; files: EvidenceFile[] }
+export type MeResponse = {
+  expert: ExpertRecord
+  consented: boolean
+  editable: boolean
+  files: EvidenceFile[]
+  completion?: { items: { key: string; done: boolean }[]; percent: number; complete: boolean }
+  references?: { id: string; referee_name: string; organisation: string; relationship: string }[]
+}

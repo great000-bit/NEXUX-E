@@ -685,7 +685,7 @@ export const ha: Messages = {
     submitText: 'Ƙara aƙalla takarda ɗaya ta zama memba, lasisi ko cancanta. Bayan ka aika, ana kulle fayilolinka yayin da muke duba su.',
     submit: 'Aika don dubawa',
     submitting: 'Ana aikawa',
-    submitHint: 'Maɓallin yana kunnawa da zarar ka ƙara takarda ta zama memba, lasisi ko cancanta.',
+    submitHint: 'Maɓallin zai kunna idan ka ƙara takardar karatu, membobi ko lasisin sana\'a, matsayi da aka rubuta a aiki da mai bada shaida ɗaya.',
     detailsTitle: 'Bayanan da ka yi rajista da su',
     detailsNote: 'Don canza waɗannan bayanai, da fatan a tuntuɓi ƙungiyar NEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const ha: Messages = {
       cv: {
         title: 'CV (zaɓi)',
         help: 'Gajeren CV yana taimaka wa masu dubawa, amma bai isa shi kaɗai ba.',
+      },
+      project_role: {
+        title: 'Matsayi da aka rubuta a aiki',
+        help: 'Takarda da ke nuna aikin da ka yi da matsayinka, kamar shafin kwangila, sharuɗɗan aiki, murfin rahoto ko wasiƙa daga abokin ciniki.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const ha: Messages = {
       saved: 'An adana.',
       notSet: 'Ba a saita ba tukuna',
     },
+    completion: {
+      title: 'Cikar bayanin ka',
+      intro: 'Yin rajista ya ɗauki minti ɗaya. Waɗannan matakan na zaɓi suna ƙarfafa bayaninka kuma suna ba NEXUS-E damar duba shi. Yi su yadda kake so, a lokacin da kake so.',
+      percent: '{n}% an cika',
+      next: 'Mataki na gaba',
+      done: 'An gama',
+      allDone: 'Komai yana nan. Miƙa shaidarka don dubawa idan ka shirya.',
+      steps: {
+        registered: 'An yi rajista',
+        consent: 'Amince da sanarwar sirri ta shaida',
+        consulting: 'Saita samuwarka don bada shawara',
+        memberships: 'Ƙara membobinka da alaƙarka (na zaɓi)',
+        qualification: 'Ɗora babbar takardar karatunka',
+        credential: 'Ɗora takardar membobi ko lasisin sana\'a',
+        projectRole: 'Ɗora takarda da ke nuna matsayin da ka riƙe a aiki',
+        reference: 'Ƙara aƙalla magana ɗaya',
+      },
+    },
+    references: {
+      title: 'Masu bada shaida',
+      help: 'Ambaci wanda zai iya magana game da aikinka. Ba ma tuntuɓar masu bada shaida kai tsaye. Mai duba na NEXUS-E na iya yin hakan a matsayin ɓangaren tabbatarwa kuma ya rubuta sakamakon.',
+      none: 'Ba ka ƙara mai bada shaida ba tukuna.',
+      name: 'Sunan mai bada shaida',
+      organisation: 'Ƙungiyar mai bada shaida',
+      relationship: 'Alaƙarka da shi (misali, shugaba ko abokin ciniki)',
+      add: 'Ƙara mai bada shaida',
+      remove: 'Cire {name}',
+      limit: 'Za ka iya ƙara har guda 3.',
+      locked: 'Ba za a iya canza masu bada shaida ba yayin da ake duba shaidarka.',
+    },
   },
   files: {
     empty: 'Wannan fayil babu komai a ciki. Da fatan a sake zaɓar fayil ɗin.',
@@ -839,6 +873,8 @@ export const ha: Messages = {
       no_evidence: 'Da fatan a ƙara aƙalla takarda ɗaya kafin ka aika: katin zama memba ko takardar shaida, lasisi, ko takardar shaidar cancanta.',
       not_verified: 'Ƙwararrun da aka tabbatar ne kaɗai za su iya nuna sha\'awa. Da zarar an amince da tabbatarwarka, za ka iya.',
       not_open: 'Wannan dama ba ta karɓar nuna sha\'awa kuma. Da fatan a sabunta shafin don ganin abin da ke buɗe yanzu.',
+      incomplete: 'Tarin naka bai cika ba tukuna. Ƙara takardar karatu, membobi ko lasisin sana\'a, matsayi da aka rubuta a aiki da mai bada shaida ɗaya, sannan ka miƙa.',
+      reference_limit: 'Za ka iya ƙara har guda 3.',
     },
   },
   directory: {

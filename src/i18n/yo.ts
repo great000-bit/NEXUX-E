@@ -685,7 +685,7 @@ export const yo: Messages = {
     submitText: 'Fi ó kéré tán ìwé kan kún un: ti ẹgbẹ́, ìwé-àṣẹ tàbí ẹ̀kọ́. Lẹ́yìn tí o bá fi ránṣẹ́, a ó tìpa àwọn fáìlì rẹ nígbà tí a bá ń yẹ̀ wọ́n wò.',
     submit: 'Fi ránṣẹ́ fún àyẹ̀wò',
     submitting: 'Ń fi ránṣẹ́',
-    submitHint: 'Bọ́tìnì náà yóò ṣiṣẹ́ nígbà tí o bá ti fi ìwé ẹgbẹ́, ìwé-àṣẹ tàbí ẹ̀kọ́ kún un.',
+    submitHint: 'Bọ́tìnì náà yóò ṣiṣẹ́ nígbà tí o bá fi ìwé ẹ̀rí ẹ̀kọ́, ẹgbẹ́ tàbí àṣẹ iṣẹ́, ipa iṣẹ́ àkànṣe tí a kọ sílẹ̀ àti ẹlẹ́rìí kan kún.',
     detailsTitle: 'Àwọn àlàyé tí o fi forúkọ sílẹ̀',
     detailsNote: 'Láti yí àwọn àlàyé wọ̀nyí padà, jọ̀wọ́ kàn sí ẹgbẹ́ NEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const yo: Messages = {
       cv: {
         title: 'CV (àṣàyàn)',
         help: 'CV kúkúrú ń ran àwọn olùyẹ̀wò lọ́wọ́, ṣùgbọ́n kò tó fúnra rẹ̀.',
+      },
+      project_role: {
+        title: 'Ipa tí a kọ sílẹ̀ nínú iṣẹ́ àkànṣe',
+        help: 'Ìwé tó fi iṣẹ́ àkànṣe tí o ṣiṣẹ́ lé lórí àti ipa rẹ hàn, bíi ojú ìwé àdéhùn, àwọn òfin iṣẹ́, ojú ìwé ìkọ́kọ́ ìròyìn tàbí lẹ́tà látọ̀dọ̀ oníbàárà.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const yo: Messages = {
       saved: 'A ti fi pamọ́.',
       notSet: 'A kò tíì ṣètò rẹ̀',
     },
+    completion: {
+      title: 'Ìparí ojú-ìwé rẹ',
+      intro: 'Fífi orúkọ sílẹ̀ gba ìṣẹ́jú kan. Àwọn ìgbésẹ̀ àṣàyàn wọ̀nyí mú ojú-ìwé rẹ lágbára, wọ́n sì jẹ́ kí NEXUS-E ṣàyẹ̀wò rẹ̀. Ṣe wọ́n ní ọ̀nà tí o fẹ́, nígbàkigbà.',
+      percent: '{n}% ti parí',
+      next: 'Ìgbésẹ̀ tó kàn',
+      done: 'Ti parí',
+      allDone: 'Gbogbo nǹkan ti wà ní ipò. Fi ẹ̀rí rẹ ránṣẹ́ fún àyẹ̀wò nígbà tí o bá ti ṣetán.',
+      steps: {
+        registered: 'A ti forúkọ sílẹ̀',
+        consent: 'Gbà ìkìlọ̀ ìpamọ́ ẹ̀rí',
+        consulting: 'Ṣètò wíwà rẹ fún ìgbìmọ̀ràn',
+        memberships: 'Fi àwọn ẹgbẹ́ àti ìbáṣepọ̀ rẹ kún (àṣàyàn)',
+        qualification: 'Gbé ìwé ẹ̀rí ẹ̀kọ́ rẹ tó ga jù sókè',
+        credential: 'Gbé ìwé ẹgbẹ́ tàbí ìwé àṣẹ iṣẹ́ sókè',
+        projectRole: 'Gbé ìwé tó fi ipa tí o kó nínú iṣẹ́ àkànṣe hàn sókè',
+        reference: 'Fi o kéré jù ẹlẹ́rìí kan kún',
+      },
+    },
+    references: {
+      title: 'Àwọn ẹlẹ́rìí',
+      help: 'Dárúkọ ẹnìkan tó lè sọ nípa iṣẹ́ rẹ. A kì í kàn sí àwọn ẹlẹ́rìí fúnra wa. Olùyẹ̀wò NEXUS-E lè ṣe é gẹ́gẹ́ bí apá ìmúdájú, yóò sì kọ àbájáde rẹ̀ sílẹ̀.',
+      none: 'O kò tíì fi ẹlẹ́rìí kankan kún.',
+      name: 'Orúkọ ẹlẹ́rìí',
+      organisation: 'Àjọ ẹlẹ́rìí',
+      relationship: 'Ìbáṣepọ̀ rẹ (fún àpẹẹrẹ, olùṣàbójútó tàbí oníbàárà)',
+      add: 'Fi ẹlẹ́rìí kún',
+      remove: 'Yọ {name} kúrò',
+      limit: 'O lè fi tó mẹ́ta kún.',
+      locked: 'A kò lè yí àwọn ẹlẹ́rìí padà nígbà tí a ń ṣàyẹ̀wò ẹ̀rí rẹ.',
+    },
   },
   files: {
     empty: 'Fáìlì yìí ṣofo. Jọ̀wọ́ tún yan fáìlì náà.',
@@ -839,6 +873,8 @@ export const yo: Messages = {
       no_evidence: 'Jọ̀wọ́ fi ó kéré tán ìwé kan kún un kí o tó fi ránṣẹ́: káàdì tàbí ìwé-ẹ̀rí ọmọ ẹgbẹ́, ìwé-àṣẹ, tàbí ìwé-ẹ̀rí ẹ̀kọ́.',
       not_verified: 'Àwọn Ògbógi tí a ti Jẹ́rìí Sí nìkan ló lè fi ìfẹ́ hàn. Nígbà tí a bá fọwọ́ sí ìjẹ́rìísí rẹ, o lè ṣe é.',
       not_open: 'Àǹfààní yìí kò gba ìfẹ́ mọ́. Jọ̀wọ́ sọ ojú-ìwé náà dọ̀tun láti rí ohun tó ṣí sílẹ̀ báyìí.',
+      incomplete: 'Àkójọ rẹ kò tíì pé. Fi ìwé ẹ̀rí ẹ̀kọ́, ẹgbẹ́ tàbí àṣẹ iṣẹ́, ipa iṣẹ́ àkànṣe tí a kọ sílẹ̀ àti ẹlẹ́rìí kan kún, lẹ́yìn náà fi ránṣẹ́.',
+      reference_limit: 'O lè fi tó mẹ́ta kún.',
     },
   },
   directory: {

@@ -685,7 +685,7 @@ export const zu: Messages = {
     submitText: 'Engeza okungenani idokhumenti eyodwa yobulungu, yelayisense noma yeziqu. Ngemva kokuthumela, amafayela akho avalwa ngesikhathi siwahlola.',
     submit: 'Thumela ukuze kubukezwe',
     submitting: 'Iyathumela',
-    submitHint: 'Inkinobho iyavuleka uma usunengeze idokhumenti yobulungu, yelayisense noma yeziqu.',
+    submitHint: 'Inkinobho iyavuleka uma usunengeze iziqu, ubulungu noma ilayisense yobungcweti, indima ebhaliwe yephrojekthi nenkomba eyodwa.',
     detailsTitle: 'Imininingwane obhalise ngayo',
     detailsNote: 'Ukushintsha lemininingwane, sicela uxhumane nethimba le-NEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const zu: Messages = {
       cv: {
         title: 'I-CV (ukukhetha)',
         help: 'I-CV emfushane isiza abahloli, kodwa ayanele yodwa.',
+      },
+      project_role: {
+        title: 'Indima ebhaliwe ephrojekthini',
+        help: 'Idokhumenti ekhombisa iphrojekthi osebenze kuyo nendima yakho kuyo, njengekhasi lesivumelwano, imigomo yokusebenza, ikhava yombiko noma incwadi evela kumthengi.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const zu: Messages = {
       saved: 'Kugciniwe.',
       notSet: 'Akumiswanga okwamanje',
     },
+    completion: {
+      title: 'Ukuqedwa kwephrofayela yakho',
+      intro: 'Ukubhalisa kuthathe umzuzu owodwa. Lezi zinyathelo zokukhetha zenza iphrofayela yakho yaqina futhi ziyivumela i-NEXUS-E ukuthi iyibukeze. Zenze noma ngabe ngasiphi isihlalo, noma nini.',
+      percent: '{n}% kuqediwe',
+      next: 'Isinyathelo esilandelayo',
+      done: 'Kuqediwe',
+      allDone: 'Konke kusendaweni. Thumela ubufakazi bakho ukuze bubukezwe uma usulungile.',
+      steps: {
+        registered: 'Ubhalisiwe',
+        consent: 'Vuma isaziso sobumfihlo bobufakazi',
+        consulting: 'Misa ukutholakala kwakho kokweluleka',
+        memberships: 'Engeza ubulungu nobudlelwano bakho (ukukhetha)',
+        qualification: 'Layisha iziqu zakho eziphakeme kakhulu',
+        credential: 'Layisha idokhumenti yobulungu noma yelayisense yobungcweti',
+        projectRole: 'Layisha idokhumenti ekhombisa indima oyibambileephrojekthini',
+        reference: 'Engeza okungenani inkomba eyodwa',
+      },
+    },
+    references: {
+      title: 'Izinkomba',
+      help: 'Qamba umuntu ongakhuluma ngomsebenzi wakho. Asixhumani nabakhomba ngokuzenzakalelayo. Umbukezi we-NEXUS-E angakwenza lokho njengengxenye yokuqinisekisa futhi aqophe umphumela.',
+      none: 'Awukabi nayo inkomba.',
+      name: 'Igama lomkhombi',
+      organisation: 'Inhlangano yomkhombi',
+      relationship: 'Ubudlelwano bakho (isibonelo, umphathi noma umthengi)',
+      add: 'Engeza inkomba',
+      remove: 'Susa {name}',
+      limit: 'Ungangeza ukufika ku-3.',
+      locked: 'Izinkomba azikwazi ukushintshwa ngenkathi ubufakazi bakho bubukezwa.',
+    },
   },
   files: {
     empty: 'Leli fayela alinalutho. Sicela ukhethe ifayela futhi.',
@@ -839,6 +873,8 @@ export const zu: Messages = {
       no_evidence: 'Sicela wengeze okungenani idokhumenti eyodwa ngaphambi kokuthumela: ikhadi noma isitifiketi sobulungu, ilayisense, noma isitifiketi seziqu.',
       not_verified: 'Kuphela Abachwepheshe Abaqinisekisiwe abangabonisa isithakazelo. Uma ukuqinisekisa kwakho kuvunyiwe, ungakwenza.',
       not_open: 'Leli thuba alisabamukeli isithakazelo. Sicela uvuselele ikhasi ukuze ubone okuvuliwe manje.',
+      incomplete: 'Isethi yakho ayikaphelele. Engeza iziqu, ubulungu noma ilayisense yobungcweti, indima ebhaliwe yephrojekthi nenkomba eyodwa, bese uthumela.',
+      reference_limit: 'Ungangeza ukufika ku-3.',
     },
   },
   directory: {

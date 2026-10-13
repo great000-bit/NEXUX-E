@@ -685,7 +685,7 @@ export const sw: Messages = {
     submitText: 'Ongeza angalau hati moja ya uanachama, leseni au sifa. Baada ya kuwasilisha, faili zako hufungwa tunapozikagua.',
     submit: 'Wasilisha kwa ukaguzi',
     submitting: 'Inawasilisha',
-    submitHint: 'Kitufe huwaka ukishaongeza hati ya uanachama, leseni au sifa.',
+    submitHint: 'Kitufe kinawashwa ukishaongeza sifa, uanachama au leseni ya kitaaluma, jukumu lililoandikwa la mradi na rejea moja.',
     detailsTitle: 'Taarifa ulizojisajili nazo',
     detailsNote: 'Kubadilisha taarifa hizi, tafadhali wasiliana na timu ya NEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const sw: Messages = {
       cv: {
         title: 'Wasifu wa kazi (CV) (hiari)',
         help: 'CV fupi huwasaidia wakaguzi, lakini haitoshi peke yake.',
+      },
+      project_role: {
+        title: 'Jukumu lililoandikwa katika mradi',
+        help: 'Hati inayoonyesha mradi uliofanyia kazi na jukumu lako, kama ukurasa wa mkataba, masharti ya kazi, jalada la ripoti au barua kutoka kwa mteja.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const sw: Messages = {
       saved: 'Imehifadhiwa.',
       notSet: 'Bado haijawekwa',
     },
+    completion: {
+      title: 'Ukamilifu wa wasifu wako',
+      intro: 'Kujisajili kulichukua dakika moja. Hatua hizi za hiari huimarisha wasifu wako na kuruhusu NEXUS-E kuuhakiki. Zifanye kwa mpangilio wowote, wakati wowote.',
+      percent: '{n}% imekamilika',
+      next: 'Hatua inayofuata',
+      done: 'Imekamilika',
+      allDone: 'Kila kitu kipo. Wasilisha ushahidi wako kwa uhakiki ukiwa tayari.',
+      steps: {
+        registered: 'Umesajiliwa',
+        consent: 'Kubali notisi ya faragha ya ushahidi',
+        consulting: 'Weka upatikanaji wako wa ushauri',
+        memberships: 'Ongeza uanachama na ushirika wako (si lazima)',
+        qualification: 'Pakia sifa yako ya juu zaidi',
+        credential: 'Pakia hati ya uanachama au leseni ya kitaaluma',
+        projectRole: 'Pakia hati inayoonyesha jukumu ulilokuwa nalo katika mradi',
+        reference: 'Ongeza angalau rejea moja',
+      },
+    },
+    references: {
+      title: 'Rejea',
+      help: 'Taja mtu anayeweza kuzungumzia kazi yako. Hatuwasiliani na warejea kiotomatiki. Mhakiki wa NEXUS-E anaweza kufanya hivyo kama sehemu ya uthibitisho na kurekodi matokeo.',
+      none: 'Bado hujaongeza rejea.',
+      name: 'Jina la mrejea',
+      organisation: 'Shirika la mrejea',
+      relationship: 'Uhusiano wako (kwa mfano, msimamizi au mteja)',
+      add: 'Ongeza rejea',
+      remove: 'Ondoa {name}',
+      limit: 'Unaweza kuongeza hadi rejea 3.',
+      locked: 'Rejea haziwezi kubadilishwa wakati ushahidi wako unahakikiwa.',
+    },
   },
   files: {
     empty: 'Faili hii ni tupu. Tafadhali chagua faili tena.',
@@ -839,6 +873,8 @@ export const sw: Messages = {
       no_evidence: 'Tafadhali ongeza angalau hati moja kabla ya kuwasilisha: kadi au cheti cha uanachama, leseni, au cheti cha sifa.',
       not_verified: 'Ni Wataalamu Waliothibitishwa pekee wanaoweza kuonyesha nia. Uthibitisho wako ukishaidhinishwa, unaweza.',
       not_open: 'Fursa hii haipokei tena maonyesho ya nia. Tafadhali onyesha upya ukurasa kuona ni zipi zilizo wazi sasa.',
+      incomplete: 'Seti yako bado haijakamilika. Ongeza sifa, uanachama au leseni ya kitaaluma, jukumu lililoandikwa la mradi na rejea moja, kisha wasilisha.',
+      reference_limit: 'Unaweza kuongeza hadi rejea 3.',
     },
   },
   directory: {

@@ -685,7 +685,7 @@ export const om: Messages = {
     submitText: 'Xiqqaatu dokumentii miseensummaa, hayyama yookiin barnootaa tokko dabali. Erga booda faayiliin kee yeroo ilaalaa jirru cufama.',
     submit: 'Ilaalchaaf ergi',
     submitting: 'Erguu jira',
-    submitHint: 'Qabduun dokumentii miseensummaa, hayyama yookiin barnootaa erga dabaltee booda ni banama.',
+    submitHint: 'Qabduun kun yeroo barnoota, miseensummaa yookiin hayyama ogummaa, gahee pirojektii galmaa\'e fi wabii tokko dabaltu banama.',
     detailsTitle: 'Odeeffannoo ittiin galmaa\'e',
     detailsNote: 'Odeeffannoo kana jijjiiruuf maaloo garee NEXUS-E qunnami.',
     details: {
@@ -720,6 +720,10 @@ export const om: Messages = {
       cv: {
         title: 'CV (filannoo)',
         help: 'CV gabaabaan ilaaltota ni gargaara, garuu isa qofa ga\'aa miti.',
+      },
+      project_role: {
+        title: 'Gahee pirojektii galmaa\'e',
+        help: 'Dokumentii pirojektii irratti hojjette fi gahee kee agarsiisu, fakkeenyaaf fuula kontiraataa, haala hojii, uffata gabaasaa yookiin xalayaa maamilaa irraa.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const om: Messages = {
       saved: 'Kuufameera.',
       notSet: 'Ammallee hin kaa\'amne',
     },
+    completion: {
+      title: 'Xumura piroofaayilii kee',
+      intro: 'Galmeen daqiiqaa tokko fudhate. Tarkaanfiiwwan filannoo kunniin piroofaayilii kee jabeessu, NEXUS-E akka ilaalu ni dandeessisu. Tartiiba barbaadeen yeroo barbaadetti raawwadhu.',
+      percent: '{n}% xumurameera',
+      next: 'Tarkaanfii itti aanu',
+      done: 'Raawwatameera',
+      allDone: 'Wanti hundi qophaa\'eera. Yeroo qophooftu ragaa kee ilaalchaaf ergi.',
+      steps: {
+        registered: 'Galmaa\'eera',
+        consent: 'Beeksisa iccitii ragaa fudhadhu',
+        consulting: 'Argamuu gorsaa kee kaa\'i',
+        memberships: 'Miseensummaa fi hariiroo kee dabali (filannoo)',
+        qualification: 'Barnoota kee ol\'aanaa fe\'i',
+        credential: 'Dokumentii miseensummaa yookiin hayyama ogummaa fe\'i',
+        projectRole: 'Dokumentii gahee pirojektii keessatti qabdu agarsiisu fe\'i',
+        reference: 'Xiqqaatu wabii tokko dabali',
+      },
+    },
+    references: {
+      title: 'Wabiiwwan',
+      help: 'Nama waa\'ee hojii kee dubbachuu danda\'u maqaa dhahi. Wabiiwwan ofiin hin qunnamnu. Ilaaltuun NEXUS-E akka kutaa mirkaneessuu godhee sana gochuu fi bu\'aa galmeessuu danda\'a.',
+      none: 'Ammallee wabii hin dabalin.',
+      name: 'Maqaa wabii',
+      organisation: 'Dhaabbata wabii',
+      relationship: 'Hariiroo kee (fakkeenyaaf to\'ataa yookiin maamilaa)',
+      add: 'Wabii dabali',
+      remove: '{name} haqi',
+      limit: 'Hanga 3 dabaluu dandeessa.',
+      locked: 'Ragaan kee ilaalamaa jiru wabiiwwan jijjiiramuu hin danda\'an.',
+    },
   },
   files: {
     empty: 'Faayiliin kun duwwaadha. Maaloo faayilii biraa filadhu.',
@@ -839,6 +873,8 @@ export const om: Messages = {
       no_evidence: 'Osoo hin erginin dura maaloo xiqqaatu dokumentii tokko dabali: kaardii yookiin ragaa miseensummaa, hayyama, yookiin ragaa barnootaa.',
       not_verified: 'Ogeeyyiin Mirkanaa\'an qofatu fedhii agarsiisuu danda\'a. Mirkaneessuun kee yeroo raggaasifamu, gochuu dandeessa.',
       not_open: 'Carraan kun fedhii hin fudhatu. Maaloo amma kan banaa ilaaluuf fuula haaromsi.',
+      incomplete: 'Walitti qabamni kee ammallee hin guutne. Barnoota, miseensummaa yookiin hayyama ogummaa, gahee pirojektii galmaa\'e fi wabii tokko dabali, ergasii ergi.',
+      reference_limit: 'Hanga 3 dabaluu dandeessa.',
     },
   },
   directory: {

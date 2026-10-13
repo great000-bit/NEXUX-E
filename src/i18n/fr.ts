@@ -670,7 +670,7 @@ export const fr: Messages = {
     submitText: 'Ajoutez au moins un document d’appartenance, de licence ou de diplôme. Une fois votre dossier envoyé, vos fichiers sont verrouillés pendant l’examen.',
     submit: 'Envoyer pour examen',
     submitting: 'Envoi en cours',
-    submitHint: 'Le bouton s’active dès que vous avez ajouté un document d’appartenance, de licence ou de diplôme.',
+    submitHint: 'Le bouton s\'active dès que vous avez ajouté un diplôme, une adhésion ou licence professionnelle, un rôle documenté dans un projet et une référence.',
     detailsTitle: 'Informations de votre inscription',
     detailsNote: 'Pour modifier ces informations, veuillez contacter l’équipe NEXUS-E.',
     details: {
@@ -705,6 +705,10 @@ export const fr: Messages = {
       cv: {
         title: 'CV (facultatif)',
         help: 'Un CV court aide les examinateurs, mais il ne suffit pas à lui seul.',
+      },
+      project_role: {
+        title: 'Rôle documenté dans un projet',
+        help: 'Un document qui montre un projet sur lequel vous avez travaillé et votre rôle, par exemple une page de contrat, des termes de référence, une page de couverture de rapport ou une lettre du client.',
       },
     },
     slot: {
@@ -791,6 +795,36 @@ export const fr: Messages = {
       saved: 'Enregistré.',
       notSet: 'Pas encore renseignée',
     },
+    completion: {
+      title: 'Complétion de votre profil',
+      intro: 'L\'inscription n\'a pris qu\'une minute. Ces étapes facultatives renforcent votre profil et permettent à NEXUS-E de l\'examiner. Faites-les dans l\'ordre que vous voulez, quand vous voulez.',
+      percent: '{n} % complété',
+      next: 'Prochaine étape',
+      done: 'Fait',
+      allDone: 'Tout est en place. Soumettez vos preuves pour examen quand vous êtes prêt.',
+      steps: {
+        registered: 'Inscrit',
+        consent: 'Accepter l\'avis de confidentialité des preuves',
+        consulting: 'Indiquer votre disponibilité pour le conseil',
+        memberships: 'Ajouter vos adhésions et affiliations (facultatif)',
+        qualification: 'Téléverser votre diplôme le plus élevé',
+        credential: 'Téléverser un document d’adhésion ou de licence professionnelle',
+        projectRole: 'Téléverser un document montrant un rôle que vous avez tenu dans un projet',
+        reference: 'Ajouter au moins une référence',
+      },
+    },
+    references: {
+      title: 'Références',
+      help: 'Indiquez une personne qui peut témoigner de votre travail. Nous ne contactons pas les référents automatiquement. Un examinateur de NEXUS-E peut le faire dans le cadre de la vérification et en consigne le résultat.',
+      none: 'Vous n\'avez pas encore ajouté de référence.',
+      name: 'Nom du référent',
+      organisation: 'Organisation du référent',
+      relationship: 'Votre relation (par exemple, supérieur ou client)',
+      add: 'Ajouter la référence',
+      remove: 'Supprimer {name}',
+      limit: 'Vous pouvez ajouter jusqu\'à 3 références.',
+      locked: 'Les références ne peuvent pas être modifiées pendant l\'examen de vos preuves.',
+    },
   },
   files: {
     empty: 'Ce fichier est vide. Veuillez choisir à nouveau le fichier.',
@@ -824,6 +858,8 @@ export const fr: Messages = {
       no_evidence: 'Veuillez ajouter au moins un document avant d’envoyer : une carte ou un certificat de membre, une licence, ou un diplôme.',
       not_verified: 'Seuls les experts vérifiés peuvent manifester leur intérêt. Une fois votre vérification approuvée, vous le pourrez.',
       not_open: 'Cette opportunité n’accepte plus de manifestations d’intérêt. Veuillez actualiser la page pour voir ce qui est ouvert.',
+      incomplete: 'Votre dossier n\'est pas encore complet. Ajoutez un diplôme, une adhésion ou licence professionnelle, un rôle documenté dans un projet et une référence, puis soumettez.',
+      reference_limit: 'Vous pouvez ajouter jusqu\'à 3 références.',
     },
   },
   directory: {

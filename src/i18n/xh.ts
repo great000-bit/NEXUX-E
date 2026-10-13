@@ -685,7 +685,7 @@ export const xh: Messages = {
     submitText: 'Yongeza ubuncinane ixwebhu elinye lobulungu, lelayisensi okanye lemfundo. Emva kokuthumela, iifayile zakho ziyavalwa ngoxa siyaphonononga.',
     submit: 'Thumela ukuze kuphononongwe',
     submitting: 'Iyathumela',
-    submitHint: 'Iqhosha liyavuleka xa sele wongeze ixwebhu lobulungu, lelayisensi okanye lemfundo.',
+    submitHint: 'Iqhosha liyavuleka xa sele wongeze imfundo, ubulungu okanye ilayisensi yobugcisa, indima ebhaliweyo kwiprojekthi kunye nesalathiso esinye.',
     detailsTitle: 'Iinkcukacha obhalise ngazo',
     detailsNote: 'Ukutshintsha ezi nkcukacha, nceda uqhagamshelane neqela le-NEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const xh: Messages = {
       cv: {
         title: 'I-CV (ukhetho)',
         help: 'I-CV emfutshane inceda abaphononongi, kodwa ayonelanga yodwa.',
+      },
+      project_role: {
+        title: 'Indima ebhaliweyo kwiprojekthi',
+        help: 'Ixwebhu elibonisa iprojekthi osebenze kuyo nendima yakho kuyo, njengephepha lesivumelwano, imigaqo yokusebenza, isigubungelo sengxelo okanye ileta evela kumathengi.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const xh: Messages = {
       saved: 'Igciniwe.',
       notSet: 'Ayikamiselwa okwangoku',
     },
+    completion: {
+      title: 'Ukugqitywa kweprofayile yakho',
+      intro: 'Ukubhalisa kuthathe umzuzu omnye. Ezi nyathelo zokukhetha zomeleza iprofayile yakho kwaye ziyivumela i-NEXUS-E ukuba iyiphonononge. Zenze nangayiphi indlela, nangaliphi na ixesha.',
+      percent: '{n}% igqityiwe',
+      next: 'Inyathelo elilandelayo',
+      done: 'Kugqityiwe',
+      allDone: 'Yonke into ikwindawo. Ngenisa ubungqina bakho ukuze buphononongwe xa ukulungele.',
+      steps: {
+        registered: 'Ubhalisiwe',
+        consent: 'Yamkela isaziso sobumfihlo bobungqina',
+        consulting: 'Misela ukufumaneka kwakho kokucebisa',
+        memberships: 'Yongeza ubulungu nobudlelwane bakho (ukhetho)',
+        qualification: 'Layisha imfundo yakho ephezulu',
+        credential: 'Layisha ixwebhu lobulungu okanye lelayisensi yobugcisa',
+        projectRole: 'Layisha ixwebhu elibonisa indima oyibambileyo kwiprojekthi',
+        reference: 'Yongeza ubuncinane isalathiso esinye',
+      },
+    },
+    references: {
+      title: 'Izalathiso',
+      help: 'Chaza umntu onokuthetha ngomsebenzi wakho. Asisoze sinxibelelane nabarefarii ngokuzenzekelayo. Umphononongi we-NEXUS-E unokwenza oko njengenxalenye yokuqinisekisa aze arekhode isiphumo.',
+      none: 'Awukayongezi isalathiso.',
+      name: 'Igama lomrefari',
+      organisation: 'Umbutho womrefari',
+      relationship: 'Ubudlelwane bakho (umzekelo, umphathi okanye umthengi)',
+      add: 'Yongeza isalathiso',
+      remove: 'Susa {name}',
+      limit: 'Unokongeza ukuya kwezi-3.',
+      locked: 'Izalathiso azinakutshintshwa ngoxa ubungqina bakho buphononongwa.',
+    },
   },
   files: {
     empty: 'Le fayile ayinanto. Nceda ukhethe enye ifayile.',
@@ -839,6 +873,8 @@ export const xh: Messages = {
       no_evidence: 'Nceda wongeze ubuncinane ixwebhu elinye phambi kokuthumela: ikhadi okanye isatifikethi sobulungu, ilayisensi, okanye isatifikethi semfundo.',
       not_verified: 'Zii-Ngcali eziQinisekisiweyo kuphela ezinokubonisa umdla. Xa ukuqinisekisa kwakho kuvunyiwe, unokwenza oko.',
       not_open: 'Eli thuba alisamkeli mdla. Nceda uhlaziye iphepha ukuze ubone ezivulekileyo ngoku.',
+      incomplete: 'Iseti yakho ayikagqitywa. Yongeza imfundo, ubulungu okanye ilayisensi yobugcisa, indima ebhaliweyo kwiprojekthi kunye nesalathiso esinye, uze uthumele.',
+      reference_limit: 'Unokongeza ukuya kwezi-3.',
     },
   },
   directory: {

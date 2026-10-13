@@ -12,7 +12,7 @@ declare const EdgeRuntime: { waitUntil(p: Promise<unknown>): void } | undefined
 
 const BUCKET = 'expert-evidence'
 const SESSION_MINUTES = 120
-const KINDS = ['membership', 'licence', 'qualification', 'cv']
+const KINDS = ['membership', 'licence', 'qualification', 'cv', 'project_role']
 const SAME_ANSWER =
   'If that email address is registered with NEXUS-E, we have sent a 6 digit code to it. The code works once and expires in 10 minutes.'
 
@@ -49,6 +49,11 @@ const FRIENDLY: Record<string, [number, string]> = {
   not_verified: [403, 'Only Verified Experts can express interest. Once your verification is approved, you can.'],
   not_open: [409, 'This opportunity is no longer open for interest. Please refresh the page to see what is open now.'],
   bad_value: [400, 'That choice was not understood. Please try again.'],
+  incomplete: [
+    409,
+    'Your set is not complete yet. Please add a qualification, a professional membership or licence, a documented project role and one reference, then submit.',
+  ],
+  reference_limit: [409, 'You can add up to 3 references.'],
 }
 
 function allowedOrigin(origin: string | null): string | null {
@@ -186,12 +191,16 @@ Deno.serve(async (req) => {
         .eq('expert_id', expertId)
         .eq('state', 'ready')
         .order('created_at')
+      const completion = await rpc('portal_completion', { p_expert_id: expertId })
+      const references = await rpc('portal_list_references', { p_expert_id: expertId })
       return respond(200, {
         ok: true,
         expert: { ...e, evidence_consent_at: undefined },
         consented: Boolean(e.evidence_consent_at),
         editable: e.verification_status === 'pending' || e.verification_status === 'more_evidence',
         files: files ?? [],
+        completion,
+        references,
       })
     }
 
@@ -297,6 +306,23 @@ Deno.serve(async (req) => {
       if (typeof body.value !== 'boolean') return fail(400, 'bad_value', 'That choice was not understood. Please try again.')
       const out = await rpc('portal_set_discoverable', { p_expert_id: expertId, p_value: body.value })
       return respond(200, { ok: true, ...(out as object) })
+    }
+
+    if (action === 'add_reference') {
+      await rpc('portal_add_reference', {
+        p_expert_id: expertId,
+        p_name: String(body.name ?? ''),
+        p_org: String(body.organisation ?? ''),
+        p_rel: String(body.relationship ?? ''),
+      })
+      return respond(200, { ok: true })
+    }
+
+    if (action === 'delete_reference') {
+      const id = String(body.id ?? '')
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) return fail(400, 'bad_value', 'That choice was not understood. Please try again.')
+      await rpc('portal_delete_reference', { p_expert_id: expertId, p_id: id })
+      return respond(200, { ok: true })
     }
 
     if (action === 'set_consulting') {

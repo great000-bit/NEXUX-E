@@ -23,7 +23,7 @@ export const STATUS_HELP: Record<VStatus, string> = {
 
 export const isStatus = (v: string): v is VStatus => (STATUS_ORDER as string[]).includes(v)
 
-export type EvidenceKind = 'membership' | 'licence' | 'qualification' | 'cv'
+export type EvidenceKind = 'membership' | 'licence' | 'qualification' | 'cv' | 'project_role'
 
 export const KIND_INFO: Record<EvidenceKind, { title: string; help: string; required: boolean }> = {
   membership: {
@@ -39,6 +39,11 @@ export const KIND_INFO: Record<EvidenceKind, { title: string; help: string; requ
   qualification: {
     title: 'Highest qualification',
     help: 'The certificate for your highest qualification.',
+    required: false,
+  },
+  project_role: {
+    title: 'Documented project role',
+    help: 'A document that shows a project you worked on and your role in it.',
     required: false,
   },
   cv: {

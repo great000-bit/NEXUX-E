@@ -685,7 +685,7 @@ export const sn: Messages = {
     submitText: 'Wedzera kanokwana gwaro rimwe rehunhengo, raisensi kana redzidzo. Mushure mekutumira, mafaera ako anovharwa tichiongorora.',
     submit: 'Tumira kuti aongororwe',
     submitting: 'Kutumira',
-    submitHint: 'Bhatani rinoshanda kana wawedzera gwaro rehunhengo, raisensi kana redzidzo.',
+    submitHint: 'Bhatani rinoshanda kana wawedzera dzidzo, hunhengo kana raisensi yeunyanzvi, basa rakanyorwa mupurojekiti nechapupu chimwe.',
     detailsTitle: 'Ruzivo rwawakanyoresa nerwo',
     detailsNote: 'Kuchinja ruzivo urwu, ndapota taura nechikwata cheNEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const sn: Messages = {
       cv: {
         title: 'CV (inosarudzwa)',
         help: 'CV pfupi inobatsira vaongorori, asi haikwani yoga.',
+      },
+      project_role: {
+        title: 'Basa rakanyorwa mupurojekiti',
+        help: 'Gwaro rinoratidza purojekiti yawakashanda uye basa rako, senge peji yechibvumirano, zvinodiwa pabasa, chikamu chekutanga chetsamba kana tsamba yemutengi.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const sn: Messages = {
       saved: 'Zvachengetwa.',
       notSet: 'Hazvisati zvaiswa',
     },
+    completion: {
+      title: 'Kupera kweprofile yako',
+      intro: 'Kunyoresa kwakatora miniti imwe. Matanho aya anosarudzwa anosimbisa profile yako uye anobvumira NEXUS-E kuiongorora. Aite nenzira chero ipi, chero nguva.',
+      percent: '{n}% yapera',
+      next: 'Danho rinotevera',
+      done: 'Zvapera',
+      allDone: 'Zvese zviripo. Tumira humbowo hwako kuti huongororwe kana wagadzirira.',
+      steps: {
+        registered: 'Wanyoreswa',
+        consent: 'Bvuma chiziviso chekuvanzika chehumbowo',
+        consulting: 'Isa kuwanikwa kwako kwekupa mazano',
+        memberships: 'Wedzera hunhengo nehukama hwako (zvinosarudzwa)',
+        qualification: 'Tumira dzidzo yako yepamusoro',
+        credential: 'Tumira gwaro rehunhengo kana raisensi yeunyanzvi',
+        projectRole: 'Tumira gwaro rinoratidza basa raunge uine mupurojekiti',
+        reference: 'Wedzera kanokwana chapupu chimwe',
+      },
+    },
+    references: {
+      title: 'Zvapupu',
+      help: 'Taura munhu anogona kutaura nezvebasa rako. Hatibatani nezvapupu pachedu. Muongorori weNEXUS-E anogona kuita izvozvo senzvimbo yekusimbisa uye anonyora mhedzisiro.',
+      none: 'Hauna kuwedzera chapupu parizvino.',
+      name: 'Zita rechapupu',
+      organisation: 'Sangano rechapupu',
+      relationship: 'Hukama hwako naye (semuenzaniso, mutariri kana mutengi)',
+      add: 'Wedzera chapupu',
+      remove: 'Bvisa {name}',
+      limit: 'Unogona kuwedzera kusvika ku3.',
+      locked: 'Zvapupu hazvichinjiki apo humbowo hwako huri kuongororwa.',
+    },
   },
   files: {
     empty: 'Faera iri harina chinhu. Ndapota sarudza rimwe faera.',
@@ -839,6 +873,8 @@ export const sn: Messages = {
       no_evidence: 'Ndapota wedzera kanokwana gwaro rimwe usati watumira: kadhi kana chitupa chehunhengo, raisensi, kana chitupa chedzidzo.',
       not_verified: 'Vanyanzvi Vakasimbiswa chete ndivo vanogona kuratidza kufarira. Kana kusimbisa kwako kwabvumirwa, unogona kuita izvozvo.',
       not_open: 'Mukana uyu hauchagamuchiri kufarira. Ndapota vandudza peji kuti uone zviri kuvhurika ikozvino.',
+      incomplete: 'Seti yako haisati yapera. Wedzera dzidzo, hunhengo kana raisensi yeunyanzvi, basa rakanyorwa mupurojekiti nechapupu chimwe, wobva watumira.',
+      reference_limit: 'Unogona kuwedzera kusvika ku3.',
     },
   },
   directory: {

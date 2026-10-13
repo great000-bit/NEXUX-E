@@ -685,7 +685,7 @@ export const af: Messages = {
     submitText: 'Voeg ten minste een dokument oor lidmaatskap, lisensie of kwalifikasie by. Ná indiening word jou lêers gesluit terwyl ons hersien.',
     submit: 'Dien in vir hersiening',
     submitting: 'Dien tans in',
-    submitHint: 'Die knoppie word aangeskakel sodra jy \'n lidmaatskap-, lisensie- of kwalifikasiedokument bygevoeg het.',
+    submitHint: 'Die knoppie skakel aan sodra jy \'n kwalifikasie, \'n professionele lidmaatskap of lisensie, \'n gedokumenteerde projekrol en een verwysing bygevoeg het.',
     detailsTitle: 'Besonderhede waarmee jy geregistreer het',
     detailsNote: 'Kontak asseblief die NEXUS-E-span om hierdie besonderhede te verander.',
     details: {
@@ -720,6 +720,10 @@ export const af: Messages = {
       cv: {
         title: 'CV (opsioneel)',
         help: '\'n Kort CV help hersieners, maar is nie alleen genoeg nie.',
+      },
+      project_role: {
+        title: 'Gedokumenteerde projekrol',
+        help: '\'n Dokument wat \'n projek toon waaraan jy gewerk het en jou rol daarin, soos \'n kontrakblad, opdragspesifikasie, verslagomslag of \'n brief van die kliënt.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const af: Messages = {
       saved: 'Gestoor.',
       notSet: 'Nog nie gestel nie',
     },
+    completion: {
+      title: 'Voltooiing van jou profiel',
+      intro: 'Registrasie het een minuut geneem. Hierdie opsionele stappe versterk jou profiel en laat NEXUS-E dit hersien. Doen dit in enige volgorde, wanneer jy wil.',
+      percent: '{n}% voltooi',
+      next: 'Volgende stap',
+      done: 'Klaar',
+      allDone: 'Alles is in plek. Dien jou bewyse in vir hersiening wanneer jy gereed is.',
+      steps: {
+        registered: 'Geregistreer',
+        consent: 'Aanvaar die privaatheidskennisgewing vir bewyse',
+        consulting: 'Stel jou beskikbaarheid vir konsultasie',
+        memberships: 'Voeg jou lidmaatskappe en verbintenisse by (opsioneel)',
+        qualification: 'Laai jou hoogste kwalifikasie op',
+        credential: 'Laai \'n professionele lidmaatskap- of lisensiedokument op',
+        projectRole: 'Laai \'n dokument op wat \'n projekrol toon wat jy gehad het',
+        reference: 'Voeg ten minste een verwysing by',
+      },
+    },
+    references: {
+      title: 'Verwysings',
+      help: 'Noem iemand wat oor jou werk kan praat. Ons kontak nie verwysers outomaties nie. \'n NEXUS-E-hersiener kan dit as deel van verifikasie doen en teken die uitslag aan.',
+      none: 'Jy het nog nie \'n verwysing bygevoeg nie.',
+      name: 'Naam van verwyser',
+      organisation: 'Organisasie van verwyser',
+      relationship: 'Jou verhouding (byvoorbeeld toesighouer of kliënt)',
+      add: 'Voeg verwysing by',
+      remove: 'Verwyder {name}',
+      limit: 'Jy kan tot 3 verwysings byvoeg.',
+      locked: 'Verwysings kan nie verander word terwyl jou bewyse hersien word nie.',
+    },
   },
   files: {
     empty: 'Hierdie lêer is leeg. Kies asseblief \'n ander lêer.',
@@ -839,6 +873,8 @@ export const af: Messages = {
       no_evidence: 'Voeg asseblief ten minste een dokument by voor indiening: \'n lidmaatskapkaart of -sertifikaat, \'n lisensie, of \'n kwalifikasiesertifikaat.',
       not_verified: 'Slegs Geverifieerde Kundiges kan belangstelling toon. Sodra jou verifikasie goedgekeur is, kan jy dit doen.',
       not_open: 'Hierdie geleentheid neem nie meer belangstelling aan nie. Verfris asseblief die bladsy om te sien wat nou oop is.',
+      incomplete: 'Jou stel is nog nie volledig nie. Voeg \'n kwalifikasie, \'n professionele lidmaatskap of lisensie, \'n gedokumenteerde projekrol en een verwysing by, en dien dan in.',
+      reference_limit: 'Jy kan tot 3 verwysings byvoeg.',
     },
   },
   directory: {

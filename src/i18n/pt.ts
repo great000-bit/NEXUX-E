@@ -670,7 +670,7 @@ export const pt: Messages = {
     submitText: 'Acrescente pelo menos um documento de filiação, licença ou habilitação. Depois de enviar, os seus ficheiros ficam bloqueados enquanto os analisamos.',
     submit: 'Enviar para análise',
     submitting: 'A enviar',
-    submitHint: 'O botão é activado quando tiver acrescentado um documento de filiação, licença ou habilitação.',
+    submitHint: 'O botão ativa-se quando tiver adicionado uma qualificação, uma filiação ou licença profissional, uma função documentada num projeto e uma referência.',
     detailsTitle: 'Dados com que se registou',
     detailsNote: 'Para alterar estes dados, contacte a equipa do NEXUS-E.',
     details: {
@@ -705,6 +705,10 @@ export const pt: Messages = {
       cv: {
         title: 'CV (opcional)',
         help: 'Um CV curto ajuda os avaliadores, mas não basta por si só.',
+      },
+      project_role: {
+        title: 'Função documentada num projeto',
+        help: 'Um documento que mostre um projeto em que trabalhou e a sua função, como uma página de contrato, termos de referência, uma capa de relatório ou uma carta do cliente.',
       },
     },
     slot: {
@@ -791,6 +795,36 @@ export const pt: Messages = {
       saved: 'Guardado.',
       notSet: 'Ainda não definida',
     },
+    completion: {
+      title: 'Conclusão do seu perfil',
+      intro: 'O registo demorou um minuto. Estes passos opcionais reforçam o seu perfil e permitem que a NEXUS-E o analise. Faça-os por qualquer ordem, quando quiser.',
+      percent: '{n}% concluído',
+      next: 'Próximo passo',
+      done: 'Feito',
+      allDone: 'Está tudo pronto. Submeta as suas provas para análise quando estiver preparado.',
+      steps: {
+        registered: 'Registado',
+        consent: 'Aceitar o aviso de privacidade das provas',
+        consulting: 'Indicar a sua disponibilidade para consultoria',
+        memberships: 'Adicionar as suas filiações e afiliações (opcional)',
+        qualification: 'Carregar a sua qualificação mais elevada',
+        credential: 'Carregar um documento de filiação ou licença profissional',
+        projectRole: 'Carregar um documento que mostre uma função que desempenhou num projeto',
+        reference: 'Adicionar pelo menos uma referência',
+      },
+    },
+    references: {
+      title: 'Referências',
+      help: 'Indique alguém que possa falar do seu trabalho. Não contactamos os referentes automaticamente. Um revisor da NEXUS-E pode fazê-lo como parte da verificação e regista o resultado.',
+      none: 'Ainda não adicionou uma referência.',
+      name: 'Nome do referente',
+      organisation: 'Organização do referente',
+      relationship: 'A sua relação (por exemplo, supervisor ou cliente)',
+      add: 'Adicionar referência',
+      remove: 'Remover {name}',
+      limit: 'Pode adicionar até 3 referências.',
+      locked: 'As referências não podem ser alteradas enquanto as suas provas estão em análise.',
+    },
   },
   files: {
     empty: 'Este ficheiro está vazio. Escolha o ficheiro novamente.',
@@ -824,6 +858,8 @@ export const pt: Messages = {
       no_evidence: 'Acrescente pelo menos um documento antes de enviar: um cartão ou certificado de membro, uma licença, ou um certificado de habilitação.',
       not_verified: 'Só os especialistas verificados podem manifestar interesse. Quando a sua verificação for aprovada, poderá fazê-lo.',
       not_open: 'Esta oportunidade já não aceita manifestações de interesse. Actualize a página para ver o que está aberto.',
+      incomplete: 'O seu conjunto ainda não está completo. Adicione uma qualificação, uma filiação ou licença profissional, uma função documentada num projeto e uma referência, e depois submeta.',
+      reference_limit: 'Pode adicionar até 3 referências.',
     },
   },
   directory: {

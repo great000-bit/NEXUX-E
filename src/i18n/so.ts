@@ -685,7 +685,7 @@ export const so: Messages = {
     submitText: 'Ku dar ugu yaraan hal dukumenti xubinnimo, shahaado ama aqoon ah. Ka dib gudbinta, faylashaada waa la xidhaa inta aan dib-eegayno.',
     submit: 'Gudbi dib-eegis',
     submitting: 'Waa la gudbinayaa',
-    submitHint: 'Badhanku wuu shidmayaa marka aad ku darto dukumenti xubinnimo, shahaado ama aqoon ah.',
+    submitHint: 'Badhanku wuu shidmayaa marka aad ku darto aqoon, xubinnimo ama shahaado xirfadeed, door mashruuc oo la diiwaan geliyay iyo hal tixraac.',
     detailsTitle: 'Faahfaahinta aad ku diiwaan gashay',
     detailsNote: 'Si aad u beddesho faahfaahintan, fadlan la xiriir kooxda NEXUS-E.',
     details: {
@@ -720,6 +720,10 @@ export const so: Messages = {
       cv: {
         title: 'CV (ikhtiyaari)',
         help: 'CV gaaban ayaa caawiya dib-eegayaasha, laakiin keligeed ma ku filna.',
+      },
+      project_role: {
+        title: 'Door mashruuc oo la diiwaan geliyay',
+        help: 'Dukumenti muujinaya mashruuc aad ka shaqeysay iyo doorkaaga, sida bog heshiis, ujeeddooyin shaqo, daboolka warbixin ama waraaq ka timid macmiil.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const so: Messages = {
       saved: 'La keydiyay.',
       notSet: 'Weli lama dejin',
     },
+    completion: {
+      title: 'Dhammaystirka profile-kaaga',
+      intro: 'Diiwaangelintu waxay qaadatay hal daqiiqo. Tillaabooyinkan ikhtiyaariga ah waxay xoojiyaan profile-kaaga waxayna u oggolaadaan NEXUS-E inay dib u eegto. Ku samee habka aad rabto, waqti kasta.',
+      percent: '{n}% waa dhammaystiran',
+      next: 'Tallaabada xigta',
+      done: 'La sameeyay',
+      allDone: 'Wax kasta waa diyaar. Gudbi caddaymahaaga dib-eegis marka aad diyaar tahay.',
+      steps: {
+        registered: 'La diiwaan geliyay',
+        consent: 'Aqbal ogeysiiska qarsoodiga caddaynta',
+        consulting: 'Deji helitaankaaga la-talinta',
+        memberships: 'Ku dar xubinnimadaada iyo xiriirkaaga (ikhtiyaari)',
+        qualification: 'Soo rar aqoontaada ugu sarreysa',
+        credential: 'Soo rar dukumenti xubinnimo ama shahaado xirfadeed',
+        projectRole: 'Soo rar dukumenti muujinaya doorka aad ku lahayd mashruuc',
+        reference: 'Ku dar ugu yaraan hal ilaha tixraac',
+      },
+    },
+    references: {
+      title: 'Tixraacyo',
+      help: 'Magacaw qof ka hadli kara shaqadaada. Si toos ah ugama xiriirno tixraacayaasha. Dib-eegaha NEXUS-E ayaa sidaas samayn kara isagoo qayb ka ah xaqiijinta wuxuuna diiwaan gelinayaa natiijada.',
+      none: 'Weli ma aadan ku darin tixraac.',
+      name: 'Magaca tixraacaha',
+      organisation: 'Hay\'adda tixraacaha',
+      relationship: 'Xiriirkaaga (tusaale, kormeere ama macmiil)',
+      add: 'Ku dar tixraac',
+      remove: 'Ka saar {name}',
+      limit: 'Waxaad ku dari kartaa ilaa 3.',
+      locked: 'Tixraacyada lama beddeli karo inta caddaymahaaga la dib-eegayo.',
+    },
   },
   files: {
     empty: 'Faylkan waa madhan yahay. Fadlan dooro fayl kale.',
@@ -839,6 +873,8 @@ export const so: Messages = {
       no_evidence: 'Fadlan ku dar ugu yaraan hal dukumenti ka hor gudbinta: kaarka ama shahaadada xubinnimada, shahaado, ama shahaadada aqoonta.',
       not_verified: 'Khubarada La Xaqiijiyay oo keliya ayaa muujin kara xiise. Marka xaqiijintaada la ansixiyo, waad sameyn kartaa.',
       not_open: 'Fursaddan mar dambe ma aqbalayso xiise. Fadlan cusboonaysii bogga si aad u aragto waxa hadda furan.',
+      incomplete: 'Isu-geyntaadu weli ma dhammaystirna. Ku dar aqoon, xubinnimo ama shahaado xirfadeed, door mashruuc oo la diiwaan geliyay iyo hal tixraac, kadibna gudbi.',
+      reference_limit: 'Waxaad ku dari kartaa ilaa 3.',
     },
   },
   directory: {

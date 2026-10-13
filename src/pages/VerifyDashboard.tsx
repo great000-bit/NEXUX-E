@@ -3,7 +3,9 @@ import { usePageInfo } from '../lib/pageInfo'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AffiliationsCard } from '../components/AffiliationsCard'
+import { CompletionCard } from '../components/CompletionCard'
 import { ConsultingCard } from '../components/ConsultingCard'
+import { ReferencesCard } from '../components/ReferencesCard'
 import { ListingCard } from '../components/ListingCard'
 import { OpportunitiesSection } from '../components/OpportunitiesSection'
 import { StatusBadge } from '../components/StatusBadge'
@@ -20,7 +22,7 @@ import { useMessages } from '../i18n/I18nProvider'
 
 type Transfer = { key: string; kind: EvidenceKind; name: string; progress: number; phase: 'preparing' | 'sending' | 'checking' }
 
-const KINDS: EvidenceKind[] = ['membership', 'licence', 'qualification', 'cv']
+const KINDS: EvidenceKind[] = ['qualification', 'membership', 'licence', 'project_role', 'cv']
 
 const when = (iso: string | null) =>
   iso ? new Date(iso).toLocaleDateString(messages().meta.dateLocale, { day: 'numeric', month: 'long', year: 'numeric' }) : ''
@@ -88,7 +90,8 @@ export default function VerifyDashboard() {
   const { expert, files, editable, consented } = me
   const status = isStatus(expert.verification_status) ? expert.verification_status : 'pending'
   const evidenceCount = files.length + transfers.length
-  const hasEvidence = files.some((f) => f.kind !== 'cv')
+  // A complete set (qualification, membership or licence, project role, one reference, and the consent) is what is submitted.
+  const hasEvidence = me.completion ? me.completion.complete : files.some((f) => f.kind !== 'cv')
 
   const setSlotError = (kind: EvidenceKind, message?: string) =>
     setSlotErrors((s) => ({ ...s, [kind]: message }))
@@ -238,6 +241,8 @@ export default function VerifyDashboard() {
         </>
       )}
 
+      {me.completion && <CompletionCard completion={me.completion} />}
+
       {/* Evidence */}
       <section aria-labelledby="evidence-title" className="space-y-4">
         <div>
@@ -295,6 +300,10 @@ export default function VerifyDashboard() {
           </div>
         )}
       </section>
+
+      {consented && me.references && (
+        <ReferencesCard references={me.references} editable={editable} token={token} onChanged={refresh} onSessionEnded={sessionEnded} />
+      )}
 
       {/* Submit */}
       {editable && consented && (

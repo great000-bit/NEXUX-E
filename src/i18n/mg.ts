@@ -685,7 +685,7 @@ export const mg: Messages = {
     submitText: 'Ampio farafahakeliny taratasy iray momba ny fikambanana, laisansa na diplaoma. Aorian\'ny fandefasana dia hidy ny rakitrao mandritra ny fandinihana.',
     submit: 'Alefaso handinihana',
     submitting: 'Mandefa',
-    submitHint: 'Mavitrika ny bokotra rehefa nampiana taratasy momba ny fikambanana, laisansa na diplaoma ianao.',
+    submitHint: 'Mavitrika ny bokotra rehefa nampiana diplaoma, fikambanana na laisansa ara-matihanina, andraikitra voarakitra amin\'ny tetikasa ary tsiahy iray.',
     detailsTitle: 'Ny antsipiriany nisoratanao anarana',
     detailsNote: 'Mba hanovana ireto antsipiriany ireto, mifandraisa amin\'ny ekipan\'ny NEXUS-E azafady.',
     details: {
@@ -720,6 +720,10 @@ export const mg: Messages = {
       cv: {
         title: 'CV (tsy voatery)',
         help: 'Manampy ny mpandinika ny CV fohy, nefa tsy ampy irery.',
+      },
+      project_role: {
+        title: 'Andraikitra voarakitra amin\'ny tetikasa',
+        help: 'Taratasy mampiseho tetikasa nandraisanao anjara sy ny andraikitrao, toy ny pejin\'ny fifanarahana, ny fepetra, ny fonon\'ny tatitra na taratasy avy amin\'ny mpanjifa.',
       },
     },
     slot: {
@@ -806,6 +810,36 @@ export const mg: Messages = {
       saved: 'Voatahiry.',
       notSet: 'Mbola tsy voafidy',
     },
+    completion: {
+      title: 'Ny fahavitan\'ny mombamombanao',
+      intro: 'Minitra iray ny fisoratana anarana. Ireto dingana tsy voatery ireto dia manamafy ny mombamombanao ary ahafahan\'ny NEXUS-E mandinika azy. Ataovy amin\'ny filaharana rehetra, amin\'ny fotoana rehetra.',
+      percent: '{n}% vita',
+      next: 'Dingana manaraka',
+      done: 'Vita',
+      allDone: 'Efa miandry ny rehetra. Alefaso hodinihina ny porofonao rehefa vonona ianao.',
+      steps: {
+        registered: 'Voasoratra anarana',
+        consent: 'Ekeo ny fampahafantarana momba ny fiainana manokana ho an\'ny porofo',
+        consulting: 'Faritao ny fahafahanao manome torohevitra',
+        memberships: 'Ampio ny fikambananao sy ny fifandraisanao (tsy voatery)',
+        qualification: 'Ampidiro ny diplaoma ambony indrindra anananao',
+        credential: 'Ampidiro taratasy momba ny fikambanana na laisansa ara-matihanina',
+        projectRole: 'Ampidiro taratasy mampiseho andraikitra nananao tamin\'ny tetikasa',
+        reference: 'Ampio farafahakeliny tsiahy iray',
+      },
+    },
+    references: {
+      title: 'Tsiahy',
+      help: 'Lazao ny olona afaka miresaka momba ny asanao. Tsy mifandray ho azy amin\'ny mpanome tsiahy izahay. Mety hanao izany ny mpandinika NEXUS-E ho ampahany amin\'ny fanamarinana ary mirakitra ny valiny.',
+      none: 'Mbola tsy nanampy tsiahy ianao.',
+      name: 'Anaran\'ny mpanome tsiahy',
+      organisation: 'Fikambanan\'ny mpanome tsiahy',
+      relationship: 'Ny fifandraisanao aminy (ohatra, mpitantana na mpanjifa)',
+      add: 'Ampio tsiahy',
+      remove: 'Esory ny {name}',
+      limit: 'Afaka manampy hatramin\'ny 3 ianao.',
+      locked: 'Tsy azo ovaina ny tsiahy raha mbola dinihina ny porofonao.',
+    },
   },
   files: {
     empty: 'Foana ity rakitra ity. Fidio rakitra hafa azafady.',
@@ -839,6 +873,8 @@ export const mg: Messages = {
       no_evidence: 'Ampio farafahakeliny taratasy iray alohan\'ny handefasana azafady: karatra na mari-pikambanana, laisansa, na mari-pahaizana.',
       not_verified: 'Ny Manam-pahaizana Voamarina ihany no afaka maneho ny fahalianany. Rehefa nekena ny fanamarinanao, azonao atao izany.',
       not_open: 'Tsy mandray fahalianana intsony ity fahafahana ity. Havaozy ny pejy mba hahitana izay misokatra izao.',
+      incomplete: 'Tsy mbola feno ny angonao. Ampio diplaoma, fikambanana na laisansa ara-matihanina, andraikitra voarakitra amin\'ny tetikasa ary tsiahy iray, dia alefaso.',
+      reference_limit: 'Afaka manampy hatramin\'ny 3 ianao.',
     },
   },
   directory: {
