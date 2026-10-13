@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
+import { ReviewChecklist } from './ReviewChecklist'
 import { isStatus, KIND_INFO, STATUS_LABEL, type EvidenceKind } from '../../lib/verification'
 import { formatSize } from '../../lib/fileCheck'
 import { StatusBadge } from '../../components/StatusBadge'
@@ -39,8 +40,8 @@ type Decision = 'approve' | 'more_evidence' | 'reject'
 const BUCKET = 'expert-evidence'
 
 const DECISIONS: { value: Decision; label: string; result: string; help: string }[] = [
-  { value: 'approve', label: 'Approve', result: 'Verified', help: 'The evidence confirms their credentials.' },
-  { value: 'more_evidence', label: 'Request more evidence', result: 'More evidence needed', help: 'Ask the expert for specific extra documents.' },
+  { value: 'approve', label: 'Approve', result: 'Verified by NEXUS-E review', help: 'All four checklist criteria are met.' },
+  { value: 'more_evidence', label: 'Request more information', result: 'More information needed', help: 'Ask the expert for specific extra documents.' },
   { value: 'reject', label: 'Reject', result: 'Not verified', help: 'The evidence does not confirm their credentials.' },
 ]
 
@@ -58,6 +59,7 @@ const when = (iso: string | null) =>
 const RPC_ERRORS: Record<string, string> = {
   reason_required: 'Please write a message first. The expert will see it, so say what you need or why.',
   not_reviewable: 'This expert has not submitted evidence yet, so there is nothing to decide.',
+  checklist_incomplete: 'Tick all four criteria in the checklist first. Verification is based on qualifications, professional credentials, documented project roles and references.',
   not_admin: 'Your account is not on the admin list.',
   not_found: 'We could not find that expert.',
 }
@@ -122,6 +124,7 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
   const [viewer, setViewer] = useState<{ url: string; mime: string } | null>(null)
   const [viewerError, setViewerError] = useState<string | null>(null)
 
+  const [checklistDone, setChecklistDone] = useState(false)
   const [decision, setDecision] = useState<Decision | ''>('')
   const [message, setMessage] = useState('')
   const [notes, setNotes] = useState('')
@@ -333,6 +336,8 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
 
       <AdminAffiliations expertId={expert.expert_id} publicConsent={Boolean((expert as { affiliations_public?: boolean }).affiliations_public)} />
 
+      <ReviewChecklist expertId={expert.expert_id} onComplete={setChecklistDone} />
+
       {/* Decision */}
       <section className="card p-5 sm:p-6" aria-labelledby="decision-h">
         <h2 id="decision-h" className="text-xl font-semibold text-green-900">Your decision</h2>
@@ -349,6 +354,7 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
             )}
             <fieldset className="mt-4">
               <legend className="field-label">What would you like to do?</legend>
+              {!checklistDone && <p className="mb-2 text-sm text-ink-500">Approve unlocks when all four checklist criteria are ticked.</p>}
               <div className="grid gap-2 sm:grid-cols-3">
                 {DECISIONS.map((d) => (
                   <label key={d.value} className="choice" data-checked={decision === d.value}>
@@ -357,6 +363,7 @@ function ReviewBody({ expert, files, audit, reload }: { expert: Expert; files: F
                       name="decision"
                       className="sr-only"
                       checked={decision === d.value}
+                      disabled={d.value === 'approve' && !checklistDone}
                       onChange={() => {
                         setDecision(d.value)
                         setFormError(null)

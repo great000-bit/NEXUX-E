@@ -223,6 +223,7 @@ export default function VerifyDashboard() {
           {status === 'under_review' && expert.submitted_at ? fmt(t.submittedOn, { date: when(expert.submitted_at) }) : ''}
           {status === 'verified' && expert.verified_at ? fmt(t.verifiedOn, { date: when(expert.verified_at) }) : ''}
         </p>
+        <p className="mt-2 text-xs text-ink-500">{m.common.verifiedDisclaimer}</p>
         {(status === 'more_evidence' || status === 'not_verified') && expert.review_message && (
           <blockquote className="mt-4 rounded-[var(--radius-md)] border-s-4 border-green-700 bg-green-100 p-4 text-[0.95rem] text-ink-900">
             <p className="text-xs font-bold uppercase tracking-wider text-green-800">

@@ -37,13 +37,13 @@ test('every status email has a subject, a greeting, a sign-off and no dashes', (
 test('evidence received: says Under review and promises nothing it cannot keep', () => {
   const mail = composeEmail(job('verification_received'), opts)
   assert.equal(mail.subject, 'We have received your evidence: NEXUS-E')
-  assert.match(mail.text, /Under review/)
+  assert.match(mail.text, /Evidence Submitted/)
   assert.match(mail.text, /nothing more you need to do/i)
 })
 
 test('more evidence needed: shows the reviewer message and a link back to sign in', () => {
   const mail = composeEmail(job('verification_more_evidence', { message: 'Your licence photo is cut off.\nPlease send the full page.' }), opts)
-  assert.match(mail.subject, /more evidence/i)
+  assert.match(mail.subject, /more information/i)
   assert.ok(mail.text.includes('Your licence photo is cut off.\nPlease send the full page.'))
   assert.ok(mail.html.includes('Your licence photo is cut off.'))
   assert.ok(mail.text.includes('https://register.nexuse.org/verify'))
@@ -52,7 +52,7 @@ test('more evidence needed: shows the reviewer message and a link back to sign i
 
 test('verified: congratulates, shows the Expert ID', () => {
   const mail = composeEmail(job('verification_verified'), opts)
-  assert.equal(mail.subject, 'You are now a Verified Expert on NEXUS-E')
+  assert.equal(mail.subject, 'You are now verified by NEXUS-E review')
   assert.match(mail.text, /Congratulations/)
   assert.ok(mail.text.includes('NEX-000042'))
 })

@@ -105,15 +105,15 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
         subject: 'We have received your evidence: NEXUS-E',
         heading: 'Evidence received',
         paragraphs: [
-          'Thank you. We have received the documents you submitted, and your status is now Under review.',
+          'Thank you. We have received the documents you submitted, and your status is now Evidence Submitted.',
           'A member of our team will look at them carefully. We will email you as soon as there is a decision, and if we need anything else we will tell you exactly what.',
           'There is nothing more you need to do for now.',
         ],
       }
     case 'verification_more_evidence':
       return {
-        subject: 'We need a little more evidence for your NEXUS-E verification',
-        heading: 'A little more evidence, please',
+        subject: 'More information needed for your NEXUS-E verification',
+        heading: 'A little more information, please',
         paragraphs: [
           'Thank you for submitting your documents. Before we can verify your profile, we need a little more from you.',
         ],
@@ -122,15 +122,15 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
         after: [
           'To continue, sign in with your registered email, add or replace documents, and submit again. Your earlier documents are still there.',
         ],
-        button: { label: 'Add more evidence', href: verifyUrl },
+        button: { label: 'Add more information', href: verifyUrl },
       }
     case 'verification_verified':
       return {
-        subject: 'You are now a Verified Expert on NEXUS-E',
-        heading: 'You are a Verified Expert',
+        subject: 'You are now verified by NEXUS-E review',
+        heading: 'You are verified by NEXUS-E review',
         paragraphs: [
-          'Congratulations. We have reviewed your documents and verified your profile.',
-          `Your Expert ID is ${job.expert_id}. You now hold Verified Expert status in the African Environmental Expertise Exchange, and organisations will be able to see that your credentials have been checked.`,
+          'Congratulations. A NEXUS-E reviewer has checked the qualifications, professional credentials, project roles and references you submitted.',
+          `Your Expert ID is ${job.expert_id}. Your status is Verified by NEXUS-E review. This is not a licence, an accreditation or a certification, and it does not replace statutory professional licensing.`,
           'Thank you for taking the time to complete verification.',
         ],
         button: { label: 'View your profile', href: verifyUrl },

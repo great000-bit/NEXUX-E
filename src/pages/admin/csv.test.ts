@@ -81,7 +81,7 @@ test('verification dates come after, and show readable status names', () => {
   const [head, line] = parse(toCsv([row]))
   const names = head.split(',').map((h) => h.replace(/"/g, ''))
   assert.deepEqual(names.slice(-3), ['Evidence submitted at', 'Reviewed at', 'Verified at'])
-  assert.ok(line.includes('"Verified"'))
+  assert.ok(line.includes('"Verified by NEXUS-E review"'))
 })
 
 test('commas and quotes inside cells are escaped, and the file starts with a BOM for Excel', () => {
@@ -126,7 +126,7 @@ test('the interested experts export has the registered details, readable status 
   assert.deepEqual(names.slice(0, 4), ['Expert ID', 'Expressed interest at', 'Title', 'Full name'])
   assert.ok(names.includes('Email') && names.includes('Phone') && names.includes('Assignments'))
   assert.ok(csv.startsWith('﻿'))
-  assert.ok(line.includes('"ada@example.org"') && line.includes('"Verified"'))
+  assert.ok(line.includes('"ada@example.org"') && line.includes('"Verified by NEXUS-E review"'))
   assert.ok(line.includes('"Water and Hydrogeology; GIS and Remote Sensing"'))
   assert.ok(line.includes('"Ada ""The Great"" Obi"'))
 })
@@ -147,7 +147,7 @@ test('the export file name is safe on every system', () => {
 
 test('every status has a readable label in the export', () => {
   const labels: Record<string, string> = {
-    pending: 'Pending', under_review: 'Under review', more_evidence: 'More evidence needed', verified: 'Verified', not_verified: 'Not verified',
+    pending: 'Registered', under_review: 'Evidence Submitted', more_evidence: 'More information needed', verified: 'Verified by NEXUS-E review', not_verified: 'Not verified',
   }
   for (const [raw, label] of Object.entries(labels)) {
     assert.ok(parse(toCsv([{ ...row, verification_status: raw }]))[1].includes(`"${label}"`), raw)

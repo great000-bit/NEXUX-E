@@ -5,6 +5,7 @@ import Review from './Review'
 import Opportunities from './Opportunities'
 import OpportunityEdit from './OpportunityEdit'
 import Institutions from './Institutions'
+import Duplicates from './Duplicates'
 
 const tab = ({ isActive }: { isActive: boolean }) =>
   `inline-flex min-h-11 items-center rounded-full px-4 text-sm font-bold transition ${
@@ -21,6 +22,7 @@ export default function AdminArea({ email, onSignOut }: { email: string; onSignO
           <NavLink to="/admin/verification" className={tab}>Verification</NavLink>
           <NavLink to="/admin/opportunities" className={tab}>Opportunities</NavLink>
           <NavLink to="/admin/institutions" className={tab}>Institutions</NavLink>
+          <NavLink to="/admin/duplicates" className={tab}>Duplicates</NavLink>
         </nav>
         <div className="flex min-w-0 items-center justify-between gap-3 text-sm sm:justify-end">
           <span className="min-w-0 truncate text-ink-500" title={email}>Signed in as {email}</span>
@@ -35,6 +37,7 @@ export default function AdminArea({ email, onSignOut }: { email: string; onSignO
         <Route path="opportunities/new" element={<OpportunityEdit />} />
         <Route path="opportunities/:id" element={<OpportunityEdit />} />
         <Route path="institutions" element={<Institutions />} />
+        <Route path="duplicates" element={<Duplicates />} />
       </Routes>
     </div>
   )

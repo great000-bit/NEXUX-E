@@ -121,7 +121,7 @@ export const PRIVACY = {
 
 export const DIRECTORY = {
   eyebrow: 'The directory',
-  title: 'Find a Verified Expert',
+  title: 'Find an expert verified by NEXUS-E review',
   lead: 'Every expert listed has had their credentials checked and has chosen to be listed.',
   empty: 'No experts are listed yet. They will appear here once they are verified and have chosen to be listed.',
 }

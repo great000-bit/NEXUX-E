@@ -5,10 +5,10 @@ export type VStatus = 'pending' | 'under_review' | 'more_evidence' | 'verified' 
 export const STATUS_ORDER: VStatus[] = ['pending', 'under_review', 'more_evidence', 'verified', 'not_verified']
 
 export const STATUS_LABEL: Record<VStatus, string> = {
-  pending: 'Pending',
-  under_review: 'Under review',
-  more_evidence: 'More evidence needed',
-  verified: 'Verified',
+  pending: 'Registered',
+  under_review: 'Evidence Submitted',
+  more_evidence: 'More information needed',
+  verified: 'Verified by NEXUS-E review',
   not_verified: 'Not verified',
 }
 

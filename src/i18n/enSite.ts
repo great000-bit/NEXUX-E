@@ -110,10 +110,10 @@ export const enSite = {
     reviewerMessage: 'Message from our reviewer',
     reason: 'Reason',
     status: {
-      pending: 'Pending',
-      under_review: 'Under review',
-      more_evidence: 'More evidence needed',
-      verified: 'Verified',
+      pending: 'Registered',
+      under_review: 'Evidence Submitted',
+      more_evidence: 'More information needed',
+      verified: 'Verified by NEXUS-E review',
       not_verified: 'Not verified',
     },
     statusHelp: {
@@ -139,7 +139,7 @@ export const enSite = {
       },
       {
         lead: 'Why.',
-        text: 'To check your membership, licence and qualification so we can give you Verified Expert status.',
+        text: 'To review your qualifications, professional credentials, documented project roles and references, so that NEXUS-E can give you the status "Verified by NEXUS-E review".',
       },
       {
         lead: 'How long.',
@@ -278,11 +278,11 @@ export const enSite = {
         'Your primary and secondary expertise, years of experience and highest qualification',
         'Your professional memberships and the kinds of assignment you are open to',
         'How far you can work, and your profile link if you gave one',
-        'A Verified Expert badge',
+        'A "Verified by NEXUS-E review" badge',
       ],
       never: 'Nobody can ever see your phone number, your email address or your documents.',
       onlyVerified:
-        'Only Verified Experts are listed. You can change your mind at any time, and your public page stops opening straight away.',
+        'Only experts verified by NEXUS-E review are listed. You can change your mind at any time, and your public page stops opening straight away.',
       doneLive: 'You are now listed in the public directory.',
       donePending: 'Your choice is saved. You will appear in the directory once you are Verified.',
       doneRemoved: 'You have been removed from the public directory. Your public page no longer opens.',
@@ -295,7 +295,7 @@ export const enSite = {
       intro: 'Open projects from NEXUS-E. Ones that match your registered expertise or assignments come first.',
       loading: 'Loading opportunities',
       loadFailed: 'We could not load the opportunities',
-      onlyVerifiedTitle: 'Only Verified Experts can express interest',
+      onlyVerifiedTitle: 'Only experts verified by NEXUS-E review can express interest',
       onlyVerifiedText:
         'You can read the opportunities below now. Once your verification is approved, you can tell us you are interested.',
       noneTitle: 'No open opportunities right now',
@@ -349,7 +349,7 @@ export const enSite = {
       bad_label: 'Choose which professional body this membership document is from.',
       no_evidence:
         'Please add at least one document before you submit: a membership card or certificate, a licence, or a qualification certificate.',
-      not_verified: 'Only Verified Experts can express interest. Once your verification is approved, you can.',
+      not_verified: 'Only experts verified by NEXUS-E review can express interest. Once your verification is approved, you can.',
       not_open: 'This opportunity is no longer open for interest. Please refresh the page to see what is open now.',
       incomplete: 'Your set is not complete yet. Please add a qualification, a professional membership or licence, a documented project role and one reference, then submit.',
       reference_limit: 'You can add up to 3 references.',
@@ -357,11 +357,11 @@ export const enSite = {
   },
 
   directory: {
-    pageTitle: 'Find a Verified Expert | NEXUS-E',
+    pageTitle: 'Experts verified by NEXUS-E review | NEXUS-E',
     pageDescription:
       'Search verified environmental professionals across Africa by expertise, country, qualification and availability. Every expert listed here has been verified and has chosen to be listed.',
     eyebrow: 'NEXUS-E directory',
-    title: 'Find a Verified Expert',
+    title: 'Find an expert verified by NEXUS-E review',
     intro:
       'Every expert here has had their credentials checked and has chosen to be listed. Phone numbers, email addresses and documents are never shown.',
     searchLabel: 'Search by name, organisation or expertise',
@@ -420,7 +420,7 @@ export const enSite = {
     searchDirectory: 'Search the directory',
     metaTitle: 'Expert profile | NEXUS-E',
     metaMissing: 'This profile is not available on NEXUS-E.',
-    metaDescription: '{name} is a Verified Expert in {expertise} ({place}) on NEXUS-E, the African Environmental Expertise Exchange.',
+    metaDescription: '{name} is an expert verified by NEXUS-E review in {expertise} ({place}) on NEXUS-E, the African Environmental Expertise Exchange.',
     breadcrumb: 'Breadcrumb',
     all: 'All experts',
     idLine: 'Expert ID {id}',

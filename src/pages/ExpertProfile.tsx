@@ -121,6 +121,7 @@ export default function ExpertProfile() {
 
       <header className="glass rounded-[var(--radius-xl)] p-5 sm:p-7">
         <VerifiedBadge />
+        <p className="mt-2 max-w-prose text-xs text-ink-500">{m.common.verifiedDisclaimer}</p>
         <h1 id="profile-name" className="mt-3 text-3xl font-semibold text-green-900 sm:text-4xl">
           {displayName(profile.title, profile.full_name)}
         </h1>

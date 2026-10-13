@@ -120,6 +120,7 @@ export default function Directory() {
           {t.title}
         </h1>
         <p className="mt-2 max-w-xl text-ink-700">{t.intro}</p>
+        <p className="mt-2 max-w-xl text-xs text-ink-500">{m.common.verifiedDisclaimer}</p>
       </header>
 
       <form role="search" onSubmit={submit} className="mt-6 space-y-3" aria-label={t.searchAria}>

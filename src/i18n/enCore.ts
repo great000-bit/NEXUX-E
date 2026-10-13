@@ -29,6 +29,9 @@ export const enCore = {
     no: 'No',
     notProvided: 'Not provided',
     opensInNewTab: '(opens in a new tab)',
+    verifiedBadge: 'Verified by NEXUS-E review',
+    verifiedDisclaimer:
+      'Verified by NEXUS-E review means a NEXUS-E reviewer checked the qualifications, professional credentials, project roles and references this expert submitted. It is not a licence, an accreditation or a certification, and it does not replace statutory professional licensing.',
   },
 
   language: {
@@ -322,7 +325,7 @@ export const enCore = {
     copyBlocked: 'Copy was blocked. The ID is selected so you can copy it manually.',
     nextTitle: 'Next: complete your verification',
     nextText:
-      'Complete verification to earn Verified Expert status. After the conference we will invite you to confirm your membership, licence and credentials using your Expert ID. There is nothing more to do today.',
+      'Complete verification to earn the status "Verified by NEXUS-E review". After the conference we will invite you to submit your qualifications, professional credentials, project roles and references using your Expert ID. There is nothing more to do today.',
     verify: 'Verify my profile',
     home: 'Back to home',
   },

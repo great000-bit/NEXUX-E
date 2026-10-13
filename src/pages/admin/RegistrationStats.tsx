@@ -3,17 +3,22 @@ import { supabase } from '../../lib/supabase'
 
 type Count = { name: string; count: number; id?: string; status?: string }
 type Stats = { by_specialisation: Count[]; by_country: Count[]; by_institution: Count[] }
+type Verif = { by_status: Count[]; by_country: Count[]; by_specialisation: Count[] }
 
 /** Registration counts by specialisation, country and institution. Opens on demand, so the registrations list is not slowed down. */
 export function RegistrationStats() {
   const [open, setOpen] = useState(false)
   const [stats, setStats] = useState<Stats | null>(null)
   const [failed, setFailed] = useState(false)
+  const [verif, setVerif] = useState<Verif | null>(null)
   useEffect(() => {
     if (!open || stats || failed) return
     supabase.rpc('admin_registration_stats').then(({ data, error }) => {
       if (error) setFailed(true)
       else setStats(data as Stats)
+    })
+    supabase.rpc('admin_verification_stats').then(({ data, error }) => {
+      if (!error) setVerif(data as Verif)
     })
   }, [open, stats, failed])
 
@@ -27,6 +32,9 @@ export function RegistrationStats() {
           <Table title="By specialisation" rows={stats.by_specialisation} />
           <Table title="By country" rows={stats.by_country} />
           <Table title="By institution (self-declared)" rows={stats.by_institution} flag />
+          {verif && <Table title="By verification status" rows={verif.by_status} />}
+          {verif && <Table title="Country by status" rows={verif.by_country.map((c) => ({ ...c, name: `${c.name} / ${c.status}` }))} />}
+          {verif && <Table title="Specialisation by status" rows={verif.by_specialisation.map((c) => ({ ...c, name: `${c.name} / ${c.status}` }))} />}
         </div>
       )}
     </details>

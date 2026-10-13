@@ -51,7 +51,7 @@ export function buildEmail(job: ConfirmationJob, opts: { siteUrl: string }): Bui
     'You are now a founding expert of the African Environmental Expertise Exchange. Please keep this ID safe, because you will need it when you verify your profile.',
     '',
     'What happens next',
-    'After the conference we will contact you with the steps to complete your verification. Verification confirms your membership, licence and credentials, and it is how you earn Verified Expert status. There is nothing more you need to do today.',
+    'After the conference we will contact you with the steps to complete your verification. Verification is a review of your qualifications, professional credentials, project roles and references, and it is how you earn the status Verified by NEXUS-E review. There is nothing more you need to do today.',
     '',
     `Visit us: ${siteUrl}`,
     '',
@@ -109,7 +109,7 @@ export function buildEmail(job: ConfirmationJob, opts: { siteUrl: string }): Bui
               <tr>
                 <td style="padding:20px 22px;">
                   <div style="font-family:Georgia,'Times New Roman',serif;font-size:19px;font-weight:700;color:${GREEN_800};margin-bottom:8px;">What happens next</div>
-                  <div style="font-size:15px;line-height:1.6;color:${INK_SOFT};">After the conference we will contact you with the steps to complete your verification. Verification confirms your membership, licence and credentials, and it is how you earn Verified Expert status. There is nothing more you need to do today.</div>
+                  <div style="font-size:15px;line-height:1.6;color:${INK_SOFT};">After the conference we will contact you with the steps to complete your verification. Verification is a review of your qualifications, professional credentials, project roles and references, and it is how you earn the status Verified by NEXUS-E review. There is nothing more you need to do today.</div>
                 </td>
               </tr>
             </table>

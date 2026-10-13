@@ -14,7 +14,8 @@ const RESEND_AFTER_SECONDS = 30
 type Step = 'email' | 'code'
 
 export default function Verify() {
-  const t = useMessages().verify
+  const m = useMessages()
+  const t = m.verify
   const navigate = useNavigate()
   const location = useLocation()
   const [step, setStep] = useState<Step>('email')
@@ -99,6 +100,7 @@ export default function Verify() {
       <p className="mt-3 text-ink-700">
         {step === 'email' ? t.introEmail : t.introCode}
       </p>
+      <p className="mt-2 text-xs text-ink-500">{m.common.verifiedDisclaimer}</p>
 
       {sessionMessage && step === 'email' && (
         <div className="mt-5">
