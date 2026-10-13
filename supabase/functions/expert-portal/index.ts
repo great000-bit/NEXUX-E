@@ -46,7 +46,7 @@ const FRIENDLY: Record<string, [number, string]> = {
     'Please add at least one document before you submit: a membership card or certificate, a licence, or a qualification certificate.',
   ],
   not_found: [404, 'We could not find that file. Please refresh the page and try again.'],
-  not_verified: [403, 'Only Verified Experts can express interest. Once your verification is approved, you can.'],
+  not_verified: [403, 'Only experts verified by NEXUS-E review can express interest. Once your verification is approved, you can.'],
   not_open: [409, 'This opportunity is no longer open for interest. Please refresh the page to see what is open now.'],
   bad_value: [400, 'That choice was not understood. Please try again.'],
   incomplete: [
@@ -354,6 +354,29 @@ Deno.serve(async (req) => {
         return fail(400, 'bad_value', 'That choice was not understood. Please try again.')
       }
       const out = await rpc('portal_set_interest', { p_expert_id: expertId, p_opportunity_id: id, p_on: body.on })
+      return respond(200, { ok: true, ...(out as object) })
+    }
+
+    if (action === 'invitations') {
+      const out = await rpc('portal_list_invitations', { p_expert_id: expertId })
+      return respond(200, { ok: true, items: out })
+    }
+
+    if (action === 'respond_invitation') {
+      const id = String(body.opportunity_id ?? '')
+      if (
+        !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id) ||
+        (body.response !== 'interested' && body.response !== 'not_interested') ||
+        typeof body.share_contact !== 'boolean'
+      ) {
+        return fail(400, 'bad_value', 'That choice was not understood. Please try again.')
+      }
+      const out = await rpc('portal_respond_invitation', {
+        p_expert_id: expertId,
+        p_opportunity_id: id,
+        p_response: body.response,
+        p_share_contact: body.share_contact,
+      })
       return respond(200, { ok: true, ...(out as object) })
     }
 

@@ -11,6 +11,7 @@ import {
 } from '../../lib/opportunities'
 import { supabase } from '../../lib/supabase'
 import { csvFileName, downloadCsvText, interestToCsv } from './csv'
+import { OpportunityMatching } from './OpportunityMatching'
 
 type Loaded =
   | { id: string; opp: AdminOpportunity | null; interest: InterestedExpert[]; log: OpportunityLogEntry[] }
@@ -123,6 +124,7 @@ export default function OpportunityEdit() {
         onDeleted={() => navigate('/admin/opportunities', { replace: true })}
       />
 
+      <OpportunityMatching id={opp.id} open={opp.status === 'open' && !opp.expired} />
       <InterestPanel opp={opp} rows={current.interest} />
       <LogPanel entries={current.log} />
     </div>

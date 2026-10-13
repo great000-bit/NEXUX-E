@@ -313,6 +313,22 @@ export const enSite = {
       withdraw: 'Withdraw interest',
       express: 'Express interest',
     },
+    invitations: {
+      title: 'Invitations',
+      intro:
+        'The NEXUS-E team invited you to these opportunities because your expertise may suit them. Nothing is shared with anyone unless you choose to.',
+      interested: 'I am interested',
+      notInterested: 'Not interested',
+      shareContact: 'The organisation offering this opportunity may see my email address and phone number.',
+      saidInterested: 'You said you are interested.',
+      saidNot: 'You said you are not interested.',
+      contactShared: 'Your contact details may be shared.',
+      contactPrivate: 'Your contact details are not shared.',
+      change: 'Change my answer',
+      closedNote: 'This opportunity is closed.',
+      level: 'Experience asked for: ',
+      saved: 'Your answer is saved.',
+    },
   },
 
   files: {

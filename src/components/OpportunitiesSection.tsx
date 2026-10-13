@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Notice, Spinner } from './ui'
+import { InvitationsSection } from './InvitationsSection'
 import { call } from '../lib/portal'
 import { daysLeft, formatDay, type ExpertOpportunity } from '../lib/opportunities'
 import { fmt } from '../i18n'
@@ -58,6 +59,8 @@ export function OpportunitiesSection({ token, onSessionEnded }: { token: string;
   }
 
   return (
+    <>
+    <InvitationsSection token={token} onSessionEnded={onSessionEnded} />
     <section aria-labelledby="opps-title" className="space-y-4">
       <div>
         <h2 id="opps-title" className="text-2xl font-semibold text-green-900">{t.title}</h2>
@@ -133,5 +136,6 @@ export function OpportunitiesSection({ token, onSessionEnded }: { token: string;
         </ul>
       )}
     </section>
+    </>
   )
 }

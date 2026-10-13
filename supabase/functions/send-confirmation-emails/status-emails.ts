@@ -9,6 +9,7 @@ export type StatusTemplate =
   | 'verification_not_verified'
   | 'opportunity_interest'
   | 'evidence_submitted'
+  | 'opportunity_invitation'
 
 export type EmailJob = {
   template: string
@@ -98,6 +99,20 @@ function contentFor(template: StatusTemplate, job: EmailJob, opts: EmailOptions)
           { label: 'Country', value: shown(job.payload?.country) },
         ],
         button: { label: 'Open review', href: `${site}/admin/verification/${encodeURIComponent(job.expert_id)}` },
+      }
+    }
+    case 'opportunity_invitation': {
+      const oppTitle = clean(job.payload?.opportunity_title, 200).replace(/\s+/g, ' ')
+      const deadline = /^\d{4}-\d{2}-\d{2}$/.test(String(job.payload?.deadline ?? '')) ? String(job.payload?.deadline) : ''
+      return {
+        subject: 'An opportunity that may suit you: NEXUS-E',
+        heading: 'An opportunity that may suit you',
+        paragraphs: [
+          `The NEXUS-E team thinks your expertise may suit this opportunity: "${oppTitle}".`,
+          deadline ? `You can respond until ${deadline}.` : 'Please respond while it is open.',
+          'Sign in to read the details and tell us whether you are interested. Nothing is shared with the organisation unless you choose to share your contact details when you answer.',
+        ],
+        button: { label: 'See the opportunity', href: verifyUrl },
       }
     }
     case 'verification_received':
@@ -242,6 +257,7 @@ export const STATUS_TEMPLATES: StatusTemplate[] = [
   'verification_more_evidence',
   'verification_verified',
   'verification_not_verified',
+  'opportunity_invitation',
 ]
 
 /** Emails that go to an administrator, not to the expert. They greet with "Hello," and say why the admin got them. */

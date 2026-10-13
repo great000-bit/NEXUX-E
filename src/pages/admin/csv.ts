@@ -206,3 +206,42 @@ export function downloadCsv(rows: Expert[], filename: string, byExpert?: Affilia
   a.remove()
   URL.revokeObjectURL(url)
 }
+
+/** One invited expert as the administrator sees them. Email and phone arrive from the database only when the expert agreed to share them. */
+export type ShortlistRow = {
+  expert_id: string
+  full_name: string
+  title: string
+  organisation: string
+  country: string
+  primary_expertise: string
+  verification_status: string
+  response: 'invited' | 'interested' | 'not_interested'
+  responded_at: string | null
+  share_contact: boolean
+  score: number
+  email: string | null
+  phone: string | null
+}
+
+/**
+ * The list to pass to an opportunity owner: only experts who said they are interested. Contact details are included
+ * only for those who agreed to share them, and the evidence, membership numbers and licences are never in it.
+ */
+export function shortlistToCsv(rows: ShortlistRow[]): string {
+  const cols: { header: string; get: (r: ShortlistRow) => string }[] = [
+    { header: 'Expert ID', get: (r) => r.expert_id },
+    { header: 'Title', get: (r) => r.title },
+    { header: 'Full name', get: (r) => r.full_name },
+    { header: 'Organisation', get: (r) => r.organisation },
+    { header: 'Country', get: (r) => r.country },
+    { header: 'Primary expertise', get: (r) => r.primary_expertise },
+    { header: 'Verification status', get: (r) => statusLabel(r.verification_status) },
+    { header: 'Match score', get: (r) => String(r.score) },
+    { header: 'Email', get: (r) => (r.share_contact ? (r.email ?? '') : '') },
+    { header: 'Phone', get: (r) => (r.share_contact && r.phone ? `+${r.phone}` : '') },
+  ]
+  const lines = [cols.map((c) => cell(c.header)).join(',')]
+  for (const r of rows.filter((x) => x.response === 'interested')) lines.push(cols.map((c) => cell(c.get(r))).join(','))
+  return '﻿' + lines.join('\r\n')
+}
